@@ -21,6 +21,97 @@
 [Port Mercury](https://github.com/spaceport-dev/port-mercury) provides a starting point for single-tenant applications.
 [Create Spaceport App](https://github.com/spaceport-dev/create-spaceport-app) guides you through setup with an AI coding assistant.
 
+<span id="rapid-iteration"></span>
+
+## A Taste of Spaceport
+
+See a complete Todo list in two files, then run the example below.
+
+Build dynamic web applications using [Source Modules](source-modules-overview.md) to organize your backend logic and
+[Routing](routing-overview.md) to handle HTTP requests. Spaceport's [Alert-driven Event System](alerts-overview.md) connects these pieces
+together, letting you define endpoints, business logic, and data flows in one cohesive codebase. Changes to your
+Groovy modules take effect immediately—no rebuilds required—so you can iterate as fast as you can type.
+
+```groovy
+/// modules/Todo.groovy
+
+import spaceport.computer.alerts.Alert
+import spaceport.computer.alerts.results.*
+import spaceport.computer.memory.virtual.*
+import spaceport.launchpad.Launchpad
+
+class Todo {
+
+    // Use Alerts to hook into routing events, even with dynamic parameters
+    @Alert('~on /todo/(.*) hit')
+    static _index(HttpResult r) {
+        // Middleware encouraged
+        r.context.data.'todo-list' = Cargo.fromStore('todo-lists').get(r.matches[0])
+        // Render UI with Launchpad's HTML-first templates
+        new Launchpad().assemble(['ui.ghtml']).launch(r)
+    }
+
+    // Endpoints don't have to serve fancy templates
+    @Alert('on /api/todo/get-all hit')
+    static _getAll(HttpResult r) {
+        // Provide a quick JSON API endpoint
+        r.writeToClient(Cargo.fromStore('todo-lists').toPrettyJSON())
+    }
+}
+```
+
+Build interactive UIs with [Launchpad](launchpad-overview.md)'s HTML-first templates that embed Groovy directly in your markup.
+[Cargo](cargo-overview.md) provides a universal data container for common frontend/backend patterns, while Launchpad's
+`.ghtml` templates offer reactive data binding—when server state changes, your UI updates automatically.
+[Server Actions](transmissions-overview.md) connect DOM events to server-side logic, and [Class Enhancements](class-enhancements-overview.md)
+like `.clean()`, `.quote()`, and `.if()` handle common template tasks like sanitizing input, escaping strings,
+and conditional rendering. Build real-time interactivity without the boilerplate, while keeping full control to
+add custom JavaScript when you need it.
+
+```HTML
+/// launchpad/parts/ui.ghtml
+
+<%@ page import="spaceport.computer.memory.virtual.Cargo" %>
+<script src="https://cdn.jsdelivr.net/gh/spaceport-dev/hud-core.js@latest/hud-core.js" defer></script>
+
+<body>
+/// Use the context provided by the router
+<% def list = data.'todo-list' as Cargo %>
+
+/// Reactively render the list
+${{ list.combine { def item -> """
+<div class="item ${ 'done'.if { item.done }}">
+
+    /// Server actions provide seamless interactivity
+    <span on-click=${ _{ item.toggle('done') }}>
+    ${ item.done ? '✓' : '○' }
+    </span>
+
+    /// Conditional attributes, client transmissions, and input cleaning
+    /// provide a safe and dynamic user experience
+    <input ${ 'disabled'.if { item.done }}
+    on-blur=${ _{ t -> item.text = t.value.clean() }}
+    value=${ item.getString('text').quote() }>
+</div>
+""" }
+}}
+
+<button on-click="${ _{ list.setNext() }}">Add New</button>
+</body>
+```
+
+**[Run this Todo list →](https://frontier.spaceport.sh/todo/)**
+
+This combined example shows how Spaceport's systems work together: [Cargo](cargo-overview.md) simplifies state, [Server Actions](transmissions-overview.md)
+handle events like `on-click` and `on-blur`, and [Class Enhancements](class-enhancements-overview.md) provide utilities like
+`.clean()`, `.quote()`, `.if()`, and `.combine()` for cleaner templates. The [Alert system](alerts-overview.md) wires routes to
+handlers, while [Launchpad](launchpad-overview.md)'s reactive block `${{ }}` syntax makes your UI reactive to server changes. Beyond what's shown
+here, Spaceport also provides [Documents](documents-overview.md) for database persistence, [Server Elements](server-elements-overview.md) for
+reusable components, [Docking Sessions & Client Management](sessions-overview.md) for authentication, and more.
+Ready to dive in? Start with [Getting Started](developer-onboarding.md) or jump straight to building your first app with
+the [Tic-Tac-Toe Tutorial](tutorial-tic-tac-toe.md).
+
+
 ## Philosophy
 
 Spaceport is built around three core ideas:
@@ -43,48 +134,6 @@ Spaceport is built around three core ideas:
 | **[HUD-Core](hud-core-overview.md)** | Lightweight client-side JavaScript library (~23KB) that manages WebSocket connections, event binding for server actions, and DOM patching for reactive updates. |
 | **[Source Modules](source-modules-overview.md)** | Hot-reloadable Groovy classes that contain your application logic. Drop a `.groovy` file into a module directory and Spaceport compiles and loads it automatically. |
 | **[Transmissions](transmissions-overview.md)** | The client-to-server data pipeline for server actions -- carries form fields, element values, and event data from the browser to your Groovy closures. |
-
-## A Taste of Spaceport
-
-Here is a minimal Spaceport application: one source module and one template.
-
-**The route handler** (a Groovy class in a source module):
-
-```groovy
-import spaceport.computer.alerts.Alert
-import spaceport.computer.alerts.results.HttpResult
-import spaceport.launchpad.Launchpad
-
-class HelloApp {
-
-    static Launchpad launchpad = new Launchpad()
-
-    @Alert('on / hit')
-    static _index(HttpResult r) {
-        r.context.data.greeting = 'Welcome to Spaceport'
-        launchpad.assemble(['hello.ghtml']).launch(r, 'wrapper.ghtml')
-    }
-}
-```
-
-**The template** (`launchpad/parts/hello.ghtml`):
-
-```html
-<h1>${ data.greeting }</h1>
-
-<p>Messages: ${{ dock.messages.getList().size() }}</p>
-
-<form on-submit=${ _{ t ->
-    dock.messages.push(t.message.clean())
-}}>
-    <input name="message" placeholder="Say something..." required>
-    <button type="submit">Send</button>
-</form>
-
-${{ dock.messages.combine { msg -> "<p>${ msg }</p>" } }}
-```
-
-The `@Alert('on / hit')` annotation registers this method as the handler for HTTP requests to `/`. The `assemble/launch` call renders the template and writes the HTML response. Inside the template, `${{ }}` creates reactive bindings that update automatically when `dock.messages` changes, and `_{ }` defines a server action that runs on the server when the form is submitted. No JavaScript required -- HUD-Core handles the WebSocket communication transparently.
 
 ## Technology Stack
 
