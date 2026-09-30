@@ -51,7 +51,7 @@ stowaways:
     - "stowaways/*"
 ```
 
-The `*` at the end of the path tells Spaceport to scan recursively, including subdirectories. If the default `stowaways/` directory does not exist, Spaceport silently continues without error -- you only need to create it when you have JARs to load.
+The `*` at the end of the path tells Spaceport to scan recursively, including subdirectories. If the default `stowaways/` directory does not exist, Spaceport silently continues without error — you only need to create it when you have JARs to load.
 
 ### 3. Using Custom Paths
 

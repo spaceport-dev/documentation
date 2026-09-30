@@ -1,4 +1,4 @@
-# Documents (CouchDB ORM) --- API Reference
+# Documents (CouchDB ORM) — API Reference
 
 Complete API reference for the Document system: `Document`, `ViewDocument`, `View`, `Operation`, and `CouchHandler`. All classes are in the `spaceport.computer.memory.physical` package.
 
@@ -16,14 +16,14 @@ The base ORM class for CouchDB. Provides get-or-create semantics, automatic JSON
 
 Retrieves the document with the given `_id` from the specified database. If the document does not exist, it is created in CouchDB and the `on document created` alert is fired.
 
-Returns are cached --- subsequent calls with the same `id` and `database` return the same in-memory object.
+Returns are cached — subsequent calls with the same `id` and `database` return the same in-memory object.
 
 ```groovy
 def doc = Document.get('settings', 'my-app')
 ```
 
-- **Parameters:** `id` --- the document `_id`; `database` --- the CouchDB database name.
-- **Returns:** `T extends Document` --- the document, cast to the calling class type.
+- **Parameters:** `id` — the document `_id`; `database` — the CouchDB database name.
+- **Returns:** `T extends Document` — the document, cast to the calling class type.
 - **Alerts fired:** `on document created` (if the document was newly created).
 
 ---
@@ -50,7 +50,7 @@ Retrieves the document and deserializes it as the specified type. Useful when ca
 def job = Document.getAs(Job, 'job-123', 'jobs')
 ```
 
-- **Parameters:** `documentType` --- the class to deserialize as; `id`; `database`.
+- **Parameters:** `documentType` — the class to deserialize as; `id`; `database`.
 - **Returns:** `T extends Document`.
 - **Alerts fired:** `on document created` (if newly created).
 
@@ -168,7 +168,7 @@ doc.fields.counter = 42
 Operation result = doc.save()
 ```
 
-- **Returns:** `Operation` --- the result of the CouchDB PUT request.
+- **Returns:** `Operation` — the result of the CouchDB PUT request.
 - **Behavior:**
   1. Fetches the latest uncached revision from CouchDB.
   2. Compares `_rev` values. If they match, proceeds with a normal save. If they differ, enters the conflict resolution path.
@@ -214,7 +214,7 @@ Supports Groovy's `as` operator for type coercion between Document subclasses. I
 def job = doc as Job
 ```
 
-- **Parameters:** `type` --- the target class. Must extend `Document`.
+- **Parameters:** `type` — the target class. Must extend `Document`.
 - **Returns:** The document cast to the target type.
 - **Throws:** `Exception` if `type` does not extend `Document`.
 
@@ -231,8 +231,8 @@ def fileId = doc.addAttachment(new File('/path/to/image.png'), [label: 'Profile 
 doc.save()
 ```
 
-- **Parameters:** `file` --- the file to attach; `details` --- a map of metadata to associate with the attachment.
-- **Returns:** `String` --- the generated UUID key (e.g., `"file-a3f8b2c1-..."`).
+- **Parameters:** `file` — the file to attach; `details` — a map of metadata to associate with the attachment.
+- **Returns:** `String` — the generated UUID key (e.g., `"file-a3f8b2c1-..."`).
 - **Note:** You must call `save()` after adding an attachment.
 
 ---
@@ -246,8 +246,8 @@ def fileId = doc.addBase64Attachment(encodedData, [name: 'photo.jpg', type: 'ima
 doc.save()
 ```
 
-- **Parameters:** `base64` --- the base64-encoded file content; `details` --- must include `name` and `type`.
-- **Returns:** `String` --- the generated UUID key.
+- **Parameters:** `base64` — the base64-encoded file content; `details` — must include `name` and `type`.
+- **Returns:** `String` — the generated UUID key.
 
 ---
 
@@ -260,7 +260,7 @@ def out = new ByteArrayOutputStream()
 doc.getAttachment('file-a3f8b2c1-...', out)
 ```
 
-- **Parameters:** `fileId` --- the attachment UUID; `o` --- the output stream to write to.
+- **Parameters:** `fileId` — the attachment UUID; `o` — the output stream to write to.
 - **Returns:** `Map` with `content_type` and `content_length`.
 
 ---
@@ -273,7 +273,7 @@ Removes an attachment from the document directly in CouchDB. Updates `_rev` auto
 doc.removeAttachment('file-a3f8b2c1-...')
 ```
 
-- **Parameters:** `attachment` --- the attachment UUID.
+- **Parameters:** `attachment` — the attachment UUID.
 - **Note:** This method saves to CouchDB immediately (no separate `save()` call needed).
 
 ---
@@ -290,7 +290,7 @@ Sets the current state for the given key, pushing the previous state into histor
 doc.setState('status', 'approved', [approvedBy: 'admin'])
 ```
 
-- **Parameters:** `id` --- the state key; `value` --- the new state value; `details` --- additional metadata.
+- **Parameters:** `id` — the state key; `value` — the new state value; `details` — additional metadata.
 
 ---
 
@@ -412,7 +412,7 @@ Retrieves the design document `_design/{id}` from the specified database. Create
 def viewDoc = ViewDocument.get('my-views', 'articles')
 ```
 
-- **Parameters:** `id` --- the design document name (without `_design/` prefix); `database`.
+- **Parameters:** `id` — the design document name (without `_design/` prefix); `database`.
 - **Returns:** `ViewDocument`.
 
 ---
@@ -449,7 +449,7 @@ viewDoc.setView('by-author', '''
 ''')
 ```
 
-- **Parameters:** `id` --- the view name; `map` --- the JavaScript map function as a string.
+- **Parameters:** `id` — the view name; `map` — the JavaScript map function as a string.
 - **Returns:** `ViewDocument` (for chaining).
 
 ---
@@ -466,7 +466,7 @@ viewDoc.setView('count-by-author', '''
 ''', '_count', false)
 ```
 
-- **Parameters:** `id`; `map`; `reduce` --- the JavaScript reduce function (or a CouchDB built-in like `'_count'`, `'_sum'`, `'_stats'`); `save` --- whether to save immediately (default `true`).
+- **Parameters:** `id`; `map`; `reduce` — the JavaScript reduce function (or a CouchDB built-in like `'_count'`, `'_sum'`, `'_stats'`); `save` — whether to save immediately (default `true`).
 - **Returns:** `ViewDocument`.
 
 ---
@@ -503,7 +503,7 @@ Checks whether the design document contains a view with the given name.
 
 Queries the named view and returns the results.
 
-- **Parameters:** `id` --- the view name.
+- **Parameters:** `id` — the view name.
 - **Returns:** `View`.
 
 ---
@@ -551,7 +551,7 @@ Queries the specified view and returns the results.
 def results = View.get('my-views', 'by-author', 'articles')
 ```
 
-- **Parameters:** `document_id` --- the design document name; `view_id` --- the view name; `database`.
+- **Parameters:** `document_id` — the design document name; `view_id` — the view name; `database`.
 - **Returns:** `View`.
 
 ---
@@ -581,7 +581,7 @@ def results = View.get('my-views', 'by-author', 'articles', [
 ])
 ```
 
-- **Parameters:** `document_id`; `view_id`; `database`; `parameters` --- a map of CouchDB view query parameters.
+- **Parameters:** `document_id`; `view_id`; `database`; `parameters` — a map of CouchDB view query parameters.
 - **Returns:** `View`.
 - **Note:** CouchDB requires `key`/`startkey`/`endkey` values to be JSON-encoded — a string key must be sent with its quotes, as in `key: '"Alice"'` above. For single-key lookups, `getByKey(...)` handles the encoding for you.
 
@@ -602,7 +602,7 @@ List<Document> docs = View.getByKey('views', 'by-user', 'sessions', userId).getD
 def rows2 = View.getByKey('views', 'by-tenant-user', 'sessions', [tenantId, userId], false).rows
 ```
 
-- **Parameters:** `document_id` --- the design document name (with or without the `_design/` prefix); `view_id` --- the view name; `database`; `key` --- the key to match, JSON-encoded automatically; `includeDocs` --- whether each row carries its full document (default `true`).
+- **Parameters:** `document_id` — the design document name (with or without the `_design/` prefix); `view_id` — the view name; `database`; `key` — the key to match, JSON-encoded automatically; `includeDocs` — whether each row carries its full document (default `true`).
 - **Returns:** `View` whose `rows` contain only the matching rows.
 - **Key encoding:** a `String` is sent as `"value"` (quotes included), a number as `42`, and a `List` as a compound key `["a","b"]`. Pass a List directly for compound keys — the encoded key travels as a single query parameter.
 - **Matching is exact:** CouchDB compares the encoded key byte-for-byte against the view's emitted keys. There is no case-insensitive or partial matching — emit normalized keys (e.g., lowercased) if you need that.
@@ -657,7 +657,7 @@ class Row {
 List<Row> typed = View.get('views', 'list-jobs', 'jobs').rowsAs(Row)
 ```
 
-- **Parameters:** `rowType` --- the class to coerce each row into.
+- **Parameters:** `rowType` — the class to coerce each row into.
 - **Returns:** `List<T>` of typed row instances, or `null` if `rows` is `null`.
 - **Note:** Unknown JSON properties are ignored during conversion, so the row class only needs fields for the properties you care about.
 

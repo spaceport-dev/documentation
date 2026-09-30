@@ -1,4 +1,4 @@
-# Transmissions -- Internals
+# Transmissions — Internals
 
 This document explains how Spaceport's Transmission system works under the hood: how template syntax is preprocessed, how the server tracks dependencies, how bindings are stored and served, how WebSocket reactions propagate changes, and how HUD-Core processes responses on the client side.
 
@@ -10,9 +10,9 @@ Target audience: contributors, advanced users debugging reactive behavior, or an
 
 The Transmission system spans three layers:
 
-1. **Template preprocessing** (compile time) -- `${{ }}` and `_{ }` syntax is transformed into `bind()` calls
-2. **Server-side binding management** (runtime) -- `Launchpad.bind()` creates bindings/reactions, stored in `bindingSatellites`
-3. **Client-side processing** (runtime) -- HUD-Core handles HTTP responses and WebSocket messages
+1. **Template preprocessing** (compile time) — `${{ }}` and `_{ }` syntax is transformed into `bind()` calls
+2. **Server-side binding management** (runtime) — `Launchpad.bind()` creates bindings/reactions, stored in `bindingSatellites`
+3. **Client-side processing** (runtime) — HUD-Core handles HTTP responses and WebSocket messages
 
 The two user-facing syntaxes map to distinct data flows:
 
@@ -66,7 +66,7 @@ It becomes:
 <span>Count: ${ _{ _script, _registration -> counter }}</span>
 ```
 
-The `_` reference is actually `this.&bind` -- a method reference to `Launchpad.bind()`. The two parameters (`_script`, `_registration`) signal to `bind()` that this is a reactive expression (2-parameter closure), not a server action (1-parameter closure).
+The `_` reference is actually `this.&bind` — a method reference to `Launchpad.bind()`. The two parameters (`_script`, `_registration`) signal to `bind()` that this is a reactive expression (2-parameter closure), not a server action (1-parameter closure).
 
 ### The `_{ }` Binding
 
@@ -437,7 +437,7 @@ The debouncing is critical for performance: when a server action modifies a Carg
 
 ### The `_update()` Method
 
-The `_update()` method is a MetaClass enhancement added to `Object` at Spaceport's initialization (in `MetaClassEnhancements.groovy`). This means it is available on any object -- Cargo instances, Documents, Lists, Maps, or custom types.
+The `_update()` method is a MetaClass enhancement added to `Object` at Spaceport's initialization (in `MetaClassEnhancements.groovy`). This means it is available on any object — Cargo instances, Documents, Lists, Maps, or custom types.
 
 When called, `_update()` scans all active binding satellites globally and pushes updates to any client whose reactions reference the updated object:
 
@@ -661,7 +661,7 @@ payload.forEach(className => {
 
 Each key-value pair is processed based on the key prefix. The processing order:
 
-1. **Content keys**: `value`, `insertBefore`, `insertAfter`, `append`, `prepend`, `innerHTML`, `outerHTML`, `innerText` -- direct DOM manipulation on `payloadTarget`
+1. **Content keys**: `value`, `insertBefore`, `insertAfter`, `append`, `prepend`, `innerHTML`, `outerHTML`, `innerText` — direct DOM manipulation on `payloadTarget`
 2. **URL query** (`?` prefix): update URL via `history.pushState` without page reload
 3. **Data attributes** (`*` prefix): set `payloadTarget.dataset[key]`
 4. **Inline styles** (`&` prefix): set `payloadTarget.style[key]`
@@ -734,7 +734,7 @@ socket.onmessage = function(event) {
 }
 ```
 
-The comment markers are never removed -- they persist in the DOM for the lifetime of the page, allowing repeated updates to the same reactive region.
+The comment markers are never removed — they persist in the DOM for the lifetime of the page, allowing repeated updates to the same reactive region.
 
 ---
 
@@ -765,7 +765,7 @@ The `getTargetElement(event)` function resolves the `target` attribute through a
 2. If not found, walk up parent elements until one with `target` is found.
 3. Process the target value:
    - **Positional keywords**: `self`, `parent`, `grandparent`, `next`, `previous`, `nextnext`, `previousprevious`, `first`, `last`
-   - **Insertion keywords**: `append`, `prepend`, `after`, `before` -- create a new element (using the `wrapper` attribute, default `<div>`) and insert it at the specified position
+   - **Insertion keywords**: `append`, `prepend`, `after`, `before` — create a new element (using the `wrapper` attribute, default `<div>`) and insert it at the specified position
    - **Index-based**: `nth-child` and `nth-sibling` use the `index` attribute
    - **Special**: `none` returns null, `outer` returns the element itself (but changes how Single Value is applied)
    - **Selector values**: `>` prefix searches descendants, `<` prefix searches ancestors, everything else uses global `querySelector`
@@ -798,9 +798,9 @@ This prevents memory leaks from accumulating stale closures in long-lived sessio
 
 ### Concurrency Safety
 
-- `bindingSatellites` is a `ConcurrentHashMap` -- thread-safe for concurrent reads and writes.
+- `bindingSatellites` is a `ConcurrentHashMap` — thread-safe for concurrent reads and writes.
 - `_bindings` and `_reactions` within each binding satellite are also `ConcurrentHashMap` instances.
-- Cargo's `synchronize()` method is declared `synchronized` -- only one thread can modify and propagate at a time per Cargo instance.
+- Cargo's `synchronize()` method is declared `synchronized` — only one thread can modify and propagate at a time per Cargo instance.
 
 ### Background Threads
 
@@ -825,6 +825,6 @@ Server actions execute on the Jetty HTTP thread pool. Each incoming POST to `/!/
 
 ## What's Next
 
-- **[Transmissions Overview](transmissions-overview.md)** -- high-level introduction
-- **[Transmissions API Reference](transmissions-api.md)** -- complete syntax reference
-- **[Transmissions Examples](transmissions-examples.md)** -- real-world patterns from production applications
+- **[Transmissions Overview](transmissions-overview.md)** — high-level introduction
+- **[Transmissions API Reference](transmissions-api.md)** — complete syntax reference
+- **[Transmissions Examples](transmissions-examples.md)** — real-world patterns from production applications

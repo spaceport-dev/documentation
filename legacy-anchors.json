@@ -75,7 +75,14 @@
     "gateway-idea": "Using with Gateway",
     "conclusion": "Conclusion",
     "build-checklist": "Quick Checklist to Start",
-    "next-steps": "Next Steps"
+    "next-steps": "Next Steps",
+    "option-a-the---create-port-wizard": "Option A: The --create-port Wizard",
+    "alerts----the-event-system": "Alerts — The Event System",
+    "source-modules----your-server-code": "Source Modules — Your Server Code",
+    "launchpad----server-side-templating": "Launchpad — Server-Side Templating",
+    "cargo----reactive-data-containers": "Cargo — Reactive Data Containers",
+    "documents----couchdb-orm": "Documents — CouchDB ORM",
+    "manifest----configuration": "Manifest — Configuration"
   },
   "class-enhancements-overview": {
     "quick-reference": "Quick Reference",
@@ -144,7 +151,8 @@
     "additional-topics": "Additional Topics",
     "quick-reference": "Quick Reference",
     "by-feature": "By Feature",
-    "by-use-case": "By Use Case"
+    "by-use-case": "By Use Case",
+    "spaceport-documentation----table-of-contents": "Spaceport Documentation — Table of Contents"
   },
   "compatibility-notes": {
     "supported-and-recommended-versions": "Supported & Recommended Versions",
@@ -156,7 +164,8 @@
     "jvm-tuning-quick-start": "JVM Tuning Quick Start",
     "verifying-your-runtime": "Verifying Your Runtime",
     "compatibility-summary": "Compatibility Summary",
-    "next-steps": "Next Steps"
+    "next-steps": "Next Steps",
+    "supported-versions": "Supported Versions"
   },
   "manifest-overview": {
     "no-manifest": "Starting Without a Manifest",
@@ -246,7 +255,8 @@
     "template-compilation-errors": "Template Compilation Errors",
     "session-loss": "Session Loss",
     "next-steps": "Next Steps",
-    "summary": "Summary"
+    "summary": "Summary",
+    "launchpad-templating-engine----overview": "Launchpad (Templating Engine) — Overview"
   },
   "sessions-overview": {
     "core-concepts": "Core Concepts",
@@ -352,7 +362,14 @@
     "documentation": "Document Your Structure",
     "team-size": "Consider Team Size",
     "summary": "Summary",
-    "see-also": "See Also"
+    "see-also": "See Also",
+    "scaffold-types": "Scaffold Types",
+    "mercury": "Mercury",
+    "pioneer": "Pioneer",
+    "voyager": "Voyager",
+    "choosing-the-right-approach": "Choosing the Right Approach",
+    "starter-kits-vs-cli-scaffolds": "Starter Kits vs. CLI Scaffolds",
+    "current-project-creation": "Current Project Creation"
   },
   "transmissions-overview": {
     "installation": "Installation &amp; Usage",
@@ -387,7 +404,8 @@
     "example-3": "Example 3: Inline Action with Contextual Data",
     "ui-ux-pattern-examples": "UI/UX Pattern Examples",
     "edit-in-place": "Edit-in-Place",
-    "load-more-button": "\"Load More\" Button"
+    "load-more-button": "\"Load More\" Button",
+    "transmissions----server-driven-dom-updates": "Transmissions — Server-Driven DOM Updates"
   },
   "server-elements-overview": {
     "launchpad": "Provided by Launchpad",
@@ -403,7 +421,8 @@
     "mixed-strategy": "A Mixed Strategy",
     "mixed-strategy-breakdown": "The Mixed Strategy Breakdown",
     "other-opportunities": "Other Opportunities for Mixed Strategies",
-    "property-annotations-in-depth": "Property Annotations In Depth"
+    "property-annotations-in-depth": "Property Annotations In Depth",
+    "server-elements----overview": "Server Elements — Overview"
   },
   "tutorial-tic-tac-toe": {
     "create-the-project-structure": "Step 1: Create the Project Structure",
@@ -420,7 +439,8 @@
     "completed-index-file": "Completed `index.ghtml` File",
     "launch-and-play": "Step 4: Launch and Play!",
     "taking-it-further": "Taking It Further",
-    "evolve-your-application": "Evolve Your Application"
+    "evolve-your-application": "Evolve Your Application",
+    "step-6-create-the-template----boilerplate-and-styling": "Step 6: Create the Template — Boilerplate and Styling"
   },
   "_index": {
     "stack": "A dynamic stack",
@@ -520,7 +540,8 @@
     "troubleshooting": "Troubleshooting",
     "common-issues": "Common Issues",
     "summary": "Summary",
-    "next-steps": "Next Steps"
+    "next-steps": "Next Steps",
+    "documents-couchdb-orm-----overview": "Documents (CouchDB ORM) —- Overview"
   },
   "cargo-overview": {
     "core-concepts": "Core Concepts: Using Cargo as a Local Object",
@@ -563,5 +584,114 @@
     "summary-the-role-of-cargo": "Summary: The Role of Cargo",
     "key-takeaways": "Key Takeaways",
     "next-steps": "Next Steps"
+  },
+  "cli-overview": {
+    "--create-port": "--create-port"
+  },
+  "ignition-scripts-overview": {
+    "current-status-not-yet-implemented": "Current Status: Not Yet Implemented",
+    "no-configuration-key-defined": "No Configuration Key Defined",
+    "what-ignition-scripts-are-intended-to-be": "What Ignition Scripts Are Intended to Be",
+    "current-alternatives": "Current Alternatives",
+    "related-documentation": "Related Documentation"
+  },
+  "scaffolds-api": {
+    "running-the-command": "Running the Command",
+    "the-8-step-interactive-process": "The 8-Step Interactive Process",
+    "step-1-spaceport-root": "Step 1: Spaceport Root",
+    "step-2-spaceport-identification": "Step 2: Spaceport Identification",
+    "step-3-spaceport-access-host-and-port": "Step 3: Spaceport Access (Host and Port)",
+    "step-4-database-connection": "Step 4: Database Connection",
+    "step-5-spaceport-administrator": "Step 5: Spaceport Administrator",
+    "step-6-static-assets": "Step 6: Static Assets",
+    "step-7-debug-mode": "Step 7: Debug Mode",
+    "step-8-module-creation-scaffold-selection": "Step 8: Module Creation (Scaffold Selection)",
+    "manifest-file-generation": "Manifest File Generation"
+  },
+  "scaffolds-internals": {
+    "entry-point": "Entry Point",
+    "the-onboarding-class": "The Onboarding Class",
+    "class-structure": "Class Structure",
+    "constructor": "Constructor",
+    "procedure-execution": "Procedure Execution",
+    "signal-handling": "Signal Handling",
+    "template-files-from-jar-resources": "Template Files from JAR Resources",
+    "default-asset-resources": "Default Asset Resources",
+    "manifest-file-generation": "Manifest File Generation",
+    "existing-manifest-handling": "Existing Manifest Handling",
+    "directory-creation": "Directory Creation",
+    "database-interaction-during-onboarding": "Database Interaction During Onboarding",
+    "relationship-to-command-class": "Relationship to Command Class",
+    "runtime-scaffolding-was-removed": "Runtime Scaffolding Was Removed",
+    "current-ownership": "Current Ownership"
+  },
+  "cli-api": {
+    "--create-port": "--create-port"
+  },
+  "hud-core-overview": {
+    "hud-corejs----overview": "HUD-Core.js — Overview"
+  },
+  "groovy-luminary": {
+    "groovy-luminary----a-groovy-quick-reference-for-spaceport-developers": "Groovy Luminary — A Groovy Quick-Reference for Spaceport Developers"
+  },
+  "launchpad-examples": {
+    "launchpad-templating-engine----examples": "Launchpad (Templating Engine) — Examples"
+  },
+  "documents-internals": {
+    "documents-couchdb-orm-----internals": "Documents (CouchDB ORM) —- Internals"
+  },
+  "documents-api": {
+    "documents-couchdb-orm-----api-reference": "Documents (CouchDB ORM) —- API Reference"
+  },
+  "transmissions-internals": {
+    "transmissions----internals": "Transmissions — Internals"
+  },
+  "documents-examples": {
+    "documents-couchdb-orm-----examples": "Documents (CouchDB ORM) —- Examples"
+  },
+  "hud-core-internals": {
+    "hud-corejs----internals": "HUD-Core.js — Internals",
+    "fetchdataandupdate----the-core-pipeline": "fetchDataAndUpdate() — The Core Pipeline"
+  },
+  "server-elements-examples": {
+    "server-elements----examples": "Server Elements — Examples"
+  },
+  "transmissions-api": {
+    "transmissions----api-reference": "Transmissions — API Reference"
+  },
+  "launchpad-api": {
+    "launchpad-templating-engine----api-reference": "Launchpad (Templating Engine) — API Reference"
+  },
+  "launchpad-internals": {
+    "launchpad-templating-engine----internals": "Launchpad (Templating Engine) — Internals"
+  },
+  "server-elements-api": {
+    "server-elements----api-reference": "Server Elements — API Reference"
+  },
+  "hud-core-examples": {
+    "hud-corejs----examples": "HUD-Core.js — Examples",
+    "single-value----replace-content": "Single Value — Replace Content",
+    "array-transmission----class-operations-and-actions": "Array Transmission — Class Operations and Actions",
+    "map-transmission----complex-dom-updates": "Map Transmission — Complex DOM Updates",
+    "map-transmission----updating-multiple-elements-by-id": "Map Transmission — Updating Multiple Elements by ID",
+    "map-transmission----inline-styles": "Map Transmission — Inline Styles",
+    "map-transmission----data-attributes": "Map Transmission — Data Attributes",
+    "map-transmission----url-query-parameters": "Map Transmission — URL Query Parameters",
+    "map-transmission----local-and-session-storage": "Map Transmission — Local and Session Storage",
+    "map-transmission----descendant-selector": "Map Transmission — Descendant Selector"
+  },
+  "transmissions-examples": {
+    "transmissions----examples": "Transmissions — Examples"
+  },
+  "server-elements-internals": {
+    "server-elements----internals": "Server Elements — Internals",
+    "css----how-global-styles-are-built": "@CSS — How Global Styles Are Built",
+    "scopedcss----how-instance-scoped-styles-work": "@ScopedCSS — How Instance-Scoped Styles Work",
+    "bind----how-server-methods-become-client-functions": "@Bind — How Server Methods Become Client Functions",
+    "javascript----how-client-side-code-is-processed": "@Javascript — How Client-Side Code Is Processed",
+    "cssjs-asset-injection----final-placement": "CSS/JS Asset Injection — Final Placement"
+  },
+  "hud-core-api": {
+    "hud-corejs----api-reference": "HUD-Core.js — API Reference"
   }
 }

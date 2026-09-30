@@ -1,4 +1,4 @@
-# Launchpad (Templating Engine) -- Internals
+# Launchpad (Templating Engine) — Internals
 
 This document covers how Launchpad works under the hood: the class architecture, the template compilation pipeline, the reactive dependency tracking system, the assemble/launch execution flow, template caching, wrappers, threading, hot-reload behavior, and Server Element processing. It is intended for contributors, framework developers, and advanced users who need to understand or debug Launchpad's internal behavior.
 
@@ -35,8 +35,8 @@ Launchpad (orchestrator)
 
 These subsystems interact during two distinct phases:
 
-1. **Render phase** -- When `launch()` is called. Templates are preprocessed, compiled, executed, and the final HTML is written to the client. Reactive closures and server action closures are registered during this phase.
-2. **Interactive phase** -- After the page is delivered. The client sends events back over HTTP (server action invocations) and maintains a WebSocket connection (for receiving reactive updates and communicating with Server Elements).
+1. **Render phase** — When `launch()` is called. Templates are preprocessed, compiled, executed, and the final HTML is written to the client. Reactive closures and server action closures are registered during this phase.
+2. **Interactive phase** — After the page is delivered. The client sends events back over HTTP (server action invocations) and maintains a WebSocket connection (for receiving reactive updates and communicating with Server Elements).
 
 ---
 
@@ -86,8 +86,8 @@ For each tag, the engine:
 
 1. Parses the tag name, attributes (handling quoted values, unquoted values, and values containing `{ }` brackets), and body content
 2. Dispatches to either:
-   - A **built-in generator** (defined in `SpaceportTemplateEngine.generators`) -- the generator closure transforms the tag into Groovy template code
-   - A **registered Server Element** -- the tag is replaced with comment-based placeholder markers for later element processing
+   - A **built-in generator** (defined in `SpaceportTemplateEngine.generators`) — the generator closure transforms the tag into Groovy template code
+   - A **registered Server Element** — the tag is replaced with comment-based placeholder markers for later element processing
    - If neither matches, an HTML comment is produced: `<!-- SpaceportTemplateEngine: Unknown tag: tagName -->`
 
 **Built-in generators and their transformations:**
@@ -98,9 +98,9 @@ For each tag, the engine:
 | `<g:repeat count="n">body</g:repeat>` | Count attribute | Literal string repetition of body `n` times |
 
 Iteration sources accept three syntaxes for their value attributes:
-- `storeName#flagPath` -- expanded to `Cargo.fromStore("storeName").get("flagPath")`
-- `${expression}` -- the `${ }` wrapper is stripped, leaving the raw expression
-- `$variable` -- the `$` prefix is stripped
+- `storeName#flagPath` — expanded to `Cargo.fromStore("storeName").get("flagPath")`
+- `${expression}` — the `${ }` wrapper is stripped, leaving the raw expression
+- `$variable` — the `$` prefix is stripped
 
 When a `<g:*>` tag matches a registered Server Element instead of a built-in generator, it is replaced with placeholder markers:
 
@@ -116,7 +116,7 @@ These markers are resolved later during the `parseElements()` phase of `launch()
 text = text.replaceAll(/(@Provided.*)/, '/* $1 */')
 ```
 
-`@Provided` is purely an IDE/documentation hint -- it has no runtime effect.
+`@Provided` is purely an IDE/documentation hint — it has no runtime effect.
 
 **6. Action delegate injection.** Inside server action closures (`${ _{ ... }}`), closure calls like `$closureName(args)` have delegate assignment code injected. This ensures that closures called within server actions use the `Catch` proxy as their delegate, enabling recursive reactive dependency tracking:
 
@@ -137,8 +137,8 @@ text = removeDefsOutsideBraces(text)
 ```
 
 This converts root-level local variables into binding properties, enabling:
-- **Cross-part variable sharing** -- all parts in a single `launch()` share the same `Binding`
-- **Reactive tracking** -- binding properties can be intercepted by the `Catch` proxy
+- **Cross-part variable sharing** — all parts in a single `launch()` share the same `Binding`
+- **Reactive tracking** — binding properties can be intercepted by the `Catch` proxy
 
 Variables inside closures retain their `def` and remain local to that closure scope.
 
@@ -209,11 +209,11 @@ if (templateCache.containsKey(name) && templateCache.get(name).get('hash') == te
 ```
 
 This means:
-- **First request** -- Full preprocessing, parsing, and compilation. Result is cached.
-- **Subsequent requests with unchanged file** -- Cache hit. Only the file read occurs; all processing is skipped.
-- **Requests after file modification** -- Hash mismatch triggers full recompilation and cache update.
+- **First request** — Full preprocessing, parsing, and compilation. Result is cached.
+- **Subsequent requests with unchanged file** — Cache hit. Only the file read occurs; all processing is skipped.
+- **Requests after file modification** — Hash mismatch triggers full recompilation and cache update.
 
-The cache is also cleared whenever new Elements are registered into a Launchpad. Without this, templates compiled before a new Element existed would still report `<!-- SpaceportTemplateEngine: Unknown tag: foo -->` even after `<g:foo>` became valid — only an actual template-content change would force a recompile that picked up the new tag. The cache-clear on element registration makes this transparent in dev mode.
+The cache is also cleared whenever new Elements are registered into a Launchpad, so templates are recompiled against the updated element registry.
 
 **Known limitation.** `templateCache` is keyed on template name/hash, not on Launchpad. If the *same template path* gets compiled from two different Launchpads with diverging element-visibility views, the cache could return a placeholder-baked version meant for the other Launchpad. In practice each Launchpad has its own source path (so template file paths naturally differ), but it's worth knowing if include/share patterns cross Launchpad boundaries.
 
@@ -357,7 +357,7 @@ closestScript._reactions.put(uuid, [
     'created'  : System.currentTimeMillis(),
     'reaction' : closure,          // The original closure (for re-evaluation)
     '_source'  : sourceText,       // Source line for debugging
-    '_current' : returnString,     // Current rendered value (for change detection)
+    '_currentHash' : reactionDigest(returnString), // 64-bit digest for change detection
     '_triggers': delegate.caught   // Set of variable names this expression depends on
 ])
 ```
@@ -391,7 +391,7 @@ When `bind()` receives a one-parameter closure (indicating a server action from 
 When a server action is invoked via HTTP to `/!/lp/bind`, the `serveBinding()` handler:
 
 1. Retrieves the binding from `bindingSatellites` by launch ID and the action closure by UUID. If not found in the main bindings, it checks Server Element bindings.
-2. Validates that the requesting client matches the binding's client (security check -- returns 405 on mismatch).
+2. Validates that the requesting client matches the binding's client (security check — returns 405 on mismatch).
 3. Enhances the request data map `r.context.data` with typed accessor methods (`getNumber`, `getBool`, `getString`, `getList`, `getInteger`).
 4. Creates a new `Catch` proxy wrapping the action's script, sets it as the action closure's delegate, and calls the action with the enhanced data map.
 5. After action execution, iterates all registered reactions for this launch:
@@ -406,7 +406,8 @@ for (def reaction in bindingSatellites.get(launch)?._reactions) {
     def payload = reaction.value.reaction(action.owner, reaction.key).toString()
     payload = bindingSatellites.get(launch).__(payload) // Process Server Elements in the new content
 
-    if (reaction.value._current != payload) {
+    def payloadHash = reactionDigest(payload)
+    if (reaction.value._currentHash != payloadHash) {
         // Send updated content via WebSocket
         bindingSatellites.get(launch)._socket.session?.remote?.sendStringByFuture(
             new JsonBuilder([
@@ -414,15 +415,15 @@ for (def reaction in bindingSatellites.get(launch)?._reactions) {
                 'uuid'   : reaction.key,
                 'payload': payload
             ]).toString())
-        reaction.value._current = payload
+        reaction.value._currentHash = payloadHash
     }
 }
 ```
 
 6. The action closure's return value is processed based on its type:
-   - `Map` or `List` -- serialized to JSON
-   - `String` or `GString` -- passed through `parseElements()` for Server Element processing, then returned as-is
-   - Other types -- converted to String via `.toString()`
+   - `Map` or `List` — serialized to JSON
+   - `String` or `GString` — passed through `parseElements()` for Server Element processing, then returned as-is
+   - Other types — converted to String via `.toString()`
 
 ---
 
@@ -519,7 +520,7 @@ Recursive priming works because the writer and script context are saved and rest
 
 ## How Wrappers (Vessels) Work Internally
 
-A wrapper (vessel) is simply a regular `.ghtml` template that contains a `<payload/>` tag. There is no special class or configuration -- any template with `<payload/>` in it can serve as a vessel.
+A wrapper (vessel) is simply a regular `.ghtml` template that contains a `<payload/>` tag. There is no special class or configuration — any template with `<payload/>` in it can serve as a vessel.
 
 The internal process:
 
@@ -593,7 +594,7 @@ The injected client-side script handles three types of incoming messages:
 
 ## Thread Safety and Concurrency
 
-- **`launch()` synchronization** -- `launch()` is `synchronized` on the Launchpad instance. Since `assemble()` creates a new instance per call, concurrent requests to the same route handler do not block each other. The synchronization exists to prevent accidental concurrent use of the same assembled instance.
+- **`launch()` synchronization** — `launch()` is `synchronized` on the Launchpad instance. Since `assemble()` creates a new instance per call, concurrent requests to the same route handler do not block each other. The synchronization exists to prevent accidental concurrent use of the same assembled instance.
 
 - **`bindingSatellites`** is a `ConcurrentHashMap`, providing safe concurrent read/write from HTTP request threads and WebSocket handler threads.
 
@@ -603,9 +604,9 @@ The injected client-side script handles three types of incoming messages:
 
 - **`binding`** (the per-Launchpad script-binding map) is `Collections.synchronizedMap([:])`, providing coarse-grained thread-safety for the websocket-event paths that read and write it during reactive updates.
 
-- **Per-request isolation** -- Each request gets its own `Binding` object (created in the `Launchpad` constructor) with its own `_reactions` and `_bindings` maps (both `ConcurrentHashMap`). There is no shared mutable state between concurrent requests during the render phase.
+- **Per-request isolation** — Each request gets its own `Binding` object (created in the `Launchpad` constructor) with its own `_reactions` and `_bindings` maps (both `ConcurrentHashMap`). There is no shared mutable state between concurrent requests during the render phase.
 
-- **Server action dispatch** -- When server actions execute via `serveBinding()`, they access the shared binding satellite. The reaction iteration and WebSocket sending are not explicitly synchronized beyond the ConcurrentHashMap guarantees. In practice, HUD-Core serializes actions from a single browser tab, so concurrent actions on the same launch ID are rare.
+- **Server action dispatch** — When server actions execute via `serveBinding()`, they access the shared binding satellite. The reaction iteration and WebSocket sending are not explicitly synchronized beyond the ConcurrentHashMap guarantees. In practice, HUD-Core serializes actions from a single browser tab, so concurrent actions on the same launch ID are rare.
 
 ---
 
@@ -678,7 +679,7 @@ for (def element in new File(this.sourcePath + 'elements').listFiles()) {
 SpaceportTemplateEngine.templateCache.clear()
 ```
 
-The filename is converted to kebab-case for the tag name (e.g., `StatCard.groovy` becomes `stat-card`, `TagInput.groovy` becomes `tag-input`). Path normalization is the trailing-slash-aware `this.sourcePath`, so passing a path without a trailing slash to the constructor no longer silently lands on a nonexistent directory.
+The filename is converted to kebab-case for the tag name (e.g., `StatCard.groovy` becomes `stat-card`, `TagInput.groovy` becomes `tag-input`). Path normalization uses the trailing-slash-aware `this.sourcePath`, so constructor paths work with or without a trailing slash.
 
 ### Multi-Launchpad resolution
 
@@ -716,16 +717,16 @@ The `parseElements()` method runs after all templates are primed and the vessel 
 
 The main loop processes each registered element:
 
-1. **Attribute extraction** -- Parses HTML attributes from the element's rendered tag using regex matching. The tag-end scan respects quoted attribute values, so a `>` inside `title="<i>x</i>"` doesn't truncate the opening tag.
-2. **Server-side attribute resolution** -- Attributes whose values are server action URLs (starting with `/!/`) but are not `on-*` event attributes are resolved immediately by calling the associated binding closure. The result replaces the URL.
-3. **Typed accessor injection** -- The attributes map is enhanced with `getNumber`, `getBool`, `getString`, `getList`, and `getInteger` methods (same as the transmission object). Bare boolean attributes (e.g. `<g:btn disabled>`) capture as `"true"`.
-4. **Prerender** -- `element.prerender(body, attributes)` is called. The element transforms its body content based on attributes.
-5. **Nested element scan** -- The string returned by `prerender()` is scanned by `processNestedElements()` for `<g:>` tags. Each tag found gets a fresh Element instance registered into `binding._elements` and is inlined as the same placeholder markup the template engine would have produced at compile time, so the outer loop picks them up on subsequent passes.
-6. **Initialize** -- `element.initialize()` is called. The element builds its CSS, JavaScript event handlers, and any other runtime setup.
-7. **Style injection** -- The `<!-- id-styles -->` comment is replaced with the element's CSS. Global `_style` (from `@CSS`) is emitted once per element type per response; per-instance `_scopedStyle` (from `@ScopedCSS`) is emitted for every instance.
-8. **Handler injection** -- The `<!-- id-handler -->` comment is replaced with the element's `_handler` (JavaScript).
-9. **Tag replacement** -- The placeholder tag `<id>` is replaced with the actual element tag `<tag-name element-id="rid">`.
-10. **Prepend/append** -- Global prepend content is inserted before `</head>` (or at the start of the HTML). Global append content is inserted after `</body>`. Scoped prepend/append content is inserted adjacent to individual element instances.
+1. **Attribute extraction** — Parses HTML attributes from the element's rendered tag using regex matching. The tag-end scan respects quoted attribute values, so a `>` inside `title="<i>x</i>"` doesn't truncate the opening tag.
+2. **Server-side attribute resolution** — Attributes whose values are server action URLs (starting with `/!/`) but are not `on-*` event attributes are resolved immediately by calling the associated binding closure. The result replaces the URL.
+3. **Typed accessor injection** — The attributes map is enhanced with `getNumber`, `getBool`, `getString`, `getList`, and `getInteger` methods (same as the transmission object). Bare boolean attributes (e.g. `<g:btn disabled>`) capture as `"true"`.
+4. **Prerender** — `element.prerender(body, attributes)` is called. The element transforms its body content based on attributes.
+5. **Nested element scan** — The string returned by `prerender()` is scanned by `processNestedElements()` for `<g:>` tags. Each tag found gets a fresh Element instance registered into `binding._elements` and is inlined as the same placeholder markup the template engine would have produced at compile time, so the outer loop picks them up on subsequent passes.
+6. **Initialize** — `element.initialize()` is called. The element builds its CSS, JavaScript event handlers, and any other runtime setup.
+7. **Style injection** — The `<!-- id-styles -->` comment is replaced with the element's CSS. Global `_style` (from `@CSS`) is emitted once per element type per response; per-instance `_scopedStyle` (from `@ScopedCSS`) is emitted for every instance.
+8. **Handler injection** — The `<!-- id-handler -->` comment is replaced with the element's `_handler` (JavaScript).
+9. **Tag replacement** — The placeholder tag `<id>` is replaced with the actual element tag `<tag-name element-id="rid">`.
+10. **Prepend/append** — Global prepend content is inserted before `</head>` (or at the start of the HTML). Global append content is inserted after `</body>`. Scoped prepend/append content is inserted adjacent to individual element instances.
 
 The processing loop is capped at **16 passes** to defend against an Element whose `prerender()` accidentally emits its own `<g:>` tag (a true cycle would otherwise loop forever). When the cap is hit, the loop terminates safely — the offending Element doesn't render, but the server doesn't hang.
 
@@ -798,3 +799,8 @@ The `prime()` method then wraps this in a `<fatal class="error">` element.
 | Missing `<payload/>` in vessel | HTTP 501 status, debug log message |
 | Folder traversal detected in template path | HTML comment: `<!-- LaunchPad: Folder traversal detected -->` |
 | Template file not found | HTML comment: `<!-- LaunchPad: Part not found: filename -->` |
+
+
+## Reactive State Memory
+
+Reactions retain `_currentHash`, a 64-bit FNV-1a digest of the last rendered string, rather than the full previous HTML in `_current`. Changed payloads are still sent as HTML; the digest reduces retained memory for large reactive blocks. Per-binding satellite cleanup removes abandoned socket state, and element processing can create additional instances when a reactive update grows its placeholder count.

@@ -1,4 +1,4 @@
-# Launchpad (Templating Engine) -- API Reference
+# Launchpad (Templating Engine) — API Reference
 
 ## `Launchpad` Class
 
@@ -99,7 +99,7 @@ Selects template files that will make up the page content. Returns a **new** `La
 |---|---|---|
 | `payloadFiles` | `List<String>` | Template filenames relative to `{sourcePath}/parts/` |
 
-**Returns:** `Launchpad` -- a new instance ready for `launch()`
+**Returns:** `Launchpad` — a new instance ready for `launch()`
 
 ```groovy
 // Single part
@@ -326,7 +326,7 @@ Controls which DOM element receives the server action's return value:
 | Value | Behavior |
 |---|---|
 | *(not set)* | The source element that triggered the event |
-| `"self"` | Same as default -- the source element |
+| `"self"` | Same as default — the source element |
 | `"parent"` | The source element's parent |
 | `"#id"` | Element with the specified ID |
 | `".class"` | First element matching the CSS class |
@@ -472,7 +472,7 @@ Available inside templates as the `prime()` function. Reads, processes, and rend
 |---|---|---|
 | `filePath` | `String` | Template filename relative to `parts/` |
 
-**Returns:** `String` -- the rendered HTML output
+**Returns:** `String` — the rendered HTML output
 
 ```html
 <!-- Inline priming via expression -->
@@ -511,7 +511,7 @@ All parts assembled in a single `launch()` share the same `Binding` object. Vari
 <p>Theme is: ${ theme }</p>
 ```
 
-The `@Provided` annotation is a documentation hint for variables expected from outer scopes. It has no runtime effect -- the annotation is stripped during preprocessing.
+The `@Provided` annotation is a documentation hint for variables expected from outer scopes. It has no runtime effect — the annotation is stripped during preprocessing.
 
 ```html
 <%
@@ -570,9 +570,9 @@ Since Groovy uses `$` for expressions, literal dollar signs in GHTML templates m
 
 Template-level `def` variables (those outside closures) have their `def` keyword stripped during preprocessing. This converts them from local variables into binding properties, making them:
 
-1. **Shared across parts** -- accessible in any template within the same `launch()` call
-2. **Reactive** -- can be tracked by `${{ }}` expressions for automatic updates
-3. **Prefixed with `$`** -- internally stored with a `$` prefix in the binding (transparent to templates)
+1. **Shared across parts** — accessible in any template within the same `launch()` call
+2. **Reactive** — can be tracked by `${{ }}` expressions for automatic updates
+3. **Prefixed with `$`** — internally stored with a `$` prefix in the binding (transparent to templates)
 
 Variables declared with `def` inside closures retain their `def` and remain local to that closure.
 
@@ -649,3 +649,18 @@ Clears all Launchpad-owned element state: iterates `byName.values()` and clears 
 | `binding` | `Map` | Per-Launchpad script-binding map (`Collections.synchronizedMap`). Holds template variables, reactions, server-action bindings, and internal state. |
 | `elements` | `ConcurrentHashMap<String, Class>` | Per-Launchpad local element map, keyed by kebab-case tag name. Always checked first during element resolution. Replaces the old static `Launchpad.elements`. |
 | `allowFolderTraversal` | `boolean` | Default `false`. When `false`, template paths containing `..` are rejected to prevent directory traversal. |
+
+
+## HTTP Render Concurrency
+
+Full HTTP renders acquire a per-client permit (keyed by `client.user_id`, when available), then a global permit before heavy rendering. Defaults are `launchpad.perClientConcurrency: 2` and `launchpad.concurrency: 16`. Requests wait for permits; the limit does not return a rate-limit response. The per-client wait holds no global slot. Limits are cached on first use; restart to apply a change.
+
+```yaml
+launchpad:
+  concurrency: 8
+  perClientConcurrency: 2
+```
+
+Use lower global concurrency for large pages to reduce simultaneous transient memory use. These settings limit full HTTP renders, not every WebSocket action or application task.
+
+The renderer checks for HTTP client disconnect after acquiring permits and during element-processing passes, skips abandoned work, and releases permits in cleanup. This is cooperative cancellation at checkpoints, not interruption of arbitrary application code.

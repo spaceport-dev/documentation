@@ -4,10 +4,10 @@
 
 This tutorial walks you through building a complete, playable Tic-Tac-Toe game in Spaceport. Along the way, you will learn four foundational concepts:
 
-- **Alerts** -- Spaceport's event system for routing and lifecycle hooks
-- **Launchpad templates** -- server-side HTML rendering with embedded Groovy
-- **Server actions** -- Groovy closures triggered by client-side events like clicks
-- **Transmissions** -- server-driven responses that update the browser
+- **Alerts** — Spaceport's event system for routing and lifecycle hooks
+- **Launchpad templates** — server-side HTML rendering with embedded Groovy
+- **Server actions** — Groovy closures triggered by client-side events like clicks
+- **Transmissions** — server-driven responses that update the browser
 
 By the end, you will have a working two-player game running in the browser, built with roughly 60 lines of Groovy and 40 lines of HTML.
 
@@ -48,9 +48,9 @@ my-tictactoe-app/
 
 Here is what each folder does:
 
-- **`modules/`** -- holds your Groovy source files (called "Source Modules"). Spaceport automatically discovers and loads every `.groovy` file placed here.
-- **`launchpad/parts/`** -- holds `.ghtml` template files that define your UI.
-- **`launchpad/elements/`** -- holds reusable Server Element definitions (not needed for this tutorial, but the folder is part of the standard structure).
+- **`modules/`** — holds your Groovy source files (called "Source Modules"). Spaceport automatically discovers and loads every `.groovy` file placed here.
+- **`launchpad/parts/`** — holds `.ghtml` template files that define your UI.
+- **`launchpad/elements/`** — holds reusable Server Element definitions (not needed for this tutorial, but the folder is part of the standard structure).
 
 ---
 
@@ -75,7 +75,7 @@ class Game {
 }
 ```
 
-These are `static` fields, which means they are shared across all requests. For this tutorial, the board acts as a simple in-memory "database" -- every visitor sees the same game. (The "Taking It Further" section at the end discusses how to support multiple independent games.)
+These are `static` fields, which means they are shared across all requests. For this tutorial, the board acts as a simple in-memory "database" — every visitor sees the same game. (The "Taking It Further" section at the end discusses how to support multiple independent games.)
 
 ---
 
@@ -151,9 +151,9 @@ This introduces **Alerts**, Spaceport's unified event system. Instead of a separ
 
 Two alerts are at work here:
 
-1. **`@Alert('on initialize')`** -- fires once when the application starts. The handler calls `resetGame()` so the board is ready before any HTTP requests arrive.
+1. **`@Alert('on initialize')`** — fires once when the application starts. The handler calls `resetGame()` so the board is ready before any HTTP requests arrive.
 
-2. **`@Alert('on / hit')`** -- fires whenever a browser requests the root URL (`/`). The handler uses Launchpad's assemble/launch pattern: `assemble()` selects which template files make up the page, and `launch()` renders them into the HTTP response.
+2. **`@Alert('on / hit')`** — fires whenever a browser requests the root URL (`/`). The handler uses Launchpad's assemble/launch pattern: `assemble()` selects which template files make up the page, and `launch()` renders them into the HTTP response.
 
 The `HttpResult r` parameter gives you access to the request and response. Launchpad uses it internally to write the rendered HTML back to the browser.
 
@@ -234,9 +234,9 @@ class Game {
 
 ---
 
-## Step 6: Create the Template -- Boilerplate and Styling
+## Step 6: Create the Template — Boilerplate and Styling
 
-Create a file named `index.ghtml` inside `launchpad/parts/`. This is a Launchpad template -- an HTML file with embedded Groovy code that runs on the server before the page is sent to the browser.
+Create a file named `index.ghtml` inside `launchpad/parts/`. This is a Launchpad template — an HTML file with embedded Groovy code that runs on the server before the page is sent to the browser.
 
 Start with the HTML structure and CSS:
 
@@ -269,7 +269,7 @@ Start with the HTML structure and CSS:
 Two things to note:
 
 - **The HUD-Core script** is required for server actions and reactive bindings to work. This lightweight JavaScript library handles WebSocket connections and DOM updates. See the [Launchpad Overview](launchpad-overview.md) for more details on this requirement.
-- **`///` (triple-slash comments)** are server-side comments. They are stripped during template processing and never appear in the HTML sent to the browser. You can use them anywhere in a `.ghtml` file -- inside HTML, CSS, JavaScript, or Groovy code blocks.
+- **`///` (triple-slash comments)** are server-side comments. They are stripped during template processing and never appear in the HTML sent to the browser. You can use them anywhere in a `.ghtml` file — inside HTML, CSS, JavaScript, or Groovy code blocks.
 
 ---
 
@@ -292,7 +292,7 @@ Inside the `<body>`, after the `<h1>`, add a status bar that shows whose turn it
     </div>
 ```
 
-**`<% %>` scriptlet blocks** execute Groovy code on the server. Here they create a conditional: if there is a winner, show the result; otherwise, show whose turn it is. Nothing inside `<% %>` is sent to the browser -- it controls what HTML gets generated.
+**`<% %>` scriptlet blocks** execute Groovy code on the server. Here they create a conditional: if there is a winner, show the result; otherwise, show whose turn it is. Nothing inside `<% %>` is sent to the browser — it controls what HTML gets generated.
 
 **`${ }` expressions** interpolate a Groovy value into the HTML output. `${ Game.currentPlayer }` outputs `X` or `O`. The `.if { condition }` syntax is a Groovy convenience that returns the string only when the condition is true, and an empty string otherwise.
 
@@ -325,7 +325,7 @@ There are several concepts working together here:
 
 ### Server Actions: `_{ }`
 
-The `_{ ... }` syntax inside a `${ }` expression creates a **server action** -- a Groovy closure stored on the server and associated with this specific DOM element. When the user clicks a cell, HUD-Core sends a request to the server, which executes the closure.
+The `_{ ... }` syntax inside a `${ }` expression creates a **server action** — a Groovy closure stored on the server and associated with this specific DOM element. When the user clicks a cell, HUD-Core sends a request to the server, which executes the closure.
 
 Inside the closure:
 1. `Game.makeMove(i)` places the current player's mark on the board at position `i`.
@@ -333,7 +333,7 @@ Inside the closure:
 
 ### Transmissions
 
-The return value of a server action is a Transmission -- an instruction set that tells HUD-Core what to do next. The map `[ '@redirect' : '/' ]` tells the browser to navigate to `/`, which triggers a full page re-render with the updated board state.
+The return value of a server action is a Transmission — an instruction set that tells HUD-Core what to do next. The map `[ '@redirect' : '/' ]` tells the browser to navigate to `/`, which triggers a full page re-render with the updated board state.
 
 This is the Multi-Page Application (MPA) pattern: each move results in a fresh page from the server. The `@view-transition` CSS rule in the `<style>` block provides a smooth fade between page loads so the transition does not feel jarring.
 
@@ -458,7 +458,7 @@ With two files and no configuration, you built a fully interactive web applicati
 |---|---|---|
 | **Source Modules** | `modules/Game.groovy` | Spaceport auto-discovered this file and loaded the `Game` class |
 | **Alerts** | `@Alert('on initialize')`, `@Alert('on / hit')` | Hooked into the app lifecycle and HTTP routing with annotations |
-| **Launchpad Templates** | `launchpad/parts/index.ghtml` | Rendered HTML with embedded Groovy -- loops, conditionals, expressions |
+| **Launchpad Templates** | `launchpad/parts/index.ghtml` | Rendered HTML with embedded Groovy — loops, conditionals, expressions |
 | **Server Actions** | `_{ Game.makeMove(i) ... }` | Bound Groovy closures to client-side click events |
 | **Transmissions** | `return [ '@redirect' : '/' ]` | Instructed the browser to reload the page after each move |
 
@@ -474,7 +474,7 @@ Move the `<style>` block into a separate `.css` file and serve it using Spacepor
 
 ### Support Multiple Simultaneous Games
 
-Right now, the board state is stored in `static` fields -- everyone shares one game. To support independent sessions, store the board state per client using Spaceport's docking system. Each browser gets its own `dock` (a session-scoped [Cargo](cargo-overview.md) instance), so you can move the board, current player, and winner into `dock` and have each visitor play their own game.
+Right now, the board state is stored in `static` fields — everyone shares one game. To support independent sessions, store the board state per client using Spaceport's docking system. Each browser gets its own `dock` (a session-scoped [Cargo](cargo-overview.md) instance), so you can move the board, current player, and winner into `dock` and have each visitor play their own game.
 
 ### Use Transmissions Instead of Redirects
 
@@ -494,14 +494,14 @@ This eliminates the page reload entirely and makes moves feel instant. See the [
 
 ### Add Reactive Bindings for Real-Time Multiplayer
 
-For true real-time play, store the game state in a shared [Cargo](cargo-overview.md) container and use `${{ }}` reactive bindings in the template. When one player makes a move, the board updates on the other player's screen automatically via WebSocket -- no polling, no manual refresh. See the [Launchpad API Reference](launchpad-api.md) for the reactive binding syntax.
+For true real-time play, store the game state in a shared [Cargo](cargo-overview.md) container and use `${{ }}` reactive bindings in the template. When one player makes a move, the board updates on the other player's screen automatically via WebSocket — no polling, no manual refresh. See the [Launchpad API Reference](launchpad-api.md) for the reactive binding syntax.
 
 ---
 
 ## Related Documentation
 
-- [Alerts Overview](alerts-overview.md) -- the event system used for routing and lifecycle hooks
-- [Launchpad Overview](launchpad-overview.md) -- the templating engine, server actions, and reactive bindings
-- [Launchpad API Reference](launchpad-api.md) -- complete syntax reference for templates, `_{ }`, `${{ }}`, and `on-*` attributes
-- [Transmissions Overview](transmissions-overview.md) -- how server actions communicate DOM updates to the browser
-- [Cargo Overview](cargo-overview.md) -- reactive data containers for session state and real-time synchronization
+- [Alerts Overview](alerts-overview.md) — the event system used for routing and lifecycle hooks
+- [Launchpad Overview](launchpad-overview.md) — the templating engine, server actions, and reactive bindings
+- [Launchpad API Reference](launchpad-api.md) — complete syntax reference for templates, `_{ }`, `${{ }}`, and `on-*` attributes
+- [Transmissions Overview](transmissions-overview.md) — how server actions communicate DOM updates to the browser
+- [Cargo Overview](cargo-overview.md) — reactive data containers for session state and real-time synchronization

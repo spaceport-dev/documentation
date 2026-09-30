@@ -32,7 +32,7 @@ def cache = Cargo.fromStore('active-jobs')
 |---|---|---|
 | `name` | `String` | Unique key in the global store |
 
-**Returns:** `Cargo` -- the named singleton instance.
+**Returns:** `Cargo` — the named singleton instance.
 
 ### `Cargo.fromDocument(Document doc)`
 
@@ -47,7 +47,7 @@ def stats = Cargo.fromDocument(Document.get('stats', 'my-db'))
 |---|---|---|
 | `doc` | `Document` | A Spaceport Document instance |
 
-**Returns:** `Cargo` -- a document-mirrored instance.
+**Returns:** `Cargo` — a document-mirrored instance.
 
 ---
 
@@ -161,7 +161,7 @@ Returns the value as a `List`.
 
 ### `getDefaulted(String path, Object defaultValue)`
 
-Returns the value at `path` if it exists. If it does not exist, **writes** `defaultValue` to `path` and returns it. This is a write-back default -- it modifies the Cargo.
+Returns the value at `path` if it exists. If it does not exist, **writes** `defaultValue` to `path` and returns it. This is a write-back default — it modifies the Cargo.
 
 ```groovy
 def theme = cargo.getDefaulted('prefs.theme', 'light')
@@ -465,8 +465,8 @@ println cargo.toPrettyJSON()
 
 ## See Also
 
-- [Cargo Overview](cargo-overview.md) -- high-level introduction
-- [Cargo Internals](cargo-internals.md) -- implementation details and reactive mechanism
-- [Cargo Examples](cargo-examples.md) -- real-world usage patterns
-- [Documents API](documents-api.md) -- the Document class that integrates with Cargo
-- [Launchpad Overview](launchpad-overview.md) -- reactive templates that consume Cargo data
+- [Cargo Overview](cargo-overview.md) — high-level introduction
+- [Cargo Internals](cargo-internals.md) — implementation details and reactive mechanism
+- [Cargo Examples](cargo-examples.md) — real-world usage patterns
+- [Documents API](documents-api.md) — the Document class that integrates with Cargo
+- [Launchpad Overview](launchpad-overview.md) — reactive templates that consume Cargo data

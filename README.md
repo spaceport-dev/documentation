@@ -38,12 +38,3 @@ Markdown with CommonMark Java and its table extension. It does not fetch GitHub
 on page requests. Publishing a commit does not automatically deploy it; the
 Spaceport orchestration workspace owns deployment, rendered-link verification,
 and browser checks.
-
-## Provenance
-
-Imported from `spaceport-dev/port-echo` commit
-`418ceee92d0c29ce0ef3307b06a31012bf6d9d90` on 2026-09-29. Its 70 documents match
-Create Spaceport App, Port Mercury, and the support plugin after line-ending
-normalization. The existing Frontier introduction contributes the Todo walkthrough
-and entry points to live examples. `provenance.json` records original checksums.
-Existing attribution is retained; this migration does not introduce a new license.

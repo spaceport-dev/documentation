@@ -218,7 +218,7 @@ If other cookies remain (the user is still logged in on another device), the Cli
   - `cookie` — The session cookie (`spaceport-uuid`) to log out
 - **Behavior:**
   - Safe to call during a request: the in-flight request already holds its Client reference, so registry removal does not affect it. The browser's next request finds no matching cookie and is bound to a fresh anonymous Client.
-  - After full teardown, `Client.getClient(userId)` no longer resurfaces the logged-out Client — this is intended.
+  - After full teardown, `Client.getClient(userId)` does not return the logged-out Client.
 
 ```groovy
 @Alert('on /logout hit')
@@ -269,7 +269,7 @@ Removes a WebSocket handler from this Client. Called internally when a WebSocket
 
 **Package:** `spaceport.personnel`
 **Extends:** `Document`
-**Database:** `users`
+**Database:** `ClientDocument.usersDatabase()` (default `users`, configurable via `memory cores.main.users database`)
 
 A ClientDocument represents a registered user stored in CouchDB. It contains profile information, credentials (BCrypt-hashed), permissions, and notes.
 
@@ -277,7 +277,7 @@ A ClientDocument represents a registered user stored in CouchDB. It contains pro
 
 #### `ClientDocument.createNewClientDocument(String userId, String password)`
 
-Creates a new user document in the `users` database with a BCrypt-hashed password.
+Creates a new user document in the configured users database with a BCrypt-hashed password.
 
 - **Parameters:**
   - `userId` — The user ID (becomes the document `_id`)

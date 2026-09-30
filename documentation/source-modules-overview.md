@@ -2,11 +2,11 @@
 
 ## What Are Source Modules?
 
-Source modules are the Groovy files that contain your application's server-side logic. They are the classes you write -- route handlers, data models, integrations, utilities -- that Spaceport dynamically compiles and loads at startup. Every Spaceport application is built from source modules.
+Source modules are the Groovy files that contain your application's server-side logic. They are the classes you write — route handlers, data models, integrations, utilities — that Spaceport dynamically compiles and loads at startup. Every Spaceport application is built from source modules.
 
 Unlike traditional Java/Groovy applications where you compile your code ahead of time, Spaceport compiles your source modules on the fly when the server starts. This means there is no separate build step. You write `.groovy` files, point Spaceport at them in your manifest, and the framework handles compilation, class loading, and lifecycle management for you.
 
-Source modules also support **hot-reloading** in debug mode. When you save a file, Spaceport detects the change, tears down the running modules, recompiles everything, and reinitializes -- all without restarting the server.
+Source modules also support **hot-reloading** in debug mode. When you save a file, Spaceport detects the change, tears down the running modules, recompiles everything, and reinitializes — all without restarting the server.
 
 ## Why Source Modules?
 
@@ -15,7 +15,7 @@ The source module system gives you several advantages:
 - **No build step.** Write Groovy, save, and it runs. The framework compiles your code at startup.
 - **Hot-reload in development.** In debug mode, file changes are detected automatically. The server reloads your modules within milliseconds of saving a file.
 - **Convention over configuration.** Place your `.groovy` files in the `modules/` directory, and Spaceport finds and loads them. Subdirectories become Java packages.
-- **Cross-module references.** All modules share a single classloader, so any class can reference any other class directly -- no special wiring needed.
+- **Cross-module references.** All modules share a single classloader, so any class can reference any other class directly — no special wiring needed.
 - **Lifecycle hooks.** Modules can declare `@Alert` methods that run during initialization and deinitialization, giving you control over setup and teardown.
 
 ## Creating Your First Module
@@ -52,7 +52,7 @@ The `*` at the end of the path tells Spaceport to scan subdirectories recursivel
 
 Real applications split their logic across multiple files. Here is a minimal two-file application with a route handler and a data model:
 
-**modules/App.groovy** -- the main entry point:
+**modules/App.groovy** — the main entry point:
 
 ```groovy
 import spaceport.computer.alerts.Alert
@@ -76,7 +76,7 @@ class App {
 }
 ```
 
-**modules/documents/Guestbook.groovy** -- a Document class in a subdirectory:
+**modules/documents/Guestbook.groovy** — a Document class in a subdirectory:
 
 ```groovy
 package documents
@@ -157,7 +157,7 @@ For more on project organization patterns, see [Source Modules Examples](source-
 
 ## Next Steps
 
-- [Source Modules API Reference](source-modules-api.md) -- manifest configuration, lifecycle alerts, and the SourceStore API.
-- [Source Modules Internals](source-modules-internals.md) -- how class loading, hot-reload, and file watching work under the hood.
-- [Source Modules Examples](source-modules-examples.md) -- real-world patterns from production Spaceport applications.
-- [Alerts Overview](alerts-overview.md) -- the event system that powers module lifecycle hooks and route handlers.
+- [Source Modules API Reference](source-modules-api.md) — manifest configuration, lifecycle alerts, and the SourceStore API.
+- [Source Modules Internals](source-modules-internals.md) — how class loading, hot-reload, and file watching work under the hood.
+- [Source Modules Examples](source-modules-examples.md) — real-world patterns from production Spaceport applications.
+- [Alerts Overview](alerts-overview.md) — the event system that powers module lifecycle hooks and route handlers.

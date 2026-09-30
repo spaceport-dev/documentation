@@ -226,7 +226,7 @@ class RequestMiddleware {
 
 **Why passive?** Spaceport's 404 fallback fires only when no hook claimed the request. A passive hook runs normally — matching, capture groups, priority, even `r.cancelled = true` if it needs to short-circuit — but never sets `r.called`, so it can't accidentally claim routes it doesn't own. Use it for session restore, logging, metrics, and header injection; keep real route handlers non-passive so they *do* claim their requests.
 
-Before `passive` existed, the workaround was scoping middleware to a path prefix with real handlers (e.g. `~on /home/(.*) hit`) — still a fine choice when the middleware genuinely only concerns that subtree.
+Scope middleware to a path prefix (e.g. `~on /home/(.*) hit`) when it only concerns that subtree. Use `passive = true` when the hook must leave route handling to other handlers.
 
 ## Application Initialization
 

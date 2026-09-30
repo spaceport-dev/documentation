@@ -1,25 +1,38 @@
 # Ignition Scripts Overview
 
-## Current Status: Not Yet Implemented
+Ignition scripts are implemented startup hooks for one-time initialization in each process. `IgnitionStore.scan()` runs after stowaway JARs load and before source modules compile in `--start`. Migrations also run ignition after stowaways, without the normal source-module scan.
 
-Ignition scripts are referenced in Spaceport documentation as a planned feature, but they are **not yet implemented** in the current source code. There is no source code, class, or module in the Spaceport codebase that handles ignition scripts.
+## Write an Ignition Script
 
-### No Configuration Key Defined
+Create `ignition/01-setup.groovy`:
 
-Unlike logging (which has defined but unused configuration keys), ignition scripts do not have a corresponding configuration key in Spaceport's default configuration. There is no `ignition.path` or similar entry in the default manifest. The feature has not yet reached the configuration stage of development.
+```groovy
+import spaceport.computer.alerts.Alert
+import spaceport.computer.alerts.results.Result
 
-### What Ignition Scripts Are Intended to Be
+class Setup {
+    @Alert('on ignition')
+    static void run(Result result) {
+        // Perform idempotent startup initialization here.
+    }
+}
+```
 
-Based on documentation references, ignition scripts are envisioned as startup scripts that run during the Spaceport initialization sequence. They would allow developers to execute custom setup logic -- such as seeding databases, initializing caches, or performing environment checks -- as part of the application boot process.
+Hooks must be public static methods accepting a `Result`. Non-static hooks are logged and skipped. Script compilation or hook failures abort initialization; restart can run them again, so make persistent changes idempotent.
 
-### Current Alternatives
+## Paths and Ordering
 
-Until ignition scripts are implemented, you can achieve similar startup behavior through these approaches:
+```yaml
+ignition:
+  paths:
+    - ignition
+    - setup
+```
 
-- **Source module initialization**: Place startup logic in a source module that runs its setup code when the module is first loaded. Source modules are compiled and loaded during startup, so any static initialization blocks or constructor logic will execute at boot time.
-- **External scripts**: Run setup scripts before starting Spaceport, either as part of a shell script that wraps the `java -jar` command or through your deployment automation.
+The default is `['ignition']`. Relative paths resolve from `spaceport root`; absolute paths are supported, and a trailing `/*` is stripped. Scanning is non-recursive. Missing directories are skipped. All `.groovy` files across configured directories are sorted by filename, compiled, then their annotated hooks are invoked in file order. Use filename prefixes when order matters; annotation priority does not control this direct invocation.
 
-## Related Documentation
+## Lifecycle and Available Code
 
-- [Source Modules](source-modules-overview.md) -- Application logic that loads at startup
-- [Manifest Configuration](manifest-overview.md) -- Spaceport configuration options
+Scripts share a dedicated classloader parented by the framework/stowaway classloader. They can use framework APIs and loaded stowaways, but must not rely on source modules having compiled. The scanner is one-shot and ignition does not hot reload. Hooks are invoked directly by the ignition scanner, rather than by normal route alert dispatch.
+
+Use [Migrations](migrations-overview.md) for separately selected database procedures, and [Source Modules](source-modules-overview.md) for application routes and hot-reloaded code.

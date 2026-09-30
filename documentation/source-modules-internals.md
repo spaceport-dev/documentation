@@ -20,7 +20,7 @@ The parent classloader is `Spaceport.classLoader`, which is the classloader that
 
 Key design decisions in `SpaceportClassLoader`:
 
-**Single shared classloader.** All source modules are compiled into one `SpaceportClassLoader` instance. There is no per-module isolation. This is intentional -- it allows any module to reference any other module's classes without explicit dependency wiring or import resolution. Cross-module references are resolved at class loading time through the standard Java classloader delegation model.
+**Single shared classloader.** All source modules are compiled into one `SpaceportClassLoader` instance. There is no per-module isolation. This is intentional — it allows any module to reference any other module's classes without explicit dependency wiring or import resolution. Cross-module references are resolved at class loading time through the standard Java classloader delegation model.
 
 **Duplicate class handling.** When a class has already been defined (a `LinkageError`), the classloader catches the error and returns the previously cached version. This can happen when multiple files define the same class name, or during hot-reload edge cases. The recovery logic extracts the class name from the error message and searches both `SpaceportClassLoader.loadedClasses` and `SpaceportInnerLoader.loadedClasses` for a match.
 
@@ -115,7 +115,7 @@ For each `.groovy` file in each include path, `classLoader.parseClass(file)` is 
 
 If compilation fails (syntax errors, missing imports), the error is printed to the console and that file is skipped. Other files continue to load. The `errors` flag is set, and a warning message is displayed after all files have been processed.
 
-`LinkageError` exceptions (duplicate class definitions) are caught and silently ignored -- this handles cases where a class is defined by multiple files or re-encountered during compilation of dependent classes.
+`LinkageError` exceptions (duplicate class definitions) are caught and silently ignored — this handles cases where a class is defined by multiple files or re-encountered during compilation of dependent classes.
 
 ### No Dependency Resolution
 
@@ -123,7 +123,7 @@ Spaceport does not perform dependency resolution between source modules. Files a
 
 Cross-module references are resolved lazily by the classloader at the point of first use, not at compile time. When class `A` references class `B`, and `B` has not yet been compiled, the classloader's `findClass()` or `loadClass()` method will search the source cache and class cache. If `B` was already compiled (because its file appeared earlier in the filesystem listing), it is found immediately. If not, Groovy's compilation pipeline may trigger on-demand compilation.
 
-In practice, this means the load order does not matter for correctness. However, if a module's `@Alert('on initialize')` handler depends on another module's class being fully loaded, both classes must be compiled before the alert fires -- and since all compilation happens before any alerts fire, this is always the case.
+In practice, this means the load order does not matter for correctness. However, if a module's `@Alert('on initialize')` handler depends on another module's class being fully loaded, both classes must be compiled before the alert fires — and since all compilation happens before any alerts fire, this is always the case.
 
 ---
 
@@ -151,7 +151,7 @@ File saved on disk
 
 The 100-millisecond debounce prevents cascading reloads when multiple files are saved in quick succession (for example, when an IDE reformats several files, or when a git checkout modifies many files at once).
 
-The `reloading` flag is a simple boolean guard. If a file change event arrives while `reloading` is `true`, the event is silently discarded. This means that changes occurring during the 100ms window are not tracked individually -- instead, the subsequent `scan()` call reloads all files from disk, picking up whatever state they are in at that moment.
+The `reloading` flag is a simple boolean guard. If a file change event arrives while `reloading` is `true`, the event is silently discarded. This means that changes occurring during the 100ms window are not tracked individually — instead, the subsequent `scan()` call reloads all files from disk, picking up whatever state they are in at that moment.
 
 ### Concurrency
 
@@ -248,7 +248,7 @@ This ensures that if the module path configuration changes, the new beacons watc
 
 ## ClassScanner and Alert Discovery
 
-`ClassScanner.getLoadedClasses()` returns a unified list of all classes available in the system -- both framework classes and user source modules. This list is consumed by `AnnotatedAlert.loadStaticHooks()` to discover `@Alert`-annotated static methods.
+`ClassScanner.getLoadedClasses()` returns a unified list of all classes available in the system — both framework classes and user source modules. This list is consumed by `AnnotatedAlert.loadStaticHooks()` to discover `@Alert`-annotated static methods.
 
 ### How It Works
 
@@ -288,7 +288,7 @@ The combined list is passed to `AnnotatedAlert.loadStaticHooks()`, which uses re
 
 ### Classloader Disposal
 
-When `SourceStore.scan()` nulls out `classLoader` and `innerLoader`, the old classloader and all its defined classes become eligible for garbage collection -- provided no other references exist. The cache-clearing steps (template cache, element cache, document cache) are specifically designed to break references that would prevent GC.
+When `SourceStore.scan()` nulls out `classLoader` and `innerLoader`, the old classloader and all its defined classes become eligible for garbage collection — provided no other references exist. The cache-clearing steps (template cache, element cache, document cache) are specifically designed to break references that would prevent GC.
 
 However, if user code stores class references in non-module locations (for example, in a `Cargo` container or a framework-managed cache), those references will keep the old classloader alive, creating a classloader leak. Each leaked classloader retains all its classes and their static fields in memory.
 
@@ -305,7 +305,7 @@ The standard `GroovyClassLoader.InnerLoader` uses weak references for class look
 
 ## See Also
 
-- [Source Modules Overview](source-modules-overview.md) -- high-level introduction
-- [Source Modules API Reference](source-modules-api.md) -- configuration and public APIs
-- [Source Modules Examples](source-modules-examples.md) -- real-world patterns
-- [Alerts Internals](alerts-internals.md) -- how `AnnotatedAlert.loadStaticHooks()` works
+- [Source Modules Overview](source-modules-overview.md) — high-level introduction
+- [Source Modules API Reference](source-modules-api.md) — configuration and public APIs
+- [Source Modules Examples](source-modules-examples.md) — real-world patterns
+- [Alerts Internals](alerts-internals.md) — how `AnnotatedAlert.loadStaticHooks()` works

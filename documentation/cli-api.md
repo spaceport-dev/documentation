@@ -22,17 +22,22 @@ java -jar spaceport.jar --start --no-manifest
 **Returns:** Does not return; runs until process termination.
 
 
-### --create-port
+### Unattended Startup and Migration Options
 
+```bash
+java -jar spaceport.jar --start config.spaceport --headless
+java -jar spaceport.jar --start config.spaceport --headless --continue
+java -jar spaceport.jar --migrate config.spaceport --headless '{"migration":"001-seed.groovy","inputs":{"tenant":"acme"}}'
+java -jar spaceport.jar --migrate config.spaceport --headless @migration.json
 ```
-java -jar spaceport.jar --create-port
-```
 
-No additional arguments. Launches the interactive scaffolding wizard.
+Place the manifest path before `--headless`: its next non-flag argument is consumed as the optional JSON value.
 
-**Behavior:** Runs the 8-step `Onboarding.createPort()` process. Creates directories, copies template files, generates a manifest, and configures the database.
-
-**Returns:** Exits with `System.exit(0)` on completion or CTRL+C.
+- `--headless` forces non-interactive operation even when a terminal is attached. Prompts fail rather than waiting for input.
+- `--continue` explicitly permits startup or migration to proceed when the main database cannot authenticate. Without it, an attached terminal offers a continue/exit choice; unattended execution exits with status `1`.
+- Without a terminal (systemd, cron, pipes), output goes to stdout and prompts fail automatically.
+- Migration JSON accepts a `migration` filename and an `inputs` object. `@file` reads that JSON from disk. Migration scripts receive `report`, `inputs`, and `interactive` bindings; supplied inputs do not answer `Command` prompts automatically.
+- A single migration is selected automatically without a terminal. With multiple migrations, supply its filename. Unknown filenames, malformed JSON, prompt attempts without a terminal, and migration failures exit with status `1`.
 
 
 ### --migrate
@@ -87,7 +92,7 @@ java -jar spaceport.jar --color
 **Package:** `spaceport.bridge`
 **File:** `src/main/groovy/spaceport/bridge/Command.groovy`
 
-The `Command` class provides all terminal I/O for the Spaceport CLI. All methods are static. It handles colored output, styled prompts, structured debugging, and terminal control.
+The `Command` class provides all terminal I/O for the Spaceport CLI. All methods are static. `Command.isInteractive()` checks for a console and that `Command.headless` is false. Set `headless` through the CLI flag when prompts must never run. It handles colored output, styled prompts, structured debugging, and terminal control.
 
 
 ### Output Methods
@@ -167,7 +172,7 @@ Displays a bordered input box with the given prompt and reads a single line of t
 String name = Command.promptInput('Enter a name:')
 ```
 
-**Returns:** The user's input as a `String`.
+**Returns:** The user's input as a `String`. Throws `IllegalStateException` when `Command.isInteractive()` is false.
 
 #### `Command.promptPasswordInput(String prompt)`
 
@@ -177,7 +182,7 @@ Identical to `promptInput` but uses `System.console().readPassword()` to mask th
 String password = Command.promptPasswordInput('CouchDB Password:')
 ```
 
-**Returns:** The password as a `String`.
+**Returns:** The password as a `String`. Throws `IllegalStateException` without an interactive terminal.
 
 #### `Command.promptMultiInput(String prompt, List<String> options)`
 
@@ -427,6 +432,6 @@ Renders every individual color and every pairwise combination of two colors to t
 
 ## See Also
 
-- [CLI Overview](cli-overview.md) -- Summary of all CLI commands
-- [Scaffolds API Reference](scaffolds-api.md) -- The --create-port interactive process
-- [Manifest API Reference](manifest-api.md) -- Configuration file reference
+- [CLI Overview](cli-overview.md) — Summary of all CLI commands
+- [Scaffolds API Reference](scaffolds-api.md) — Current project creation workflow
+- [Manifest API Reference](manifest-api.md) — Configuration file reference

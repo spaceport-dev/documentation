@@ -100,7 +100,7 @@ Scans a single directory path for JAR files.
 | `pathPattern` | `String` | Directory path to scan. May end with `*` for recursive scanning. |
 | `isDefaultConfig` | `boolean` | Whether the current configuration is the default. Controls error handling. |
 
-**Returns:** `List<File>` -- all JAR files found in the specified directory.
+**Returns:** `List<File>` — all JAR files found in the specified directory.
 
 **Behavior:**
 

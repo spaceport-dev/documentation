@@ -9,21 +9,21 @@ Spaceport needs three things on your system:
 
 | Prerequisite | Minimum Version | Recommended |
 |---|---|---|
-| Java (JDK or JRE) | Java 8 SE | Java 11 (Azul Zulu or Amazon Corretto) |
+| Java (JDK or JRE) | Java 8 SE bytecode target | Java 21 (verified Frontier runtime) |
 | Apache CouchDB | 2.0 | 3.5.x or later |
 | Spaceport JAR | Latest | Latest |
 
-You will also need a terminal, a web browser, and a text editor. Any editor works -- Spaceport has no build step, so there is no IDE dependency. If you want syntax highlighting for `.ghtml` template files, Sublime Text with the [Spaceport plugin](https://github.com/aufdemrand/spaceport-slt) or JetBrains IntelliJ IDEA Ultimate with the Grails plugin are good choices.
+You will also need a terminal, a web browser, and a text editor. Any editor works — Spaceport has no build step, so there is no IDE dependency. For `.ghtml` support, use Spaceport Ground Control in IntelliJ or the [Spaceport Sublime Text plugin](https://github.com/aufdemrand/spaceport-slt).
 
 ### Groovy Knowledge
 
 Spaceport server code is written in Groovy, a JVM language that is fully compatible with Java. If you know Java, you already know most of Groovy. The key differences you will encounter immediately are:
 
-- **Optional semicolons and return statements** -- the last expression in a method is its return value
+- **Optional semicolons and return statements** — the last expression in a method is its return value
 - **`def` keyword** for dynamic typing alongside standard Java types
-- **GStrings** -- double-quoted strings support `${ expression }` interpolation
-- **Closures** -- `{ args -> body }` blocks that can be passed around like values
-- **Maps and lists** -- `[key: value]` for maps, `[a, b, c]` for lists
+- **GStrings** — double-quoted strings support `${ expression }` interpolation
+- **Closures** — `{ args -> body }` blocks that can be passed around like values
+- **Maps and lists** — `[key: value]` for maps, `[a, b, c]` for lists
 
 You do not need to be a Groovy expert to start. Spaceport source modules are plain Groovy classes, and the framework handles compilation for you.
 
@@ -35,16 +35,12 @@ Spaceport has no build step and no IDE requirement — any text editor works. Ho
 
 **JetBrains IntelliJ IDEA** (recommended)
 
-IntelliJ IDEA provides excellent Groovy support out of the box: code completion, refactoring, debugging, and error detection. The **Ultimate** edition adds HTML, CSS, and JavaScript support that is valuable for full-stack Spaceport development. The Community edition is free and handles Groovy well but lacks front-end tooling. Ultimate is free for students and open-source projects.
+Use **Spaceport Ground Control** for dedicated `.ghtml` editing in IntelliJ-based IDEs. Version 1.1.0 targets IntelliJ Platform 2026.2 (build 262 or newer), with Groovy and YAML support enabled.
 
-- Download from the [IntelliJ IDEA Downloads Page](https://www.jetbrains.com/idea/download/)
-- Install the **Grails plugin** for `.ghtml` template support:
-  1. Go to `File > Settings > Plugins` (or `IntelliJ IDEA > Preferences > Plugins` on macOS)
-  2. Search the Marketplace for `Grails` and install it
-  3. Restart the IDE
-  4. Associate `.ghtml` files with Groovy Server Pages: `Preferences > Editor > File Types`, find Groovy Server Pages, and add `*.ghtml` to its patterns
+Install its ZIP through Settings → Plugins → the gear menu → Install Plugin from Disk, then restart the IDE. Ground Control supplies GHTML/HTML/Groovy completion, cross-island type inference, element navigation, manifest schema completion, source-root recognition, route inspections, and manifest-generated run configurations.
 
-> The Grails/GSP association is not a perfect match for Spaceport's template syntax, but it provides reasonable syntax highlighting and basic editing features while dedicated Spaceport tooling is in development.
+Ground Control builds require JDK 25; this is separate from the Java requirement for running a Spaceport application. See [Scaffolds API](scaffolds-api.md#ground-control-builds) for build commands.
+
 
 **IntelliJ IDEA with JetBrains Gateway** (remote development)
 
@@ -91,9 +87,9 @@ java -version
 
 If you see a version number (1.8 or higher), you are set. If not, install a JDK. For development, any distribution works. For production, an LTS distribution avoids frequent upgrades:
 
-- **[Azul Zulu](https://www.azul.com/downloads/)** -- Free, open-source OpenJDK with LTS for Java 8, 11, and 17
-- **[Amazon Corretto](https://aws.amazon.com/corretto/)** -- Free LTS OpenJDK from Amazon
-- **[OpenJDK](https://openjdk.org/)** -- Rolling releases, no LTS
+- **[Azul Zulu](https://www.azul.com/downloads/)** — Free, open-source OpenJDK with LTS for Java 8, 11, and 17
+- **[Amazon Corretto](https://aws.amazon.com/corretto/)** — Free LTS OpenJDK from Amazon
+- **[OpenJDK](https://openjdk.org/)** — Rolling releases, no LTS
 
 On Debian/Ubuntu, the quickest path is:
 
@@ -101,7 +97,7 @@ On Debian/Ubuntu, the quickest path is:
 sudo apt install default-jre
 ```
 
-For Java version compatibility details beyond Java 11, see [Compatibility Notes](compatibility-notes.md).
+For verified build and runtime baselines, see [Compatibility Notes](compatibility-notes.md).
 
 
 ## Installing CouchDB
@@ -112,7 +108,7 @@ During installation:
 
 1. Choose **standalone** mode (not clustered) for local development
 2. Set the bind address to `127.0.0.1` on Linux or `localhost` on Windows
-3. Set an admin password and note it down -- you will need it when configuring Spaceport
+3. Set an admin password and note it down — you will need it when configuring Spaceport
 
 After installation, verify CouchDB is running by visiting `http://localhost:5984/_utils/` in your browser. You should see the Fauxton web interface. This admin panel is useful for inspecting your databases during development, but Spaceport handles all database operations for you through its [Documents API](documents-overview.md).
 
@@ -136,32 +132,26 @@ For full CLI documentation, see [CLI Overview](cli-overview.md).
 
 ## Creating a Project
 
-You have two paths to create a new Spaceport project: the interactive CLI wizard, or downloading a starter kit.
+You can create a new Spaceport project with Create Spaceport App or a starter kit.
 
-### Option A: The --create-port Wizard
+### Option A: Create Spaceport App
 
-The CLI wizard walks you through an interactive setup process that creates your project structure, writes a manifest configuration file, configures your database connection, and creates an administrator account.
+Use [Create Spaceport App](https://github.com/spaceport-dev/create-spaceport-app) for AI-assisted setup, clone a starter kit, or create a project manually. See [Scaffolds Overview](scaffolds-overview.md).
 
 ```bash
-java -jar spaceport.jar --create-port
+git clone https://github.com/spaceport-dev/create-spaceport-app my-project
+cd my-project
 ```
 
-The wizard offers three scaffold types:
+Follow the repository's documentation-fetch instructions, then its `BOOTSTRAP.md` workflow. Download the framework JAR separately.
 
-| Scaffold | What You Get | Best For |
-|---|---|---|
-| **Mercury** | A single `App.groovy` in `modules/` | APIs, microservices, learning |
-| **Pioneer** | Source modules + Launchpad templates | Sites with pages, no user accounts |
-| **Voyager** | Full app with login, registration, admin panel | Production web applications |
-
-For your first project, **Mercury** is the right choice. It gives you the minimum needed to start, and you can add structure as you go. See [Scaffolds Overview](scaffolds-overview.md) for details on what each scaffold creates.
 
 ### Option B: Download a Starter Kit
 
 If you prefer starting from a pre-built project you can inspect and modify:
 
-- **[Port-Echo](https://github.com/spaceport-dev/port-echo)** -- Minimal starter with a manifest and a single source module
-- **[Port-Mercury](https://github.com/spaceport-dev/port-mercury)** -- Full-featured starter with routing, authentication, templates, and inline documentation
+- **[Port-Echo](https://github.com/spaceport-dev/port-echo)** — Minimal starter with a manifest and a single source module
+- **[Port-Mercury](https://github.com/spaceport-dev/port-mercury)** — Full-featured starter with routing, authentication, templates, and inline documentation
 
 Clone the repository, update the manifest with your CouchDB credentials, and you are ready to go.
 
@@ -210,10 +200,10 @@ my-app/
 
 The key directories are:
 
-- **`modules/`** -- Where all your server-side Groovy code lives. Spaceport compiles these automatically at startup. Subdirectories map to Java packages, so `modules/documents/Message.groovy` has `package documents`.
-- **`launchpad/parts/`** -- Where your `.ghtml` template files live. These are Groovy-embedded HTML files that Spaceport renders on the server.
-- **`assets/`** -- Static files served directly to the browser at the `/assets/` URL path.
-- **`config.spaceport`** -- Your application's configuration file. See [Manifest Overview](manifest-overview.md) for all options.
+- **`modules/`** — Where all your server-side Groovy code lives. Spaceport compiles these automatically at startup. Subdirectories map to Java packages, so `modules/documents/Message.groovy` has `package documents`.
+- **`launchpad/parts/`** — Where your `.ghtml` template files live. These are Groovy-embedded HTML files that Spaceport renders on the server.
+- **`assets/`** — Static files served directly to the browser at the `/assets/` URL path.
+- **`config.spaceport`** — Your application's configuration file. See [Manifest Overview](manifest-overview.md) for all options.
 
 The manifest tells Spaceport where to find everything. A minimal `config.spaceport` looks like:
 
@@ -303,11 +293,11 @@ Hot-reloading compiles and reloads all source modules within milliseconds of a f
 
 ## Rendering Templates with Launchpad
 
-Writing HTML inside `writeToClient()` strings is fine for simple responses, but real pages need Launchpad templates. Launchpad is Spaceport's server-side templating engine. Templates are `.ghtml` files -- HTML with embedded Groovy code -- stored in `launchpad/parts/`.
+Writing HTML inside `writeToClient()` strings is fine for simple responses, but real pages need Launchpad templates. Launchpad is Spaceport's server-side templating engine. Templates are `.ghtml` files — HTML with embedded Groovy code — stored in `launchpad/parts/`.
 
 Create the template directory and two files:
 
-**`launchpad/parts/wrapper.ghtml`** -- a layout wrapper that wraps every page:
+**`launchpad/parts/wrapper.ghtml`** — a layout wrapper that wraps every page:
 
 ```html
 <!DOCTYPE html>
@@ -329,7 +319,7 @@ Create the template directory and two files:
 
 The `<payload/>` tag marks where assembled page content goes.
 
-**`launchpad/parts/index.ghtml`** -- the home page content:
+**`launchpad/parts/index.ghtml`** — the home page content:
 
 ```html
 <%
@@ -371,7 +361,7 @@ For the full templating system including reactive bindings, server actions, and 
 
 Now that you have a running application, here is a quick map of the major systems you will work with as you build out your project.
 
-### Alerts -- The Event System
+### Alerts — The Event System
 
 Alerts are Spaceport's unified event system. Every HTTP request, WebSocket message, document save, and lifecycle event is dispatched as an Alert. Your code listens with the `@Alert` annotation.
 
@@ -386,33 +376,33 @@ Alerts support priorities for ordering (authentication checks before route handl
 
 Read more: [Alerts Overview](alerts-overview.md)
 
-### Source Modules -- Your Server Code
+### Source Modules — Your Server Code
 
-Source modules are the Groovy classes in your `modules/` directory. Spaceport compiles them at startup -- no build step required. In debug mode, saving a file triggers automatic hot-reload.
+Source modules are the Groovy classes in your `modules/` directory. Spaceport compiles them at startup — no build step required. In debug mode, saving a file triggers automatic hot-reload.
 
 Subdirectories map to Java packages. All modules share one classloader, so any class can reference any other. Structure your code however makes sense for your project.
 
 Read more: [Source Modules Overview](source-modules-overview.md)
 
-### Launchpad -- Server-Side Templating
+### Launchpad — Server-Side Templating
 
 Launchpad renders `.ghtml` templates on the server with full access to your Groovy code, database, and session state. Beyond basic templating, it provides **reactive bindings** (`${{ }}`) that push live DOM updates when server data changes, and **server actions** (`_{ }`) that bind Groovy closures to client-side events like clicks and form submissions.
 
 Read more: [Launchpad Overview](launchpad-overview.md)
 
-### Cargo -- Reactive Data Containers
+### Cargo — Reactive Data Containers
 
 Cargo is a reactive key-value store. When you update a Cargo value, any Launchpad template bound to it re-renders automatically on the client via WebSocket. Cargo comes in three modes: in-memory, server-wide shared, and CouchDB-backed persistent. Every user session also has a per-session Cargo called the **dock**.
 
 Read more: [Cargo Overview](cargo-overview.md)
 
-### Documents -- CouchDB ORM
+### Documents — CouchDB ORM
 
 Documents are Spaceport's data layer. The `Document` class maps Groovy objects to CouchDB JSON documents with automatic serialization, revision tracking, and lifecycle events. You can use the base `Document` class for simple key-value storage or extend it to create typed data models with custom properties and business logic.
 
 Read more: [Documents Overview](documents-overview.md)
 
-### Manifest -- Configuration
+### Manifest — Configuration
 
 The `config.spaceport` file (YAML format) controls how your application starts: host, port, database connection, source module paths, static asset paths, debug mode, and any custom keys your application needs. Spaceport deep-merges your configuration over sensible defaults, so you only specify what you want to change.
 
@@ -435,7 +425,7 @@ There is no compile step, no build command, no restart. Spaceport watches for fi
 - [ ] Install Java 8+ (Java 11 LTS recommended)
 - [ ] Install CouchDB and note the admin credentials
 - [ ] Download the Spaceport JAR
-- [ ] Create a project (`--create-port`, starter kit, or manual)
+- [ ] Create a project (Create Spaceport App, starter kit, or manual)
 - [ ] Write a source module with an `@Alert` route handler
 - [ ] Start Spaceport and verify your route works in the browser
 - [ ] Add a Launchpad template and render it with `assemble().launch()`
@@ -447,20 +437,20 @@ There is no compile step, no build command, no restart. Spaceport watches for fi
 Once you are comfortable with the basics, pick a path:
 
 **Hands-on tutorials:**
-- [Tic-Tac-Toe Tutorial](tutorial-tic-tac-toe.md) -- Build an interactive game covering routes, templates, and server actions
-- [Meeting Room Booker Tutorial](tutorial-meeting-room.md) -- Build a real-time booking system with Documents and Cargo
+- [Tic-Tac-Toe Tutorial](tutorial-tic-tac-toe.md) — Build an interactive game covering routes, templates, and server actions
+- [Meeting Room Booker Tutorial](tutorial-meeting-room.md) — Build a real-time booking system with Documents and Cargo
 
 **Deep dives into core systems:**
-- [Alerts Overview](alerts-overview.md) -- The event system behind routes, lifecycle hooks, and inter-module communication
-- [Source Modules Overview](source-modules-overview.md) -- How Spaceport compiles, loads, and hot-reloads your code
-- [Launchpad Overview](launchpad-overview.md) -- Templating, reactive bindings, and server actions
-- [Cargo Overview](cargo-overview.md) -- Reactive data containers for session state, caching, and persistence
-- [Documents Overview](documents-overview.md) -- The CouchDB ORM for persistent data
-- [Scaffolds Overview](scaffolds-overview.md) -- Project structure and the `--create-port` wizard
-- [Manifest Overview](manifest-overview.md) -- Configuration file format and all available keys
-- [CLI Overview](cli-overview.md) -- All Spaceport command-line commands
+- [Alerts Overview](alerts-overview.md) — The event system behind routes, lifecycle hooks, and inter-module communication
+- [Source Modules Overview](source-modules-overview.md) — How Spaceport compiles, loads, and hot-reloads your code
+- [Launchpad Overview](launchpad-overview.md) — Templating, reactive bindings, and server actions
+- [Cargo Overview](cargo-overview.md) — Reactive data containers for session state, caching, and persistence
+- [Documents Overview](documents-overview.md) — The CouchDB ORM for persistent data
+- [Scaffolds Overview](scaffolds-overview.md) — Project structure and current setup workflows
+- [Manifest Overview](manifest-overview.md) — Configuration file format and all available keys
+- [CLI Overview](cli-overview.md) — All Spaceport command-line commands
 
 **Starter projects to explore:**
-- [Port-Echo](https://github.com/spaceport-dev/port-echo) -- Minimal starter kit
-- [Port-Mercury](https://github.com/spaceport-dev/port-mercury) -- Full-featured starter with authentication and templates
-- [Guestbook](https://github.com/aufdemrand/guestbook.ing) -- A real-world example application
+- [Port-Echo](https://github.com/spaceport-dev/port-echo) — Minimal starter kit
+- [Port-Mercury](https://github.com/spaceport-dev/port-mercury) — Full-featured starter with authentication and templates
+- [Guestbook](https://github.com/aufdemrand/guestbook.ing) — A real-world example application

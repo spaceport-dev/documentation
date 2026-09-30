@@ -30,13 +30,13 @@ This is the primary command for running your application. It performs the follow
 
 1. Reads and parses the YAML manifest file
 2. Merges user configuration over built-in defaults (deep merge)
-3. Substitutes environment variables (`${ VAR_NAME }` placeholders)
+3. Substitutes and types environment values, then validates framework configuration
 4. Applies metaclass enhancements to Groovy types
 5. Initializes the CouchDB connection
-6. Prompts to continue if the database is unreachable
+6. Fails if the database is unreachable unless interactive confirmation or `--continue` permits continuing
 7. Displays a debug mode warning if `debug: true`
 8. Loads stowaway JARs into the classpath
-9. Scans and compiles source modules
+9. Runs ignition scripts once, then scans and compiles source modules
 10. Starts the Jetty HTTP server and WebSocket handler
 
 
@@ -64,15 +64,22 @@ This mode uses built-in defaults:
 This is useful for rapid prototyping or when you want to run a minimal application without any configuration overhead.
 
 
-### --create-port
-
-Launch the interactive project creation wizard.
+### Unattended Startup and Migration Options
 
 ```bash
-java -jar spaceport.jar --create-port
+java -jar spaceport.jar --start config.spaceport --headless
+java -jar spaceport.jar --start config.spaceport --headless --continue
+java -jar spaceport.jar --migrate config.spaceport --headless '{"migration":"001-seed.groovy","inputs":{"tenant":"acme"}}'
+java -jar spaceport.jar --migrate config.spaceport --headless @migration.json
 ```
 
-This command walks you through an 8-step interactive process to create a new Spaceport project, including directory structure, manifest file, database setup, and administrator account creation. See the [Scaffolds documentation](scaffolds-overview.md) for details on what each scaffold type creates.
+Place the manifest path before `--headless`: its next non-flag argument is consumed as the optional JSON value.
+
+- `--headless` forces non-interactive operation even when a terminal is attached. Prompts fail rather than waiting for input.
+- `--continue` explicitly permits startup or migration to proceed when the main database cannot authenticate. Without it, an attached terminal offers a continue/exit choice; unattended execution exits with status `1`.
+- Without a terminal (systemd, cron, pipes), output goes to stdout and prompts fail automatically.
+- Migration JSON accepts a `migration` filename and an `inputs` object. `@file` reads that JSON from disk. Migration scripts receive `report`, `inputs`, and `interactive` bindings; supplied inputs do not answer `Command` prompts automatically.
+- A single migration is selected automatically without a terminal. With multiple migrations, supply its filename. Unknown filenames, malformed JSON, prompt attempts without a terminal, and migration failures exit with status `1`.
 
 
 ### --migrate
@@ -150,10 +157,15 @@ java -jar spaceport.jar --migrate config.spaceport
 
 ### Creating a New Project
 
+Use [Create Spaceport App](https://github.com/spaceport-dev/create-spaceport-app) for AI-assisted setup, clone a starter kit, or create a project manually. See [Scaffolds Overview](scaffolds-overview.md).
+
 ```bash
-# Interactive project setup
-java -jar spaceport.jar --create-port
+git clone https://github.com/spaceport-dev/create-spaceport-app my-project
+cd my-project
 ```
+
+Follow the repository's documentation-fetch instructions, then its `BOOTSTRAP.md` workflow. Download the framework JAR separately.
+
 
 ### Environment-Specific Startup
 
@@ -172,13 +184,13 @@ java -jar spaceport.jar --start config.production.spaceport
 ## Exit Behavior
 
 - `--help`, `--color`: Exit immediately after output
-- `--create-port`, `--migrate`: Exit after the interactive process completes (via `System.exit(0)`)
+- `--migrate`: Exit after the interactive process completes (via `System.exit(0)`)
 - `--start`: Runs indefinitely until the process is terminated (the Jetty server blocks on `server.join()`)
 - `CTRL+C` during interactive commands: Terminal settings are restored before exiting (macOS/Linux only)
 
 
 ## See Also
 
-- [CLI API Reference](cli-api.md) -- Full Command class API and color system
-- [Scaffolds Overview](scaffolds-overview.md) -- The --create-port scaffold types
-- [Manifest Overview](manifest-overview.md) -- Configuration file format and options
+- [CLI API Reference](cli-api.md) — Full Command class API and color system
+- [Scaffolds Overview](scaffolds-overview.md) — Current project creation options
+- [Manifest Overview](manifest-overview.md) — Configuration file format and options

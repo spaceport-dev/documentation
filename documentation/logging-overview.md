@@ -20,12 +20,12 @@ These keys are recognized by the configuration parser and can be set in your man
 
 Spaceport currently outputs all diagnostic and status messages to **stdout and stderr** through the `Command` class (`spaceport.bridge.Command`). This class provides several output methods used throughout the framework:
 
-- `Command.debug(message)` -- Debug-level messages (visible when `debug: true` is set in the manifest)
-- `Command.error(message)` -- Error messages written to stderr
-- `Command.success(message)` -- Success/status messages
-- `Command.println(message)` -- General output
-- `Command.printHeader(message)` -- Section headers during startup
-- `Command.printParagraph(message)` -- Formatted paragraph output
+- `Command.debug(message)` — Debug-level messages (visible when `debug: true` is set in the manifest)
+- `Command.error(message)` — Error messages written to stderr
+- `Command.success(message)` — Success/status messages
+- `Command.println(message)` — General output
+- `Command.printHeader(message)` — Section headers during startup
+- `Command.printParagraph(message)` — Formatted paragraph output
 
 All output goes directly to the console. There is no file-based logging, log rotation, or log level filtering beyond the debug flag.
 
@@ -45,5 +45,5 @@ java -jar spaceport.jar --start config.spaceport 2>&1 | tee app.log
 
 ## Related Documentation
 
-- [Manifest Configuration](manifest-overview.md) -- All configuration options including the logging keys
-- [Source Modules](source-modules-overview.md) -- Where most application-level logging would occur
+- [Manifest Configuration](manifest-overview.md) — All configuration options including the logging keys
+- [Source Modules](source-modules-overview.md) — Where most application-level logging would occur

@@ -5,7 +5,7 @@ This document provides practical migration patterns and recipes drawn from real 
 
 ## Create a Spaceport Administrator
 
-This is the most common migration, included by default in both the Port-Mercury starter kit and the MadAve-Collab production application. It ensures the `users` database exists, then either creates a new administrator account or promotes an existing user.
+This is the most common migration, included by default in both the Port-Mercury starter kit and the MadAve-Collab production application. It ensures the configured users database exists, then either creates a new administrator account or promotes an existing user.
 
 ```groovy
 import spaceport.Spaceport
@@ -17,11 +17,11 @@ Command.with {
 
     printBox("""
     This migration will create a default Spaceport administrator
-    and a 'users' database if they do not already exist.
+    and the configured users database if they do not already exist.
     """)
 
     // Ensure the users database exists
-    Spaceport.main_memory_core.createDatabaseIfNotExists('users')
+    Spaceport.main_memory_core.createDatabaseIfNotExists(ClientDocument.usersDatabase())
 
     // Prompt for a username
     def username, password
@@ -32,7 +32,7 @@ Command.with {
     // Check if the user already exists
     def user
 
-    if (Document.exists(username, 'users')) {
+    if (Document.exists(username, ClientDocument.usersDatabase())) {
 
         user = ClientDocument.getClientDocument(username)
 
@@ -97,12 +97,12 @@ Command.with {
 
     printBox("""
     This migration will change the password for an existing user
-    in the 'users' database.
+    in the configured users database.
     """)
 
     // Verify the users database exists
-    if (!Spaceport.main_memory_core.containsDatabase('users')) {
-        error("'users' database does not exist. Exiting.")
+    if (!Spaceport.main_memory_core.containsDatabase(ClientDocument.usersDatabase())) {
+        error("Configured users database does not exist. Exiting.")
         return
     }
 
@@ -114,8 +114,8 @@ Command.with {
     }
 
     // Verify the user exists
-    if (!Document.exists(username, 'users')) {
-        error("User ${username} does not exist in 'users' database. Exiting.")
+    if (!Document.exists(username, ClientDocument.usersDatabase())) {
+        error("User ${username} does not exist in the configured users database. Exiting.")
         return
     }
 
@@ -243,7 +243,7 @@ Command.with {
         return
     }
 
-    if (!Document.exists(username, 'users')) {
+    if (!Document.exists(username, ClientDocument.usersDatabase())) {
         error("User '${username}' does not exist. Exiting.")
         return
     }
@@ -297,9 +297,9 @@ Command.with {
     }
 
     // Ensure users database exists
-    Spaceport.main_memory_core.createDatabaseIfNotExists('users')
+    Spaceport.main_memory_core.createDatabaseIfNotExists(ClientDocument.usersDatabase())
 
-    if (Document.exists(username, 'users')) {
+    if (Document.exists(username, ClientDocument.usersDatabase())) {
         success("User '${username}' already exists. Skipping creation.")
         return
     }
@@ -384,5 +384,5 @@ Command.with {
 
 ## See Also
 
-- [Migrations Overview](migrations-overview.md) -- What migrations are and when to use them.
-- [Migrations API Reference](migrations-api.md) -- Complete reference for CLI commands and available APIs.
+- [Migrations Overview](migrations-overview.md) — What migrations are and when to use them.
+- [Migrations API Reference](migrations-api.md) — Complete reference for CLI commands and available APIs.

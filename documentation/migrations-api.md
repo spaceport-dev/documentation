@@ -39,15 +39,27 @@ java -jar spaceport.jar --migrate --no-manifest
 3. Replaces environment variable placeholders (`${VAR_NAME}`) in the configuration.
 4. Applies metaclass enhancements (`MetaClassEnhancements.enhance()`).
 5. Connects to the configured main memory core (CouchDB).
-6. If the database connection fails, prompts the user to continue or exit.
-7. Scans the migrations directory for `.groovy` files and presents them as a selection menu.
-8. Executes the chosen migration script using a `GroovyScriptEngine`.
-9. Prints a completion message and exits.
+6. If the database connection fails, exits unattended with status `1` unless `--continue` is supplied; an interactive terminal offers a choice.
+7. Loads stowaways and runs ignition scripts once, without scanning normal source modules.
+8. Scans the migrations directory for `.groovy` files and presents them as a selection menu.
+9. Executes the chosen migration script using a `GroovyScriptEngine`.
+10. Prints a completion message and exits.
 
 **Signal handling:**
 
-On Unix systems, `CTRL+C` is intercepted to reset terminal settings before exiting. This prevents the terminal from being left in a broken state if the migration is interrupted.
+On Unix systems with an interactive terminal, `CTRL+C` is intercepted to reset terminal settings before exiting. This prevents the terminal from being left in a broken state if the migration is interrupted.
 
+
+## Unattended Migrations
+
+```bash
+java -jar spaceport.jar --migrate config.spaceport --headless '{"migration":"001-seed.groovy","inputs":{"tenant":"acme"}}'
+java -jar spaceport.jar --migrate config.spaceport --headless @migration.json
+```
+
+`--headless` disables prompts. Its JSON value selects a filename and provides an `inputs` object. A single script is selected automatically without a terminal; multiple scripts require selection. Scripts receive `report` (`Cargo`), `inputs` (`Map`, empty by default), and `interactive` (`boolean`). Read `inputs.tenant` in the script; these values do not automatically satisfy `Command.promptInput()` calls. Missing required answers must fail explicitly or fall back to a prompt only in interactive mode.
+
+Malformed JSON, an unknown script, a prompt without a terminal or a script failure exits with status `1`. Use `--continue` only when the selected script can proceed without the database. Startup validates configuration after environment substitution, including missing-variable failures.
 
 ## Configuration
 
@@ -151,7 +163,7 @@ if (!username) username = 'admin'
 |:---|:---|:---|
 | `message` | `String` | The prompt message displayed to the user. |
 
-**Returns:** `String` -- The user's input, or `null`/empty string if no input was provided.
+**Returns:** `String` — The user's input, or `null`/empty string if no input was provided.
 
 ---
 
@@ -170,7 +182,7 @@ def choice = promptMultiInput('Select an action:', ['Create', 'Update', 'Delete'
 | `message` | `String` | The prompt message displayed to the user. |
 | `options` | `List` | A list of string options to present. |
 
-**Returns:** `String` -- The selected option.
+**Returns:** `String` — The selected option.
 
 ---
 
@@ -283,7 +295,7 @@ Prints a section header with formatting.
 
 ## Database APIs
 
-Migration scripts have full access to Spaceport's core database layer. Note that only built-in Spaceport classes are available -- project-specific modules are not loaded in the migration runtime.
+Migration scripts have full access to Spaceport's core database layer. Note that only built-in Spaceport classes are available — project-specific modules are not loaded in the migration runtime.
 
 ### `Spaceport.main_memory_core`
 
@@ -292,7 +304,7 @@ The configured CouchDB connection handler (`CouchHandler`), initialized from the
 | Method | Returns | Description |
 |:---|:---|:---|
 | `containsDatabase(String name)` | `boolean` | Checks if a database exists. |
-| `createDatabase(String name)` | -- | Creates a new database. |
+| `createDatabase(String name)` | — | Creates a new database. |
 | `cookie` | `String` | The authentication cookie. `null` if the connection failed. |
 
 **Example:**
@@ -376,12 +388,12 @@ if (user) {
 - **Debug mode:** Debug output is enabled by default (`Spaceport.store._debug = true`).
 - **Default configuration:** If `--no-manifest` is used, a default configuration is applied with CouchDB at `http://127.0.0.1:5984`, port `10000`, and standard paths.
 - **Environment variables:** Placeholders in the form `${VAR_NAME}` in the manifest are replaced with actual environment variable values before the migration runs.
-- **Project modules are not loaded.** The migration runtime does not compile or load source modules from your `modules/` directory. Stowaway JARs are also not loaded. Only core Spaceport classes are available. All migration logic must be self-contained within the script -- use closures, inline definitions, or standard Groovy/Java libraries for any helper logic.
+- **Project modules are not loaded.** The migration runtime does not compile or load source modules from your `modules/` directory. Stowaway JARs are also not loaded. Only core Spaceport classes are available. All migration logic must be self-contained within the script — use closures, inline definitions, or standard Groovy/Java libraries for any helper logic.
 
 
 ## See Also
 
-- [Migrations Overview](migrations-overview.md) -- High-level introduction to the migration system.
-- [Migrations Examples](migrations-examples.md) -- Practical patterns and recipes.
-- [Documents API](documents-api.md) -- Full Document class reference.
-- [Cargo API](cargo-api.md) -- Cargo data container reference.
+- [Migrations Overview](migrations-overview.md) — High-level introduction to the migration system.
+- [Migrations Examples](migrations-examples.md) — Practical patterns and recipes.
+- [Documents API](documents-api.md) — Full Document class reference.
+- [Cargo API](cargo-api.md) — Cargo data container reference.

@@ -121,7 +121,7 @@ The logout verbs perform a staged teardown built on top of the `removeCookie` pr
 
 `deauthenticateAll()` skips the per-cookie logic: it clears all cookies and performs the full teardown unconditionally.
 
-The registry removal matters for two reasons. A cookieless Client can no longer be resolved by `getClientByCookie()`, so leaving it registered would only lengthen the O(n) registry scans — and it would remain resolvable (still authenticated) via `getClient(userId)`, resurfacing a logged-out session to server-initiated pushes. Removal closes both gaps. Removal is concurrency-safe (`activeClients` is a `CopyOnWriteArrayList`), and the in-flight request is unaffected because it already holds its Client reference.
+Removing a logged-out Client from the registry keeps O(n) registry scans shorter and prevents `getClient(userId)` from returning it for server-initiated pushes. A Client without cookies cannot be resolved by `getClientByCookie()`. Removal is concurrency-safe (`activeClients` is a `CopyOnWriteArrayList`), and the in-flight request is unaffected because it already holds its Client reference.
 
 `closeSockets()` iterates a **snapshot** of the socket set: closing a session triggers `onWebSocketClose → removeSocketHandler` on the socket's own thread, which would otherwise mutate the set mid-iteration. Each still-connected handler is closed via `handler.getSession()?.close()` — the same mechanism `SocketResult` uses — and the set is then cleared.
 
@@ -242,7 +242,12 @@ All ClientDocument profile setters (`setName`, `setEmail`, `setPhone`, `updateSt
 ### Password Storage
 
 - New passwords are hashed with BCrypt via `changePassword()`, using `BCrypt.gensalt(bcryptCost())`
-- The work factor comes from the manifest (`auth` → `bcrypt cost`), resolved by `ClientDocument.resolveBcryptCost()`: values in `4`–`31` are honored; unset, non-numeric, or out-of-range values fall back to the default of `10`. The clamping means a config typo can neither throw (jBCrypt rejects costs outside 4–31) nor silently weaken hashing
+- The work factor comes from the manifest (`auth` → `bcrypt cost`), resolved by `ClientDocument.resolveBcryptCost()`: values in `4`–`31` are honored; unset, non-numeric, or out-of-range values fall back to the default of `10` when the helper is called directly. Manifest validation rejects explicitly invalid costs before startup or migrations. The clamping means a config typo can neither throw (jBCrypt rejects costs outside 4–31) nor silently weaken hashing
 - Changing the configured cost never invalidates stored hashes — bcrypt embeds the cost in every hash string (`$2a$<cost>$...`) and `BCrypt.checkpw` reads it from the stored hash, not from config. Only newly set passwords use the new cost
 - `checkPassword()` supports both BCrypt hashes and legacy plaintext for migration scenarios
 - There is no automatic migration from plaintext to BCrypt on login, and no automatic re-hash when a stored hash's cost is below the configured target — applications must handle either explicitly if needed
+
+
+## Users Database Resolution
+
+`ClientDocument.usersDatabase()` reads `memory cores -> main -> users database`, defaulting to `users`. Client document creation/lookup, password authentication views and registry setup all use this resolver. Application migrations that manipulate user records should use it too. Changing the setting does not migrate existing databases or records.

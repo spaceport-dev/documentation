@@ -1,4 +1,4 @@
-# Server Elements -- API Reference
+# Server Elements — API Reference
 
 ## `Element` Trait
 
@@ -40,13 +40,13 @@ The core trait that all Server Elements implement. Defined in `spaceport.launchp
 | `body` | `String` | The inner HTML content between the element's opening and closing tags in the template |
 | `attributes` | `Map<String, String>` | All attributes from the element's HTML tag, as string key-value pairs |
 
-**Returns:** `String` -- the rendered inner HTML of the element.
+**Returns:** `String` — the rendered inner HTML of the element.
 
 The `attributes` map is enhanced with convenience methods:
 
-- `attributes.getInteger(key)` -- returns the value as an `Integer`
-- `attributes.get(key)` -- returns the value as a `String` (standard map access)
-- `attributes.containsKey(key)` -- checks for the presence of an attribute (including boolean attributes like `checked` or `disabled`)
+- `attributes.getInteger(key)` — returns the value as an `Integer`
+- `attributes.get(key)` — returns the value as a `String` (standard map access)
+- `attributes.containsKey(key)` — checks for the presence of an attribute (including boolean attributes like `checked` or `disabled`)
 
 ```groovy
 String prerender(String body, Map attributes) {
@@ -64,15 +64,15 @@ You should not normally call this method directly. It is invoked by the framewor
 
 **Processing order within `initialize()`:**
 
-1. `@CSS` fields -- aggregated into `_style`, wrapped in `<style>` tags
-2. `@ScopedCSS` fields -- aggregated into `_scopedStyle` with instance-scoped selectors
-3. `@Prepend` fields -- aggregated into `_prepend`
-4. `@ScopedPrepend` fields -- aggregated into `_scopedPrepend`
-5. `@Append` fields -- aggregated into `_append`
-6. `@ScopedAppend` fields -- aggregated into `_scopedAppend`
-7. `@Bind` methods -- generates client-side JavaScript proxy functions and registers server-side handlers in `_handlerMap`
-8. `@Javascript` fields -- appended to the JavaScript handler block
-9. Wraps all JavaScript in a `<script>` tag that initializes the client-side element reference
+1. `@CSS` fields — aggregated into `_style`, wrapped in `<style>` tags
+2. `@ScopedCSS` fields — aggregated into `_scopedStyle` with instance-scoped selectors
+3. `@Prepend` fields — aggregated into `_prepend`
+4. `@ScopedPrepend` fields — aggregated into `_scopedPrepend`
+5. `@Append` fields — aggregated into `_append`
+6. `@ScopedAppend` fields — aggregated into `_scopedAppend`
+7. `@Bind` methods — generates client-side JavaScript proxy functions and registers server-side handlers in `_handlerMap`
+8. `@Javascript` fields — appended to the JavaScript handler block
+9. Wraps JavaScript in a `<script>` tag only when `@Bind` or `@Javascript` contributes a handler; static elements emit no empty script wrapper
 
 #### `getTagName()`
 
@@ -163,7 +163,7 @@ Marks a field whose value contains CSS to be injected globally for this element 
 - Multiple `@CSS` fields are concatenated in declaration order
 - The `&` character at the start of the CSS is replaced with the element's tag name, enabling self-referencing styles
 - CSS is injected into the rendered page via a `<style>` tag placed at the element's style marker position
-- The CSS is global -- all instances of the element type share the same styles
+- The CSS is global — all instances of the element type share the same styles
 
 **Example:**
 
@@ -197,7 +197,7 @@ star-rating {
 
 **Notes:**
 - You can use `static` on the field (common pattern when CSS does not reference instance state)
-- No `<style>` tags needed -- the framework wraps the CSS automatically
+- No `<style>` tags needed — the framework wraps the CSS automatically
 - Modern nested CSS syntax is supported (nesting selectors inside `&`)
 
 ---

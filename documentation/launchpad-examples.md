@@ -1,4 +1,4 @@
-# Launchpad (Templating Engine) -- Examples
+# Launchpad (Templating Engine) — Examples
 
 Real-world patterns drawn from production Spaceport applications: Guestbook, port-mercury, and MadAve-Collab.
 
@@ -73,7 +73,7 @@ static _index(HttpResult r) {
 }
 ```
 
-The `index.ghtml` part handles guestbook creation, and the `history.ghtml` part displays the user's past guestbooks -- both rendered within the same wrapper.
+The `index.ghtml` part handles guestbook creation, and the `history.ghtml` part displays the user's past guestbooks — both rendered within the same wrapper.
 
 ### Launch Without a Wrapper
 
@@ -191,7 +191,7 @@ A production login page that handles both rendering and processing:
 
 ### Basic Click Handler (Guestbook)
 
-Bind a server-side closure to a button click. The return value is a list of transmission instructions -- here, `'@print'` triggers the browser's print dialog:
+Bind a server-side closure to a button click. The return value is a list of transmission instructions — here, `'@print'` triggers the browser's print dialog:
 
 ```html
 <button on-click="${ _{ [ '@print' ] }}">
@@ -245,7 +245,7 @@ Instead of a traditional POST, use a server action for form submission. The clos
 </section>
 ```
 
-Note the `target='#contact-section'` attribute -- the server action's return value (a thank-you message) replaces the entire `#contact-section` content, including the form.
+Note the `target='#contact-section'` attribute — the server action's return value (a thank-you message) replaces the entire `#contact-section` content, including the form.
 
 ### Inline Server Action with Multiple Operations (Guestbook)
 

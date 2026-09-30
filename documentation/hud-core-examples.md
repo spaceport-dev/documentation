@@ -1,4 +1,4 @@
-# HUD-Core.js -- Examples
+# HUD-Core.js — Examples
 
 Real-world patterns and recipes for building interactive Spaceport applications with HUD-Core.js. All examples in this document are drawn from or modeled after production Spaceport applications (Guestbook, port-mercury, and MadAve-Collab).
 
@@ -58,7 +58,7 @@ After clicking, the button's `innerHTML` becomes `"Clicked!"`. The `target="self
 
 ### Accessing Transmitted Data
 
-The server closure can accept a parameter (conventionally named `t`) that carries data from the client -- the element's value, form data, data attributes, event metadata, and URL query parameters:
+The server closure can accept a parameter (conventionally named `t`) that carries data from the client — the element's value, form data, data attributes, event metadata, and URL query parameters:
 
 ```html
 <input type="text" on-blur="${ _{ t ->
@@ -81,7 +81,7 @@ def submitNewMessage = { t ->
 
 ### Print Action
 
-From the Guestbook application -- triggering the browser's print dialog with an Array Transmission action:
+From the Guestbook application — triggering the browser's print dialog with an Array Transmission action:
 
 ```html
 <button on-click="${ _{ [ '@print' ] }}">
@@ -91,7 +91,7 @@ From the Guestbook application -- triggering the browser's print dialog with an 
 
 No target is needed because `@print` is a global browser action. The server closure returns the array, and since Groovy returns the last expression in a closure, no `return` keyword is necessary.
 
-*Source: Guestbook -- guestbook.ghtml*
+*Source: Guestbook — guestbook.ghtml*
 
 ---
 
@@ -143,14 +143,14 @@ Key points:
 
 - `on-submit` prevents the default form submission automatically.
 - `target='#contact-section'` means the entire section (including the form) is replaced with the thank-you message.
-- Form inputs are accessible via `t.name`, `t.get('email')`, or `t.getString('message')` -- all equivalent ways to access the transmission data.
+- Form inputs are accessible via `t.name`, `t.get('email')`, or `t.getString('message')` — all equivalent ways to access the transmission data.
 - `.clean()` sanitizes input for XSS protection.
 
-*Source: port-mercury -- contact.ghtml*
+*Source: port-mercury — contact.ghtml*
 
 ### Form with Checkboxes and Booleans
 
-From the Guestbook editing form -- checkboxes send their checked state. Use `t.getBool()` on the server to coerce the value to a boolean:
+From the Guestbook editing form — checkboxes send their checked state. Use `t.getBool()` on the server to coerce the value to a boolean:
 
 ```html
 <%
@@ -177,7 +177,7 @@ def editGuestbook = { t ->
 </form>
 ```
 
-*Source: Guestbook -- guestbook.ghtml*
+*Source: Guestbook — guestbook.ghtml*
 
 ### Inline Form Submission
 
@@ -199,11 +199,11 @@ For simpler cases, the server action can be defined entirely inline:
 </form>
 ```
 
-*Source: Guestbook -- guestbook.ghtml*
+*Source: Guestbook — guestbook.ghtml*
 
 ### Dropdown Change Handler
 
-From the MadAve-Collab job view -- an `on-change` event on a `<select>` element sends the selected value to the server:
+From the MadAve-Collab job view — an `on-change` event on a `<select>` element sends the selected value to the server:
 
 ```html
 <%
@@ -226,13 +226,13 @@ def doChangeStatus = { t ->
 </select>
 ```
 
-Note there is no `target` attribute -- the closure does not return a Transmission, so no DOM update occurs. The reactive variable system (`job._update()`) handles refreshing other parts of the page that display the job status.
+Note there is no `target` attribute — the closure does not return a Transmission, so no DOM update occurs. The reactive variable system (`job._update()`) handles refreshing other parts of the page that display the job status.
 
-*Source: MadAve-Collab -- job/view.ghtml*
+*Source: MadAve-Collab — job/view.ghtml*
 
 ### Form Submission that Clears the Input
 
-From the MadAve-Collab comment form -- the server action returns `[ '@clear' ]` to clear the target after submission. The `target="textarea"` directive targets the textarea element within the form:
+From the MadAve-Collab comment form — the server action returns `[ '@clear' ]` to clear the target after submission. The `target="textarea"` directive targets the textarea element within the form:
 
 ```html
 <%
@@ -256,11 +256,11 @@ def doAddComment = { t ->
 
 The `@clear` action in an Array Transmission clears either the `.value` or `.innerHTML` of the target element.
 
-*Source: MadAve-Collab -- job/view.ghtml*
+*Source: MadAve-Collab — job/view.ghtml*
 
 ### Complex Form with Multiple Field Types
 
-From MadAve-Collab's job creation form -- a large form with text inputs, selects, date fields, hidden inputs, and custom elements. The server action accesses all fields through the transmission:
+From MadAve-Collab's job creation form — a large form with text inputs, selects, date fields, hidden inputs, and custom elements. The server action accesses all fields through the transmission:
 
 ```html
 <%
@@ -306,16 +306,16 @@ def doCreateJob = { t, String s = Job.STATUS_ASSIGNED_TO_TALENT ->
 Key details:
 
 - Date/time inputs are automatically converted to epoch milliseconds by HUD-Core before sending to the server.
-- Custom Server Elements with a `name` attribute participate in form data collection -- HUD-Core reads their `.value` property.
+- Custom Server Elements with a `name` attribute participate in form data collection — HUD-Core reads their `.value` property.
 - `t.getList('tags')` retrieves multi-value fields as lists.
 
-*Source: MadAve-Collab -- create-job.ghtml*
+*Source: MadAve-Collab — create-job.ghtml*
 
 ---
 
 ## Transmission Response Patterns
 
-### Single Value -- Replace Content
+### Single Value — Replace Content
 
 The simplest response. Return a string and it replaces the target element's `innerHTML`:
 
@@ -325,7 +325,7 @@ The simplest response. Return a string and it replaces the target element's `inn
 </span>
 ```
 
-### Array Transmission -- Class Operations and Actions
+### Array Transmission — Class Operations and Actions
 
 Use an array to perform CSS class operations and trigger built-in actions:
 
@@ -351,7 +351,7 @@ Use an array to perform CSS class operations and trigger built-in actions:
 </button>
 ```
 
-### Map Transmission -- Complex DOM Updates
+### Map Transmission — Complex DOM Updates
 
 Maps are the most powerful response format. Each key-value pair is an instruction:
 
@@ -365,7 +365,7 @@ Maps are the most powerful response format. Each key-value pair is an instructio
 
 This single response changes the button text, adds a CSS class to `event.currentTarget`, and disables the button.
 
-### Map Transmission -- Updating Multiple Elements by ID
+### Map Transmission — Updating Multiple Elements by ID
 
 Use `#id` keys to update elements elsewhere on the page:
 
@@ -386,7 +386,7 @@ def doSave = { t ->
 <span id="status-message"></span>
 ```
 
-### Map Transmission -- Inline Styles
+### Map Transmission — Inline Styles
 
 Prefix keys with `&` to set inline CSS properties:
 
@@ -397,7 +397,7 @@ Prefix keys with `&` to set inline CSS properties:
 ] }}">Highlight me</div>
 ```
 
-### Map Transmission -- Data Attributes
+### Map Transmission — Data Attributes
 
 Prefix keys with `*` to set `data-*` attributes:
 
@@ -408,7 +408,7 @@ Prefix keys with `*` to set `data-*` attributes:
 ] }}">Mark Complete</button>
 ```
 
-### Map Transmission -- URL Query Parameters
+### Map Transmission — URL Query Parameters
 
 Prefix keys with `?` to update the URL query string without a page reload (uses `pushState`):
 
@@ -419,7 +419,7 @@ Prefix keys with `?` to update the URL query string without a page reload (uses 
 ] }}">Page 2</button>
 ```
 
-### Map Transmission -- Local and Session Storage
+### Map Transmission — Local and Session Storage
 
 Use `~` for `localStorage` and `~~` for `sessionStorage`:
 
@@ -430,7 +430,7 @@ Use `~` for `localStorage` and `~~` for `sessionStorage`:
 ] }}">Set Dark Theme</button>
 ```
 
-### Map Transmission -- Descendant Selector
+### Map Transmission — Descendant Selector
 
 Prefix keys with `>` to target a descendant of the active target:
 
@@ -478,7 +478,7 @@ Target the parent element. Useful for removing a list item by its delete button:
 
 In this Guestbook example, clicking the delete icon removes the parent `<div>` that contains the entire participant entry.
 
-*Source: Guestbook -- guestbook.ghtml*
+*Source: Guestbook — guestbook.ghtml*
 
 ### CSS Selector Target
 
@@ -494,7 +494,7 @@ Target any element on the page by CSS selector:
 </section>
 ```
 
-*Source: port-mercury -- contact.ghtml*
+*Source: port-mercury — contact.ghtml*
 
 ### No Target (Fire and Forget)
 
@@ -510,7 +510,7 @@ Alternatively, omit the `target` attribute entirely and return `null` from the s
 
 ### Named Dialog Target
 
-From MadAve-Collab -- forms inside dialogs target the dialog container to dismiss or update it:
+From MadAve-Collab — forms inside dialogs target the dialog container to dismiss or update it:
 
 ```html
 <form target='hud-dialog' on-submit="${ _{ t -> doEdit(t) }}">
@@ -519,7 +519,7 @@ From MadAve-Collab -- forms inside dialogs target the dialog container to dismis
 </form>
 ```
 
-*Source: MadAve-Collab -- user-edit.ghtml*
+*Source: MadAve-Collab — user-edit.ghtml*
 
 ### Append and Prepend Targets
 
@@ -630,7 +630,7 @@ Standard Groovy control flow renders different HTML based on server state:
 <% } %>
 ```
 
-*Source: Guestbook -- guestbook.ghtml*
+*Source: Guestbook — guestbook.ghtml*
 
 ### Reactive Conditional Display with `.if{}`
 
@@ -642,18 +642,18 @@ ${{ "<div id='closed-guestbook-notice' class='centered narrow-width top-margin p
 
 This renders the `<div>` only when the guestbook is closed, and re-evaluates whenever the underlying data changes.
 
-*Source: Guestbook -- guestbook.ghtml*
+*Source: Guestbook — guestbook.ghtml*
 
 ### Conditional CSS Stylesheet Loading
 
-From MadAve-Collab -- load different stylesheets based on the current route:
+From MadAve-Collab — load different stylesheets based on the current route:
 
 ```html
 ${ "<link rel='stylesheet' href='/assets/css/secure.css'>".if { context.target.startsWith('/home/') } }
 ${ "<link rel='stylesheet' href='/assets/css/insecure.css'>".if { !context.target.startsWith('/home/') } }
 ```
 
-*Source: MadAve-Collab -- _wrapper.ghtml*
+*Source: MadAve-Collab — _wrapper.ghtml*
 
 ### Conditional Attributes
 
@@ -664,7 +664,7 @@ Use `.if{}` to conditionally include HTML attributes:
 <option value="disabled" ${ 'selected'.if { user?.value?.status == 'disabled' }}>Disabled</option>
 ```
 
-*Source: MadAve-Collab -- user-edit.ghtml*
+*Source: MadAve-Collab — user-edit.ghtml*
 
 ### Show/Hide with Transmission Actions
 
@@ -681,7 +681,7 @@ Use `@show` and `@hide` to toggle element visibility from the server:
 
 ### CSS-Driven Step Visibility
 
-From MadAve-Collab's password reset flow -- use reactive CSS to control which step is visible:
+From MadAve-Collab's password reset flow — use reactive CSS to control which step is visible:
 
 ```html
 ${{
@@ -707,7 +707,7 @@ ${{
 
 When a server action changes `currentStep()`, the reactive CSS block re-renders, toggling which step is displayed.
 
-*Source: MadAve-Collab -- forgot.ghtml*
+*Source: MadAve-Collab — forgot.ghtml*
 
 ---
 
@@ -727,7 +727,7 @@ ${ userGuestbooks.combine { """
 """ }}
 ```
 
-*Source: Guestbook -- history.ghtml*
+*Source: Guestbook — history.ghtml*
 
 ### Reactive List Rendering
 
@@ -758,11 +758,11 @@ ${{
 }}
 ```
 
-*Source: MadAve-Collab -- upload-audio.ghtml*
+*Source: MadAve-Collab — upload-audio.ghtml*
 
 ### Table Row Rendering with Per-Row Actions
 
-From MadAve-Collab's admin user list -- each row includes action buttons that trigger server closures. Each `on-click` captures the specific user from the loop iteration. The `on-click` attributes work on dynamically inserted content because HUD-Core's MutationObserver automatically binds events:
+From MadAve-Collab's admin user list — each row includes action buttons that trigger server closures. Each `on-click` captures the specific user from the loop iteration. The `on-click` attributes work on dynamically inserted content because HUD-Core's MutationObserver automatically binds events:
 
 ```html
 ${ userList.combine { user ->
@@ -798,11 +798,11 @@ ${ userList.combine { user ->
 
 Each list item gets its own `on-click` server action closure that captures the specific `user.id` from the loop iteration. This is possible because Launchpad creates a unique server action endpoint for each closure.
 
-*Source: MadAve-Collab -- manage-users.ghtml*
+*Source: MadAve-Collab — manage-users.ghtml*
 
 ### Reactive Datalist Options
 
-From MadAve-Collab -- a `<datalist>` whose options are reactively generated from server-side search results:
+From MadAve-Collab — a `<datalist>` whose options are reactively generated from server-side search results:
 
 ```html
 <datalist id="clients">
@@ -812,7 +812,7 @@ From MadAve-Collab -- a `<datalist>` whose options are reactively generated from
 
 The `${{ }}` wrapper makes this reactive: when `fuzzyClients` is updated by a server action, the datalist options re-render automatically.
 
-*Source: MadAve-Collab -- create-job.ghtml*
+*Source: MadAve-Collab — create-job.ghtml*
 
 ### Empty State Handling
 
@@ -852,7 +852,7 @@ MadAve-Collab uses a reactive `dialog` variable defined in the wrapper template.
 <dialogs>${{ dialog ? "<g:hud-dialog open>${ dialog }</g:hud-dialog>" : '' }}</dialogs>
 ```
 
-*Source: MadAve-Collab -- _wrapper.ghtml*
+*Source: MadAve-Collab — _wrapper.ghtml*
 
 ### Opening a Dialog
 
@@ -908,7 +908,7 @@ The pattern works as follows:
 3. Because the wrapper uses `${{ dialog }}`, the DOM updates automatically with the dialog.
 4. The form inside the dialog has its own `on-submit` handler, which works immediately because HUD-Core's MutationObserver binds events on dynamically inserted content.
 
-*Source: MadAve-Collab -- user-edit.ghtml*
+*Source: MadAve-Collab — user-edit.ghtml*
 
 ### Dismissing a Dialog
 
@@ -929,11 +929,11 @@ def doEdit = { t ->
 }
 ```
 
-*Source: MadAve-Collab -- upload-audio.ghtml*
+*Source: MadAve-Collab — upload-audio.ghtml*
 
 ### Confirmation Dialog
 
-From MadAve-Collab -- a delete confirmation dialog with destructive action:
+From MadAve-Collab — a delete confirmation dialog with destructive action:
 
 ```html
 <%
@@ -970,7 +970,7 @@ def deleteCommentDialog = { String commentId ->
 
 Note the error handling: if the comment is not found or the user lacks permission, the dialog still opens but shows an error message instead of the delete form.
 
-*Source: MadAve-Collab -- edit-comment.ghtml*
+*Source: MadAve-Collab — edit-comment.ghtml*
 
 ---
 
@@ -986,7 +986,7 @@ Return a Map Transmission with `@redirect` to navigate to a new page:
 </button>
 ```
 
-*Source: Guestbook -- index.ghtml*
+*Source: Guestbook — index.ghtml*
 
 ### Navigate Back
 
@@ -999,11 +999,11 @@ def doSave = { t ->
 }
 ```
 
-*Source: MadAve-Collab -- create-job.ghtml*
+*Source: MadAve-Collab — create-job.ghtml*
 
 ### Conditional Redirects
 
-From MadAve-Collab's job creation -- redirect to different pages based on context and user role:
+From MadAve-Collab's job creation — redirect to different pages based on context and user role:
 
 ```groovy
 def doCreateJob = { t ->
@@ -1020,7 +1020,7 @@ def doCreateJob = { t ->
 
 The `?m=new-job-success` query parameter is used on the target page to display a success notification.
 
-*Source: MadAve-Collab -- create-job.ghtml*
+*Source: MadAve-Collab — create-job.ghtml*
 
 ---
 
@@ -1049,7 +1049,7 @@ static handleChatMessage(Result r) {
 
 ### WebSocket Reconnection Handling
 
-From MadAve-Collab's wrapper -- detect when the WebSocket connection drops and prompt the user to reconnect:
+From MadAve-Collab's wrapper — detect when the WebSocket connection drops and prompt the user to reconnect:
 
 ```javascript
 function setupSocketHandler() {
@@ -1076,7 +1076,7 @@ if (document.readyState === 'loading') {
 
 This pattern polls for the `socket` variable (set up by Spaceport's WebSocket initialization, which is separate from HUD-Core) and attaches an `onclose` handler that shows a reconnection notification.
 
-*Source: MadAve-Collab -- _wrapper.ghtml*
+*Source: MadAve-Collab — _wrapper.ghtml*
 
 ---
 
@@ -1084,7 +1084,7 @@ This pattern polls for the `socket` variable (set up by Spaceport's WebSocket in
 
 ### Third-Party Library Integration
 
-From the Guestbook application -- integrating the QRCode.js library alongside HUD-Core:
+From the Guestbook application — integrating the QRCode.js library alongside HUD-Core:
 
 ```html
 <script src="/assets/qrcode.min.js" type="application/javascript"></script>
@@ -1105,22 +1105,22 @@ From the Guestbook application -- integrating the QRCode.js library alongside HU
 
 HUD-Core does not interfere with third-party libraries. Scripts embedded in templates execute normally at page load, and scripts inside dynamically inserted content (from Transmissions) are evaluated automatically by HUD-Core's MutationObserver.
 
-*Source: Guestbook -- guestbook.ghtml*
+*Source: Guestbook — guestbook.ghtml*
 
 ### Injecting Notifications via Inline Script
 
-From MadAve-Collab -- display toast-style notifications by including a `<script>` tag in the template output. This works both at page load and when injected via Transmission:
+From MadAve-Collab — display toast-style notifications by including a `<script>` tag in the template output. This works both at page load and when injected via Transmission:
 
 ```html
 ${ """<script>insertNotification("${ messages[data.error] }")</script>""".if { data.error } }
 ${ """<script>insertNotification("${ messages[data.message] }")</script>""".if { data.message } }
 ```
 
-*Source: MadAve-Collab -- login.ghtml, forgot.ghtml*
+*Source: MadAve-Collab — login.ghtml, forgot.ghtml*
 
 ### Notification System
 
-From MadAve-Collab's wrapper -- a reusable client-side notification system that queues messages until the tray element is ready:
+From MadAve-Collab's wrapper — a reusable client-side notification system that queues messages until the tray element is ready:
 
 ```javascript
 var notificationQueue = [];
@@ -1149,9 +1149,9 @@ function insertNotification(html, duration, shade = false) {
 }
 ```
 
-Note the escaped `\${}` in the template literal -- this is necessary inside `.ghtml` files because `${}` would otherwise be interpreted as a Groovy expression.
+Note the escaped `\${}` in the template literal — this is necessary inside `.ghtml` files because `${}` would otherwise be interpreted as a Groovy expression.
 
-*Source: MadAve-Collab -- _wrapper.ghtml*
+*Source: MadAve-Collab — _wrapper.ghtml*
 
 ### Manipulating the DOM from Inline Scripts
 
@@ -1166,7 +1166,7 @@ Scripts in templates can manipulate elements on the page. This works because the
 <% } %>
 ```
 
-*Source: Guestbook -- history.ghtml*
+*Source: Guestbook — history.ghtml*
 
 ---
 
@@ -1229,7 +1229,7 @@ HUD-Core automatically:
 
 This works on dynamically inserted content as well, since the MutationObserver processes new elements with `href` attributes.
 
-*Sources: MadAve-Collab -- upload-audio.ghtml, active-jobs.ghtml; port-mercury -- wrapper.ghtml*
+*Sources: MadAve-Collab — upload-audio.ghtml, active-jobs.ghtml; port-mercury — wrapper.ghtml*
 
 ---
 
@@ -1237,7 +1237,7 @@ This works on dynamically inserted content as well, since the MutationObserver p
 
 ### State-Driven Multi-Step Forms
 
-From MadAve-Collab's password reset flow -- use server-side state (stored in the user's session dock) to control which step of a multi-step workflow is displayed:
+From MadAve-Collab's password reset flow — use server-side state (stored in the user's session dock) to control which step of a multi-step workflow is displayed:
 
 ```html
 <%
@@ -1296,7 +1296,7 @@ Step visibility is controlled by reactive CSS (shown earlier in the [Conditional
 
 Note that `on-click` can be used on `<a>` elements just like `<button>` elements.
 
-*Source: MadAve-Collab -- forgot.ghtml*
+*Source: MadAve-Collab — forgot.ghtml*
 
 ---
 
@@ -1304,7 +1304,7 @@ Note that `on-click` can be used on `<a>` elements just like `<button>` elements
 
 ### Reactive Datalist with `on-keyup`
 
-From MadAve-Collab's job creation form -- use `on-keyup` to trigger server-side fuzzy search and reactively update a `<datalist>`:
+From MadAve-Collab's job creation form — use `on-keyup` to trigger server-side fuzzy search and reactively update a `<datalist>`:
 
 ```html
 <%
@@ -1341,7 +1341,7 @@ How this works:
 
 ### Chained Autocomplete Fields
 
-The same pattern can chain fields -- the project name autocomplete filters by the selected client:
+The same pattern can chain fields — the project name autocomplete filters by the selected client:
 
 ```html
 <%
@@ -1363,7 +1363,7 @@ The same pattern can chain fields -- the project name autocomplete filters by th
 
 The `updateFuzzyProjects` closure uses `currentClient` (set by the previous field's `on-change`) to filter project suggestions.
 
-*Source: MadAve-Collab -- create-job.ghtml*
+*Source: MadAve-Collab — create-job.ghtml*
 
 ---
 
@@ -1371,7 +1371,7 @@ The `updateFuzzyProjects` closure uses `currentClient` (set by the previous fiel
 
 ### File Upload via Server Element
 
-From MadAve-Collab -- file uploads are handled by a custom `<g:file-drop>` Server Element that manages direct-to-cloud uploads. The form submission sends file metadata (not the file bytes) to the server:
+From MadAve-Collab — file uploads are handled by a custom `<g:file-drop>` Server Element that manages direct-to-cloud uploads. The form submission sends file metadata (not the file bytes) to the server:
 
 ```html
 <%
@@ -1411,7 +1411,7 @@ def doUploadAudio = { t ->
 
 Note: For standard `<input type="file">` elements (without a custom Server Element), HUD-Core automatically converts files to base64 data URLs before sending them to the server. The `<g:file-drop>` Server Element handles uploads via presigned URLs for large files, which is a custom implementation.
 
-*Source: MadAve-Collab -- upload-audio.ghtml*
+*Source: MadAve-Collab — upload-audio.ghtml*
 
 ---
 
@@ -1419,7 +1419,7 @@ Note: For standard `<input type="file">` elements (without a custom Server Eleme
 
 ### Delete with Parent Removal
 
-From the Guestbook application -- each participant entry has an inline delete button that removes the parent container:
+From the Guestbook application — each participant entry has an inline delete button that removes the parent container:
 
 ```html
 ${{ gb.participants.combine { Guestbook.ParticipantSchema participant ->
@@ -1440,11 +1440,11 @@ ${{ gb.participants.combine { Guestbook.ParticipantSchema participant ->
 
 The `target='parent'` ensures that `@remove` removes the entire `<div>` containing the participant entry, not just the delete span.
 
-*Source: Guestbook -- guestbook.ghtml*
+*Source: Guestbook — guestbook.ghtml*
 
 ### Inline Flag Clearing
 
-From MadAve-Collab's admin panel -- each notification flag has an inline "Clear" button:
+From MadAve-Collab's admin panel — each notification flag has an inline "Clear" button:
 
 ```html
 ${{
@@ -1466,7 +1466,7 @@ ${{
 
 Since this content is generated inside a `${{ }}` reactive block, the re-render after `_update()` produces fresh HTML with the "Clear" button removed for the flag that was just cleared. HUD-Core's MutationObserver ensures all new `on-click` attributes are properly bound.
 
-*Source: MadAve-Collab -- job/view.ghtml*
+*Source: MadAve-Collab — job/view.ghtml*
 
 ### Bulk Action
 
@@ -1489,7 +1489,7 @@ def doClearAllFlags = {
 </button>
 ```
 
-*Source: MadAve-Collab -- job/view.ghtml*
+*Source: MadAve-Collab — job/view.ghtml*
 
 ---
 
@@ -1522,7 +1522,7 @@ Server Elements can accept server action closures as attribute values:
 
 Here the Server Element receives server action endpoints as its `value` and `transform` attributes, allowing it to fetch and transform data reactively.
 
-*Source: MadAve-Collab -- manage-users.ghtml*
+*Source: MadAve-Collab — manage-users.ghtml*
 
 ### Tag Input Server Element
 
@@ -1543,7 +1543,7 @@ A multi-value input element that participates in form submission:
 
 The `value` attribute receives a server action closure that provides the initial list of tags. The `name="permissions"` attribute means HUD-Core includes the tag values in form data as a list, accessible via `t.getList('permissions')`.
 
-*Source: MadAve-Collab -- user-edit.ghtml*
+*Source: MadAve-Collab — user-edit.ghtml*
 
 ---
 
@@ -1677,7 +1677,7 @@ Place the HUD-Core script tag after the `<body>` content or use the `defer` attr
 <script src='https://cdn.jsdelivr.net/gh/spaceport-dev/hud-core.js@latest/hud-core.min.js'></script>
 ```
 
-*Sources: port-mercury -- wrapper.ghtml; MadAve-Collab -- _wrapper.ghtml*
+*Sources: port-mercury — wrapper.ghtml; MadAve-Collab — _wrapper.ghtml*
 
 ---
 
@@ -1707,6 +1707,6 @@ Place the HUD-Core script tag after the `<body>` content or use the `defer` attr
 
 ## What's Next
 
-- **[HUD-Core Overview](hud-core-overview.md)** -- High-level introduction to HUD-Core and how it fits into the Spaceport ecosystem.
-- **[HUD-Core API Reference](hud-core-api.md)** -- Complete reference for all events, data payloads, Transmission formats, and special attributes.
-- **[HUD-Core Internals](hud-core-internals.md)** -- How the MutationObserver, event binding, fetch pipeline, and Proxy-based reactivity work under the hood.
+- **[HUD-Core Overview](hud-core-overview.md)** — High-level introduction to HUD-Core and how it fits into the Spaceport ecosystem.
+- **[HUD-Core API Reference](hud-core-api.md)** — Complete reference for all events, data payloads, Transmission formats, and special attributes.
+- **[HUD-Core Internals](hud-core-internals.md)** — How the MutationObserver, event binding, fetch pipeline, and Proxy-based reactivity work under the hood.
