@@ -282,10 +282,10 @@ SpaceportTemplateEngine.templateCache.clear()
 Key details:
 
 - **Reactive syntax preprocessing.** The `${{ }}` reactive expression syntax is transformed into Launchpad's internal closure format before parsing. The same transformation is applied to `.ghtml` templates, so reactive expressions work identically in Elements and templates.
-- **Shared classloader per Launchpad.** All Element classes for a single Launchpad load into one classloader. `Page.prerender()` may reference `Sidebar.renderHtml(...)` directly — no helper module required. Earlier versions used a throwaway loader per file, which made sibling classes invisible to each other.
-- **Per-instance map.** `launchpad.elements` is now an instance field, not the static `Launchpad.elements` of earlier versions. Two Launchpads constructed for the **same source path** share the same element map (the `assemble()` case), so the install pass runs once per source path.
-- **Path normalization.** The directory lookup uses the trailing-slash-normalized `this.sourcePath`. Earlier code used the constructor's raw `sourcePath` argument, which silently missed the directory when callers passed a path without a trailing slash.
-- **Template cache invalidation.** Installing a new Element clears `SpaceportTemplateEngine.templateCache`. Without this, templates compiled before the new Element was registered would still report `<!-- SpaceportTemplateEngine: Unknown tag: ... -->` until something else forced a recompile.
+- **Shared classloader per Launchpad.** All Element classes for a single Launchpad load into one classloader. `Page.prerender()` may reference `Sidebar.renderHtml(...)` directly — no helper module required.
+- **Per-instance map.** `launchpad.elements` is an instance field. Two Launchpads constructed for the **same source path** share the same element map (the `assemble()` case), so the install pass runs once per source path.
+- **Path normalization.** The directory lookup uses the trailing-slash-normalized `this.sourcePath`. Constructor paths work with or without a trailing slash.
+- **Template cache invalidation.** Installing a new Element clears `SpaceportTemplateEngine.templateCache`, so templates are recompiled against the updated element registry.
 
 ### Multi-Launchpad Element Resolution
 
@@ -807,13 +807,13 @@ private void reconcileMarkerCount(String html) {
 }
 ```
 
-Reconciliation **preserves existing entries** and only adds what's missing. Earlier versions of the code renamed `replacementId`s on existing entries when stashed elements were processed; that logic is gone — the new reconcile pass is correct for both the deferred-appearance case and the reactive-update-grew case.
+Reconciliation **preserves existing entries** and only adds what's missing. Existing entries retain their `replacementId`s when stashed elements are processed. Reconciliation handles both deferred appearance and growth in the placeholder count during reactive updates.
 
 ### Why this matters in practice
 
 Reactive lists are a common pattern. Before this reconciliation, anything like `items.combine { "<g:row>..." }` where `items` grew over time silently dropped Elements past the initial count — they appeared in the DOM as bare custom tags but without their handler hookup, so any `@Bind`-driven JS behavior didn't work for the elements born via reactive update.
 
-The reconcile pass also handles the case where a reactive expression initially evaluated to an empty list. Earlier logic stashed entries only on first appearance and would miss subsequent updates; the unconditional stash + reconcile combination covers it correctly.
+The reconcile pass also handles the case where a reactive expression initially evaluated to an empty list. Stashing placeholders on each render and reconciling their count ensures that subsequent updates create any required instances.
 
 ---
 

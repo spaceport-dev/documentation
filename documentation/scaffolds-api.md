@@ -2,7 +2,7 @@
 
 ## Create a Project
 
-The runtime no longer accepts `--create-port`. For AI-assisted setup:
+For AI-assisted setup, clone Create Spaceport App:
 
 ```bash
 git clone https://github.com/spaceport-dev/create-spaceport-app my-project
@@ -23,7 +23,7 @@ Use `--headless` for explicit unattended execution. Database connection failures
 
 ## Ground Control Builds
 
-Ground Control is the dedicated Spaceport IntelliJ plugin. The inspected 1.1.0 source targets IntelliJ Platform `2026.2.0.1`, since-build `262`, uses Gradle wrapper `9.3.1`, and requires a JDK 25 toolchain.
+Ground Control is the dedicated Spaceport IntelliJ plugin. Version 1.1.0 targets IntelliJ Platform `2026.2.0.1`, since-build `262`, uses Gradle wrapper `9.3.1`, and requires a JDK 25 toolchain.
 
 From its source checkout, with JDK 25 installed:
 
@@ -32,7 +32,7 @@ From its source checkout, with JDK 25 installed:
 ./gradlew -Dorg.gradle.java.installations.paths=/path/to/jdk-25 runIde
 ```
 
-`buildPlugin` writes an installable ZIP under `build/distributions/`. `runIde` starts a sandbox IDE with the plugin loaded. The toolchain path override replaces the original Tangelo-specific setting; use your own absolute JDK path. Install the ZIP with Settings → Plugins → Install Plugin from Disk.
+`buildPlugin` writes an installable ZIP under `build/distributions/`. `runIde` starts a sandbox IDE with the plugin loaded. Set the toolchain path to your own absolute JDK path. Install the ZIP with Settings → Plugins → Install Plugin from Disk.
 
 These are plugin-source build requirements, not requirements for ordinary Spaceport applications. Shipyard integration and publication are managed by the orchestration workspace; availability of a source checkout does not imply a published plugin build.
 

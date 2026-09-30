@@ -360,7 +360,8 @@
     "pioneer": "Pioneer",
     "voyager": "Voyager",
     "choosing-the-right-approach": "Choosing the Right Approach",
-    "starter-kits-vs-cli-scaffolds": "Starter Kits vs. CLI Scaffolds"
+    "starter-kits-vs-cli-scaffolds": "Starter Kits vs. CLI Scaffolds",
+    "current-project-creation": "Current Project Creation"
   },
   "transmissions-overview": {
     "installation": "Installation &amp; Usage",
@@ -608,7 +609,9 @@
     "existing-manifest-handling": "Existing Manifest Handling",
     "directory-creation": "Directory Creation",
     "database-interaction-during-onboarding": "Database Interaction During Onboarding",
-    "relationship-to-command-class": "Relationship to Command Class"
+    "relationship-to-command-class": "Relationship to Command Class",
+    "runtime-scaffolding-was-removed": "Runtime Scaffolding Was Removed",
+    "current-ownership": "Current Ownership"
   },
   "cli-api": {
     "--create-port": "--create-port"

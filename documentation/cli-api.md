@@ -35,7 +35,7 @@ Place the manifest path before `--headless`: its next non-flag argument is consu
 
 - `--headless` forces non-interactive operation even when a terminal is attached. Prompts fail rather than waiting for input.
 - `--continue` explicitly permits startup or migration to proceed when the main database cannot authenticate. Without it, an attached terminal offers a continue/exit choice; unattended execution exits with status `1`.
-- Without a terminal (systemd, cron, pipes), output goes to stdout and prompts fail automatically. A missing console no longer breaks ordinary output.
+- Without a terminal (systemd, cron, pipes), output goes to stdout and prompts fail automatically.
 - Migration JSON accepts a `migration` filename and an `inputs` object. `@file` reads that JSON from disk. Migration scripts receive `report`, `inputs`, and `interactive` bindings; supplied inputs do not answer `Command` prompts automatically.
 - A single migration is selected automatically without a terminal. With multiple migrations, supply its filename. Unknown filenames, malformed JSON, prompt attempts without a terminal, and migration failures exit with status `1`.
 

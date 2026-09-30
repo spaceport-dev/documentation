@@ -58,7 +58,7 @@ Every subsequent CouchDB request calls `ensureValidSession()` before executing. 
 
 This ObjectMapper is used for all document serialization and deserialization between Spaceport and CouchDB.
 
-`View.getDocuments()` and `View.rowsAs(...)` construct their own `ObjectMapper` instances with the same `DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES` setting. (Earlier framework versions referenced a Jackson 1.x enum path that does not exist in the bundled Jackson — `DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES` — which made both methods throw `MissingPropertyException` on first use. Both now use the correct `DeserializationFeature` form and are fully functional.)
+`View.getDocuments()` and `View.rowsAs(...)` construct their own `ObjectMapper` instances with the same `DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES` setting.
 
 ---
 

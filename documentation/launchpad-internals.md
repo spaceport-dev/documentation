@@ -213,7 +213,7 @@ This means:
 - **Subsequent requests with unchanged file** -- Cache hit. Only the file read occurs; all processing is skipped.
 - **Requests after file modification** -- Hash mismatch triggers full recompilation and cache update.
 
-The cache is also cleared whenever new Elements are registered into a Launchpad. Without this, templates compiled before a new Element existed would still report `<!-- SpaceportTemplateEngine: Unknown tag: foo -->` even after `<g:foo>` became valid — only an actual template-content change would force a recompile that picked up the new tag. The cache-clear on element registration makes this transparent in dev mode.
+The cache is also cleared whenever new Elements are registered into a Launchpad, so templates are recompiled against the updated element registry.
 
 **Known limitation.** `templateCache` is keyed on template name/hash, not on Launchpad. If the *same template path* gets compiled from two different Launchpads with diverging element-visibility views, the cache could return a placeholder-baked version meant for the other Launchpad. In practice each Launchpad has its own source path (so template file paths naturally differ), but it's worth knowing if include/share patterns cross Launchpad boundaries.
 
@@ -679,7 +679,7 @@ for (def element in new File(this.sourcePath + 'elements').listFiles()) {
 SpaceportTemplateEngine.templateCache.clear()
 ```
 
-The filename is converted to kebab-case for the tag name (e.g., `StatCard.groovy` becomes `stat-card`, `TagInput.groovy` becomes `tag-input`). Path normalization is the trailing-slash-aware `this.sourcePath`, so passing a path without a trailing slash to the constructor no longer silently lands on a nonexistent directory.
+The filename is converted to kebab-case for the tag name (e.g., `StatCard.groovy` becomes `stat-card`, `TagInput.groovy` becomes `tag-input`). Path normalization uses the trailing-slash-aware `this.sourcePath`, so constructor paths work with or without a trailing slash.
 
 ### Multi-Launchpad resolution
 

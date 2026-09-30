@@ -133,7 +133,7 @@ Project structure templates and starter kits for new applications.
 
 - [Scaffolds Overview](scaffolds-overview.md) -- What scaffolds are, available starter kits (Port-Echo, Port-Mercury), and project directory structure.
 - [Scaffolds API Reference](scaffolds-api.md) -- Configuration options, directory conventions, and customization.
-- [Scaffolds Internals](scaffolds-internals.md) -- Scaffold ownership and migration from the removed runtime wizard.
+- [Scaffolds Internals](scaffolds-internals.md) -- Scaffold ownership and existing project configuration.
 
 ### Manifest Configuration
 

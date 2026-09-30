@@ -37,7 +37,7 @@ Spaceport has no build step and no IDE requirement — any text editor works. Ho
 
 Use **Spaceport Ground Control** for dedicated `.ghtml` editing in IntelliJ-based IDEs. Version 1.1.0 targets IntelliJ Platform 2026.2 (build 262 or newer), with Groovy and YAML support enabled.
 
-Install its ZIP through Settings → Plugins → the gear menu → Install Plugin from Disk, then restart the IDE. Ground Control supplies GHTML/HTML/Groovy completion, cross-island type inference, element navigation, manifest schema completion, source-root recognition, route inspections, and manifest-generated run configurations. The retired Grails/GSP plugin is no longer the recommended setup.
+Install its ZIP through Settings → Plugins → the gear menu → Install Plugin from Disk, then restart the IDE. Ground Control supplies GHTML/HTML/Groovy completion, cross-island type inference, element navigation, manifest schema completion, source-root recognition, route inspections, and manifest-generated run configurations.
 
 Ground Control builds require JDK 25; this is separate from the Java requirement for running a Spaceport application. See [Scaffolds API](scaffolds-api.md#ground-control-builds) for build commands.
 
@@ -132,11 +132,11 @@ For full CLI documentation, see [CLI Overview](cli-overview.md).
 
 ## Creating a Project
 
-You have two paths to create a new Spaceport project: the interactive CLI wizard, or downloading a starter kit.
+You can create a new Spaceport project with Create Spaceport App or a starter kit.
 
 ### Option A: Create Spaceport App
 
-The built-in `--create-port` wizard has been removed. Use [Create Spaceport App](https://github.com/spaceport-dev/create-spaceport-app) for AI-assisted setup, clone a starter kit, or create a project manually. See [Scaffolds Overview](scaffolds-overview.md).
+Use [Create Spaceport App](https://github.com/spaceport-dev/create-spaceport-app) for AI-assisted setup, clone a starter kit, or create a project manually. See [Scaffolds Overview](scaffolds-overview.md).
 
 ```bash
 git clone https://github.com/spaceport-dev/create-spaceport-app my-project

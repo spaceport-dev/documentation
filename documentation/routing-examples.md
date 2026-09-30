@@ -223,7 +223,7 @@ static _roleCheck(HttpResult r) {
 
 This pattern scales well for applications with many protected routes — add a route to the role map configuration instead of adding authorization code to each handler.
 
-The `passive = true` attribute is essential here. The wildcard `~on /(.*) hit` matches **every** path — including ones no route serves — and a normal (non-passive) hook marks each matched request as handled, which would make unrouted paths return 200 instead of 404. A passive hook runs exactly the same way (it can still redirect and cancel, as above) but never claims the request, so the 404 fallback keeps working. Before `passive` existed, the only workaround was scoping the pattern to a prefix like `~on /app/(.*) hit`; that's still sensible when the middleware genuinely only concerns one subtree, but it's no longer required for global middleware.
+The `passive = true` attribute is essential here. The wildcard `~on /(.*) hit` matches **every** path — including ones no route serves — and a normal (non-passive) hook marks each matched request as handled, which would make unrouted paths return 200 instead of 404. A passive hook runs exactly the same way (it can still redirect and cancel, as above) but never claims the request, so the 404 fallback keeps working. Scope the pattern to a prefix like `~on /app/(.*) hit` when the middleware only concerns that subtree.
 
 ---
 

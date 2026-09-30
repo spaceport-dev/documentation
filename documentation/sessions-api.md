@@ -218,7 +218,7 @@ If other cookies remain (the user is still logged in on another device), the Cli
   - `cookie` — The session cookie (`spaceport-uuid`) to log out
 - **Behavior:**
   - Safe to call during a request: the in-flight request already holds its Client reference, so registry removal does not affect it. The browser's next request finds no matching cookie and is bound to a fresh anonymous Client.
-  - After full teardown, `Client.getClient(userId)` no longer resurfaces the logged-out Client — this is intended.
+  - After full teardown, `Client.getClient(userId)` does not return the logged-out Client.
 
 ```groovy
 @Alert('on /logout hit')

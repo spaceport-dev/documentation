@@ -2,11 +2,9 @@
 
 A scaffold is the layout of modules, Launchpad templates, assets and configuration in a Spaceport project. The manifest determines where the runtime finds these files; you can use the layout that suits your application.
 
-## Current Project Creation
+## Project Creation
 
-The built-in `--create-port` command and its `Onboarding` implementation were removed in favor of [Create Spaceport App](https://github.com/spaceport-dev/create-spaceport-app). The old Mercury/Pioneer/Voyager CLI wizard is not available in current JARs.
-
-Choose one of these approaches:
+Project creation is handled by [Create Spaceport App](https://github.com/spaceport-dev/create-spaceport-app), starter kits, or manual setup. Choose one of these approaches:
 
 | Situation | Approach |
 |---|---|
@@ -49,6 +47,6 @@ Use only the folders your project needs. Ignition scripts run once during startu
 ## See Also
 
 - [Scaffolds API Reference](scaffolds-api.md) — Setup and Ground Control build steps
-- [Scaffolds Internals](scaffolds-internals.md) — Source ownership and migration from the old wizard
+- [Scaffolds Internals](scaffolds-internals.md) — Source ownership and existing project configuration
 - [Developer Onboarding](developer-onboarding.md) — Start a first application
 - [CLI Overview](cli-overview.md) — Runtime commands

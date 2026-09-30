@@ -121,7 +121,7 @@ The logout verbs perform a staged teardown built on top of the `removeCookie` pr
 
 `deauthenticateAll()` skips the per-cookie logic: it clears all cookies and performs the full teardown unconditionally.
 
-The registry removal matters for two reasons. A cookieless Client can no longer be resolved by `getClientByCookie()`, so leaving it registered would only lengthen the O(n) registry scans — and it would remain resolvable (still authenticated) via `getClient(userId)`, resurfacing a logged-out session to server-initiated pushes. Removal closes both gaps. Removal is concurrency-safe (`activeClients` is a `CopyOnWriteArrayList`), and the in-flight request is unaffected because it already holds its Client reference.
+Removing a logged-out Client from the registry keeps O(n) registry scans shorter and prevents `getClient(userId)` from returning it for server-initiated pushes. A Client without cookies cannot be resolved by `getClientByCookie()`. Removal is concurrency-safe (`activeClients` is a `CopyOnWriteArrayList`), and the in-flight request is unaffected because it already holds its Client reference.
 
 `closeSockets()` iterates a **snapshot** of the socket set: closing a session triggers `onWebSocketClose → removeSocketHandler` on the socket's own thread, which would otherwise mutate the set mid-iteration. Each still-connected handler is closed via `handler.getSession()?.close()` — the same mechanism `SocketResult` uses — and the set is then cleared.
 

@@ -1609,7 +1609,7 @@ class Page implements Element {
 ```
 
 **Patterns demonstrated:**
-- **Static cross-element references.** `Sidebar.renderHtml(...)` is callable from `Page` because both classes loaded into the same `GroovyClassLoader`. Earlier framework versions used a throwaway loader per Element, which forced this kind of shared helper to live in `modules/`.
+- **Static cross-element references.** `Sidebar.renderHtml(...)` is callable from `Page` because both classes loaded into the same `GroovyClassLoader`.
 - **`<g:>` tags inside prerender output.** The framework scans the returned HTML after `prerender()` runs, instantiates an Element for each `<g:>` tag it finds, and gives it the full lifecycle (CSS dedup, handler injection, recursion). Outer-loop pass count is capped at 16, so a self-emitting Element terminates safely rather than hanging.
 - **Choosing between the two.** Use the static method when you just need a string of HTML (no scoped CSS or handlers); use the nested `<g:>` form when you want the sibling Element's full lifecycle (its own CSS, JS, attributes).
 

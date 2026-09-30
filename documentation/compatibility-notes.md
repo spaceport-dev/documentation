@@ -21,7 +21,7 @@ The framework targets Java 8 bytecode and embeds Groovy 3.0.25 at revision `3fff
 
 ### The `--add-opens` Flag
 
-Starting with Java 9, the Java Platform Module System (JPMS) encapsulated many internal APIs that were previously accessible via reflection. While Java 9 through 11 provided some leniency, later versions have tightened these restrictions.
+The Java Platform Module System (JPMS) restricts reflective access to internal APIs. On Java 17+, application dependencies that access these APIs may require explicit package access.
 
 Spaceport's core does not directly require access to encapsulated JDK internals. However, Groovy's dynamic nature and many common Java libraries rely on deep reflection. When your application code or a dependency attempts to access an encapsulated API, you will see a runtime error:
 
@@ -97,6 +97,6 @@ For maximum production stability, choose **Java 11 or 17**. Test newer feature r
 
 ## Verified Build and IDE Tooling Baselines
 
-The framework build at revision `3fff144` uses Java 8 and Gradle 5.2.1, with Groovy 3.0.25. Shipyard verification passed 525 tests and a Java 21 HTTP smoke check; Frontier runs Java 21. These checks do not prove every application dependency or all reflective code paths work on every JDK. The Java 8 classloader fix also handles duplicate-class `LinkageError` messages emitted by that runtime.
+The framework build at revision `3fff144` uses Java 8 and Gradle 5.2.1, with Groovy 3.0.25. Shipyard verification passed 525 tests and a Java 21 HTTP smoke check; Frontier runs Java 21. These checks do not prove every application dependency or all reflective code paths work on every JDK. The classloader also handles duplicate-class `LinkageError` messages emitted by that runtime.
 
 Ground Control 1.1.0 is a separate IntelliJ plugin targeting platform 2026.2 / build 262. Building it requires JDK 25 and its Gradle 9.3.1 wrapper. This does not raise the framework runtime's Java requirement.
