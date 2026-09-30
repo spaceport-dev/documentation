@@ -269,7 +269,7 @@ Removes a WebSocket handler from this Client. Called internally when a WebSocket
 
 **Package:** `spaceport.personnel`
 **Extends:** `Document`
-**Database:** `users`
+**Database:** `ClientDocument.usersDatabase()` (default `users`, configurable via `memory cores.main.users database`)
 
 A ClientDocument represents a registered user stored in CouchDB. It contains profile information, credentials (BCrypt-hashed), permissions, and notes.
 
@@ -277,7 +277,7 @@ A ClientDocument represents a registered user stored in CouchDB. It contains pro
 
 #### `ClientDocument.createNewClientDocument(String userId, String password)`
 
-Creates a new user document in the `users` database with a BCrypt-hashed password.
+Creates a new user document in the configured users database with a BCrypt-hashed password.
 
 - **Parameters:**
   - `userId` — The user ID (becomes the document `_id`)

@@ -18,8 +18,8 @@ If you have experience with Rails migrations, Django migrations, or Flyway, Spac
 - **No migration history.** Spaceport does not track which migrations have been run. Scripts should be written to be idempotent -- safe to execute repeatedly.
 - **Interactive by default.** Migrations can prompt the operator for input (usernames, passwords, confirmation of destructive actions). This makes them well suited for setup tasks that require human decisions.
 - **Full database access.** Migration scripts use the same core Spaceport APIs (`Document`, `ClientDocument`, `Spaceport.main_memory_core`) that your application code uses. There is no separate migration DSL.
-- **Minimal runtime.** The migration environment only loads core Spaceport classes, metaclass enhancements, and a database connection. **Your project's source modules are not loaded** -- migrations cannot reference classes, services, or utilities defined in your `modules/` directory. All logic must be self-contained within the script itself.
-- **CLI environment.** Migrations run inside `Command.with { }`, giving access to formatted output helpers (`printBox`, `success`, `error`) and input prompts (`promptInput`, `promptMultiInput`).
+- **Minimal runtime.** The migration environment loads core Spaceport classes, metaclass enhancements, a database connection, stowaways and ignition scripts. **Your project's source modules are not loaded** -- migrations cannot reference classes, services, or utilities defined in your `modules/` directory. All logic must be self-contained within the script itself.
+- **CLI environment.** Migrations can use `Command.with { }`, giving access to formatted output helpers (`printBox`, `success`, `error`) and input prompts (`promptInput`, `promptMultiInput`).
 
 
 ## When to Use Migrations
@@ -36,7 +36,7 @@ Migrations are typically run while the server is stopped, but they can also be e
 
 ## A Simple Example
 
-The most common migration included with Spaceport projects is `CreateSpaceportAdministrator.groovy`, which ensures the `users` database exists and creates an administrator account:
+The most common migration included with Spaceport projects is `CreateSpaceportAdministrator.groovy`, which ensures the configured users database exists and creates an administrator account:
 
 ```groovy
 import spaceport.Spaceport
@@ -48,11 +48,11 @@ Command.with {
 
     printBox("""
     This migration will create a default Spaceport administrator
-    and a 'users' database if they do not already exist.
+    and the configured users database if they do not already exist.
     """)
 
     // Ensure the users database exists
-    Spaceport.main_memory_core.createDatabaseIfNotExists('users')
+    Spaceport.main_memory_core.createDatabaseIfNotExists(ClientDocument.usersDatabase())
 
     // Prompt for credentials
     def username = promptInput('Enter a new username (default: administrator)')
@@ -143,3 +143,8 @@ Use migrations for tasks that happen **outside** the running application -- crea
 
 - [Migrations API Reference](migrations-api.md) -- Complete reference for the `--migrate` command, script structure, and available APIs.
 - [Migrations Examples](migrations-examples.md) -- Practical migration patterns drawn from real Spaceport projects.
+
+
+## Unattended Execution
+
+Use `--headless` with JSON naming the migration and its `inputs` (or `@file.json`). Scripts receive `report`, `inputs`, and `interactive` bindings. A single script is auto-selected without a terminal; multiple scripts need an explicit filename. Prompts fail without a terminal, so scripts must read supplied answers rather than calling a prompt unconditionally. See [Migrations API](migrations-api.md#unattended-migrations).

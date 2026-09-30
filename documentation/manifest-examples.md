@@ -357,3 +357,27 @@ Each file is a complete, standalone configuration. There is no inheritance betwe
 - [Manifest Overview](manifest-overview.md) -- How configuration loading works
 - [Manifest API Reference](manifest-api.md) -- Complete reference of all configuration keys
 - [CLI Overview](cli-overview.md) -- Starting Spaceport with different manifests
+
+
+## Dedicated Users Database and Render Limits
+
+```yaml
+memory cores:
+  main:
+    address: ${COUCHDB_URL}
+    username: ${COUCHDB_USER}
+    password: ${COUCHDB_PASSWORD}
+    users database: app-users
+
+ignition:
+  paths:
+    - ignition
+
+launchpad:
+  concurrency: 8
+  perClientConcurrency: 2
+```
+
+`users database` changes where client records and authentication views are stored; it does not move existing users. Read the value through `ClientDocument.usersDatabase()` in custom migrations. Ignition runs before normal source modules and also before selected migration scripts. Render limits must be positive integers and apply to full HTTP renders.
+
+Environment placeholders are required unless given an explicit `${VAR:-fallback}`. Whole-placeholder values are typed with YAML scalar rules. Invalid framework configuration fails before database or application initialization.

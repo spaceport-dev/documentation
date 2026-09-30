@@ -649,3 +649,18 @@ Clears all Launchpad-owned element state: iterates `byName.values()` and clears 
 | `binding` | `Map` | Per-Launchpad script-binding map (`Collections.synchronizedMap`). Holds template variables, reactions, server-action bindings, and internal state. |
 | `elements` | `ConcurrentHashMap<String, Class>` | Per-Launchpad local element map, keyed by kebab-case tag name. Always checked first during element resolution. Replaces the old static `Launchpad.elements`. |
 | `allowFolderTraversal` | `boolean` | Default `false`. When `false`, template paths containing `..` are rejected to prevent directory traversal. |
+
+
+## HTTP Render Concurrency
+
+Full HTTP renders acquire a per-client permit (keyed by `client.user_id`, when available), then a global permit before heavy rendering. Defaults are `launchpad.perClientConcurrency: 2` and `launchpad.concurrency: 16`. Requests wait for permits; the limit does not return a rate-limit response. The per-client wait holds no global slot. Limits are cached on first use; restart to apply a change.
+
+```yaml
+launchpad:
+  concurrency: 8
+  perClientConcurrency: 2
+```
+
+Use lower global concurrency for large pages to reduce simultaneous transient memory use. These settings limit full HTTP renders, not every WebSocket action or application task.
+
+The renderer checks for HTTP client disconnect after acquiring permits and during element-processing passes, skips abandoned work, and releases permits in cleanup. This is cooperative cancellation at checkpoints, not interruption of arbitrary application code.

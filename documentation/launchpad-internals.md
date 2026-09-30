@@ -357,7 +357,7 @@ closestScript._reactions.put(uuid, [
     'created'  : System.currentTimeMillis(),
     'reaction' : closure,          // The original closure (for re-evaluation)
     '_source'  : sourceText,       // Source line for debugging
-    '_current' : returnString,     // Current rendered value (for change detection)
+    '_currentHash' : reactionDigest(returnString), // 64-bit digest for change detection
     '_triggers': delegate.caught   // Set of variable names this expression depends on
 ])
 ```
@@ -406,7 +406,8 @@ for (def reaction in bindingSatellites.get(launch)?._reactions) {
     def payload = reaction.value.reaction(action.owner, reaction.key).toString()
     payload = bindingSatellites.get(launch).__(payload) // Process Server Elements in the new content
 
-    if (reaction.value._current != payload) {
+    def payloadHash = reactionDigest(payload)
+    if (reaction.value._currentHash != payloadHash) {
         // Send updated content via WebSocket
         bindingSatellites.get(launch)._socket.session?.remote?.sendStringByFuture(
             new JsonBuilder([
@@ -414,7 +415,7 @@ for (def reaction in bindingSatellites.get(launch)?._reactions) {
                 'uuid'   : reaction.key,
                 'payload': payload
             ]).toString())
-        reaction.value._current = payload
+        reaction.value._currentHash = payloadHash
     }
 }
 ```
@@ -798,3 +799,8 @@ The `prime()` method then wraps this in a `<fatal class="error">` element.
 | Missing `<payload/>` in vessel | HTTP 501 status, debug log message |
 | Folder traversal detected in template path | HTML comment: `<!-- LaunchPad: Folder traversal detected -->` |
 | Template file not found | HTML comment: `<!-- LaunchPad: Part not found: filename -->` |
+
+
+## Reactive State Memory
+
+Reactions retain `_currentHash`, a 64-bit FNV-1a digest of the last rendered string, rather than the full previous HTML in `_current`. Changed payloads are still sent as HTML; the digest reduces retained memory for large reactive blocks. Per-binding satellite cleanup removes abandoned socket state, and element processing can create additional instances when a reactive update grows its placeholder count.

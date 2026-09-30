@@ -72,7 +72,7 @@ You should not normally call this method directly. It is invoked by the framewor
 6. `@ScopedAppend` fields -- aggregated into `_scopedAppend`
 7. `@Bind` methods -- generates client-side JavaScript proxy functions and registers server-side handlers in `_handlerMap`
 8. `@Javascript` fields -- appended to the JavaScript handler block
-9. Wraps all JavaScript in a `<script>` tag that initializes the client-side element reference
+9. Wraps JavaScript in a `<script>` tag only when `@Bind` or `@Javascript` contributes a handler; static elements emit no empty script wrapper
 
 #### `getTagName()`
 

@@ -9,11 +9,11 @@ Spaceport needs three things on your system:
 
 | Prerequisite | Minimum Version | Recommended |
 |---|---|---|
-| Java (JDK or JRE) | Java 8 SE | Java 11 (Azul Zulu or Amazon Corretto) |
+| Java (JDK or JRE) | Java 8 SE bytecode target | Java 21 (verified Frontier runtime) |
 | Apache CouchDB | 2.0 | 3.5.x or later |
 | Spaceport JAR | Latest | Latest |
 
-You will also need a terminal, a web browser, and a text editor. Any editor works -- Spaceport has no build step, so there is no IDE dependency. If you want syntax highlighting for `.ghtml` template files, Sublime Text with the [Spaceport plugin](https://github.com/aufdemrand/spaceport-slt) or JetBrains IntelliJ IDEA Ultimate with the Grails plugin are good choices.
+You will also need a terminal, a web browser, and a text editor. Any editor works -- Spaceport has no build step, so there is no IDE dependency. For `.ghtml` support, use Spaceport Ground Control in IntelliJ or the [Spaceport Sublime Text plugin](https://github.com/aufdemrand/spaceport-slt).
 
 ### Groovy Knowledge
 
@@ -35,16 +35,12 @@ Spaceport has no build step and no IDE requirement — any text editor works. Ho
 
 **JetBrains IntelliJ IDEA** (recommended)
 
-IntelliJ IDEA provides excellent Groovy support out of the box: code completion, refactoring, debugging, and error detection. The **Ultimate** edition adds HTML, CSS, and JavaScript support that is valuable for full-stack Spaceport development. The Community edition is free and handles Groovy well but lacks front-end tooling. Ultimate is free for students and open-source projects.
+Use **Spaceport Ground Control** for dedicated `.ghtml` editing in IntelliJ-based IDEs. Version 1.1.0 targets IntelliJ Platform 2026.2 (build 262 or newer), with Groovy and YAML support enabled.
 
-- Download from the [IntelliJ IDEA Downloads Page](https://www.jetbrains.com/idea/download/)
-- Install the **Grails plugin** for `.ghtml` template support:
-  1. Go to `File > Settings > Plugins` (or `IntelliJ IDEA > Preferences > Plugins` on macOS)
-  2. Search the Marketplace for `Grails` and install it
-  3. Restart the IDE
-  4. Associate `.ghtml` files with Groovy Server Pages: `Preferences > Editor > File Types`, find Groovy Server Pages, and add `*.ghtml` to its patterns
+Install its ZIP through Settings → Plugins → the gear menu → Install Plugin from Disk, then restart the IDE. Ground Control supplies GHTML/HTML/Groovy completion, cross-island type inference, element navigation, manifest schema completion, source-root recognition, route inspections, and manifest-generated run configurations. The retired Grails/GSP plugin is no longer the recommended setup.
 
-> The Grails/GSP association is not a perfect match for Spaceport's template syntax, but it provides reasonable syntax highlighting and basic editing features while dedicated Spaceport tooling is in development.
+Ground Control builds require JDK 25; this is separate from the Java requirement for running a Spaceport application. See [Scaffolds API](scaffolds-api.md#ground-control-builds) for build commands.
+
 
 **IntelliJ IDEA with JetBrains Gateway** (remote development)
 
@@ -101,7 +97,7 @@ On Debian/Ubuntu, the quickest path is:
 sudo apt install default-jre
 ```
 
-For Java version compatibility details beyond Java 11, see [Compatibility Notes](compatibility-notes.md).
+For verified build and runtime baselines, see [Compatibility Notes](compatibility-notes.md).
 
 
 ## Installing CouchDB
@@ -138,23 +134,17 @@ For full CLI documentation, see [CLI Overview](cli-overview.md).
 
 You have two paths to create a new Spaceport project: the interactive CLI wizard, or downloading a starter kit.
 
-### Option A: The --create-port Wizard
+### Option A: Create Spaceport App
 
-The CLI wizard walks you through an interactive setup process that creates your project structure, writes a manifest configuration file, configures your database connection, and creates an administrator account.
+The built-in `--create-port` wizard has been removed. Use [Create Spaceport App](https://github.com/spaceport-dev/create-spaceport-app) for AI-assisted setup, clone a starter kit, or create a project manually. See [Scaffolds Overview](scaffolds-overview.md).
 
 ```bash
-java -jar spaceport.jar --create-port
+git clone https://github.com/spaceport-dev/create-spaceport-app my-project
+cd my-project
 ```
 
-The wizard offers three scaffold types:
+Follow the repository's documentation-fetch instructions, then its `BOOTSTRAP.md` workflow. Download the framework JAR separately.
 
-| Scaffold | What You Get | Best For |
-|---|---|---|
-| **Mercury** | A single `App.groovy` in `modules/` | APIs, microservices, learning |
-| **Pioneer** | Source modules + Launchpad templates | Sites with pages, no user accounts |
-| **Voyager** | Full app with login, registration, admin panel | Production web applications |
-
-For your first project, **Mercury** is the right choice. It gives you the minimum needed to start, and you can add structure as you go. See [Scaffolds Overview](scaffolds-overview.md) for details on what each scaffold creates.
 
 ### Option B: Download a Starter Kit
 
@@ -435,7 +425,7 @@ There is no compile step, no build command, no restart. Spaceport watches for fi
 - [ ] Install Java 8+ (Java 11 LTS recommended)
 - [ ] Install CouchDB and note the admin credentials
 - [ ] Download the Spaceport JAR
-- [ ] Create a project (`--create-port`, starter kit, or manual)
+- [ ] Create a project (Create Spaceport App, starter kit, or manual)
 - [ ] Write a source module with an `@Alert` route handler
 - [ ] Start Spaceport and verify your route works in the browser
 - [ ] Add a Launchpad template and render it with `assemble().launch()`
@@ -456,7 +446,7 @@ Once you are comfortable with the basics, pick a path:
 - [Launchpad Overview](launchpad-overview.md) -- Templating, reactive bindings, and server actions
 - [Cargo Overview](cargo-overview.md) -- Reactive data containers for session state, caching, and persistence
 - [Documents Overview](documents-overview.md) -- The CouchDB ORM for persistent data
-- [Scaffolds Overview](scaffolds-overview.md) -- Project structure and the `--create-port` wizard
+- [Scaffolds Overview](scaffolds-overview.md) -- Project structure and current setup workflows
 - [Manifest Overview](manifest-overview.md) -- Configuration file format and all available keys
 - [CLI Overview](cli-overview.md) -- All Spaceport command-line commands
 

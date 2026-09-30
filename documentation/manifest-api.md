@@ -130,6 +130,20 @@ memory cores:
     address: http://db.example.com:5984
 ```
 
+### `memory cores.main.users database`
+
+**Type:** `String` · **Default:** `users`
+
+Database containing `ClientDocument` records and authentication views. Client creation, lookup, authentication and registry setup use this name. Resolve it in application code with `ClientDocument.usersDatabase()` rather than hard-coding `users`.
+
+```yaml
+memory cores:
+  main:
+    users database: app-users
+```
+
+This does not rename or migrate existing documents, and does not select a default database for unrelated application documents. Move existing user data deliberately before changing a production setting.
+
 ### `memory cores.main.username`
 
 **Type:** `String`
@@ -469,14 +483,37 @@ auth:
 | Configured value | Effect |
 |---|---|
 | `4`–`31` | Honored (bcrypt's valid cost range) |
-| Unset, non-numeric, or out of range | Falls back to `10` |
+| Unset | Uses `10` |
+| Non-integer or outside `4`–`31` in a manifest | Configuration validation rejects startup |
 
-The fallback rules mean a config typo can neither break password hashing nor silently weaken it.
+The password helper also defensively falls back to `10` when called directly with an unusable value; that does not bypass manifest validation.
 
 **Changing the cost never invalidates existing passwords.** Every stored hash records the cost it was created with, and verification uses that recorded cost — not the configured one. Raising or lowering the value is safe at any time; only newly set passwords (new users, password changes and resets) use the new cost.
 
 See [Sessions & Client Management API](sessions-api.md) for the `ClientDocument` password methods, and [Sessions Internals](sessions-internals.md) for how cost resolution works.
 
+
+## Ignition Scripts
+
+### `ignition.paths`
+
+**Type:** `List<String>` · **Default:** `['ignition']`
+
+Directories of one-shot startup scripts, resolved relative to `spaceport root` unless absolute. Files are scanned non-recursively and sorted by filename across configured directories. See [Ignition Scripts Overview](ignition-scripts-overview.md).
+
+## Launchpad Concurrency
+
+### `launchpad.concurrency`
+
+**Type:** `Integer` · **Default:** `16`
+
+Global limit on concurrent HTTP Launchpad renders.
+
+### `launchpad.perClientConcurrency`
+
+**Type:** `Integer` · **Default:** `2`
+
+Per-client limit on concurrent HTTP Launchpad renders. Both settings must be positive integers. See [Launchpad API](launchpad-api.md#http-render-concurrency).
 
 ## Custom Configuration Keys
 
@@ -523,7 +560,9 @@ api keys:
 ```
 
 - Whitespace inside the braces is trimmed: `${ VAR }` and `${VAR}` both work
-- If the environment variable is not set, the placeholder remains in the string unchanged
+- Missing variables abort startup and migrations with a key-path diagnostic; `${VAR:-fallback}` supplies an explicit default and logs its use
+- A whole-placeholder value is coerced with YAML scalar rules; embedded placeholders remain strings
+- Configuration is validated after substitution; see [Manifest Overview](manifest-overview.md#4-configuration-validation)
 - Substitution works in maps, lists, and plain string values
 - Non-string values (numbers, booleans, null) are not processed
 

@@ -9,7 +9,7 @@ java -jar spaceport.jar --start config.spaceport
 
 ## How Configuration Loading Works
 
-When Spaceport starts, the configuration goes through a three-stage process:
+When Spaceport starts, the configuration goes through a four-stage process:
 
 ### 1. Parse the YAML File
 
@@ -41,7 +41,21 @@ memory cores:
     password: ${ COUCHDB_PASSWORD }
 ```
 
-If an environment variable is not set, the placeholder is left as-is and a debug message is logged.
+If a variable is missing, startup and migration fail with the configuration key path. Use `${VAR_NAME:-fallback}` for an explicit default; using the fallback logs a warning. An empty but defined environment value does not select the fallback.
+
+A value consisting entirely of one placeholder is typed using YAML scalar rules: booleans, integers, floating-point numbers and null become their corresponding values. Mixed text remains a string. This applies even when the placeholder was quoted in YAML; avoid all-numeric or boolean-like values for string-only credentials, or provide those values through a configuration mechanism that preserves strings.
+
+```yaml
+host:
+  port: ${PORT:-10000}
+debug: ${DEBUG:-false}
+```
+
+### 4. Configuration Validation
+
+After substitution, `ConfigValidator` checks framework-owned nodes before connecting to CouchDB or loading application code. Wrong types, invalid ranges and malformed path settings abort initialization with key-path diagnostics. Unknown nested framework keys produce warnings; custom top-level application settings remain allowed (near-miss names can warn).
+
+For example, `host.port` must be an integer in `0`–`65535`, launch concurrency limits must be positive integers, and `auth.bcrypt cost` must be an integer in `4`–`31`. A quoted literal `"8080"` is still a string and fails validation; an environment placeholder resolving to `8080` is typed as an integer.
 
 
 ## The Default Configuration
@@ -60,6 +74,7 @@ memory cores:
   main:
     type: couchdb
     address: http://127.0.0.1:5984
+    users database: users
 
 logging:
   enabled: false
@@ -77,6 +92,14 @@ stowaways:
   enabled: true
   paths:
     - stowaways/*
+
+ignition:
+  paths:
+    - ignition
+
+launchpad:
+  concurrency: 16
+  perClientConcurrency: 2
 
 debug: true
 ```

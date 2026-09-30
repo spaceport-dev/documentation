@@ -75,7 +75,8 @@
     "gateway-idea": "Using with Gateway",
     "conclusion": "Conclusion",
     "build-checklist": "Quick Checklist to Start",
-    "next-steps": "Next Steps"
+    "next-steps": "Next Steps",
+    "option-a-the---create-port-wizard": "Option A: The --create-port Wizard"
   },
   "class-enhancements-overview": {
     "quick-reference": "Quick Reference",
@@ -156,7 +157,8 @@
     "jvm-tuning-quick-start": "JVM Tuning Quick Start",
     "verifying-your-runtime": "Verifying Your Runtime",
     "compatibility-summary": "Compatibility Summary",
-    "next-steps": "Next Steps"
+    "next-steps": "Next Steps",
+    "supported-versions": "Supported Versions"
   },
   "manifest-overview": {
     "no-manifest": "Starting Without a Manifest",
@@ -352,7 +354,13 @@
     "documentation": "Document Your Structure",
     "team-size": "Consider Team Size",
     "summary": "Summary",
-    "see-also": "See Also"
+    "see-also": "See Also",
+    "scaffold-types": "Scaffold Types",
+    "mercury": "Mercury",
+    "pioneer": "Pioneer",
+    "voyager": "Voyager",
+    "choosing-the-right-approach": "Choosing the Right Approach",
+    "starter-kits-vs-cli-scaffolds": "Starter Kits vs. CLI Scaffolds"
   },
   "transmissions-overview": {
     "installation": "Installation &amp; Usage",
@@ -563,5 +571,46 @@
     "summary-the-role-of-cargo": "Summary: The Role of Cargo",
     "key-takeaways": "Key Takeaways",
     "next-steps": "Next Steps"
+  },
+  "cli-overview": {
+    "--create-port": "--create-port"
+  },
+  "ignition-scripts-overview": {
+    "current-status-not-yet-implemented": "Current Status: Not Yet Implemented",
+    "no-configuration-key-defined": "No Configuration Key Defined",
+    "what-ignition-scripts-are-intended-to-be": "What Ignition Scripts Are Intended to Be",
+    "current-alternatives": "Current Alternatives",
+    "related-documentation": "Related Documentation"
+  },
+  "scaffolds-api": {
+    "running-the-command": "Running the Command",
+    "the-8-step-interactive-process": "The 8-Step Interactive Process",
+    "step-1-spaceport-root": "Step 1: Spaceport Root",
+    "step-2-spaceport-identification": "Step 2: Spaceport Identification",
+    "step-3-spaceport-access-host-and-port": "Step 3: Spaceport Access (Host and Port)",
+    "step-4-database-connection": "Step 4: Database Connection",
+    "step-5-spaceport-administrator": "Step 5: Spaceport Administrator",
+    "step-6-static-assets": "Step 6: Static Assets",
+    "step-7-debug-mode": "Step 7: Debug Mode",
+    "step-8-module-creation-scaffold-selection": "Step 8: Module Creation (Scaffold Selection)",
+    "manifest-file-generation": "Manifest File Generation"
+  },
+  "scaffolds-internals": {
+    "entry-point": "Entry Point",
+    "the-onboarding-class": "The Onboarding Class",
+    "class-structure": "Class Structure",
+    "constructor": "Constructor",
+    "procedure-execution": "Procedure Execution",
+    "signal-handling": "Signal Handling",
+    "template-files-from-jar-resources": "Template Files from JAR Resources",
+    "default-asset-resources": "Default Asset Resources",
+    "manifest-file-generation": "Manifest File Generation",
+    "existing-manifest-handling": "Existing Manifest Handling",
+    "directory-creation": "Directory Creation",
+    "database-interaction-during-onboarding": "Database Interaction During Onboarding",
+    "relationship-to-command-class": "Relationship to Command Class"
+  },
+  "cli-api": {
+    "--create-port": "--create-port"
   }
 }

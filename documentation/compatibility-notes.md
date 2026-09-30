@@ -7,20 +7,15 @@ Spaceport runs on the Java Virtual Machine (JVM) and targets broad compatibility
 
 ## Java Version Compatibility
 
-### Supported Versions
+### Verified Versions
 
-| Use Case | Recommended | Also Supported | Notes |
-|---|---|---|---|
-| **Production (General)** | Java 11 (LTS) | Java 17 (LTS), Java 8 (Legacy) | Java 11 is the most tested version with Spaceport's core components. |
-| **New Long-Lived Projects** | Java 17 (LTS) | Java 11 | Java 17 provides newer language features for teams that want them. |
-| **Local Development** | Latest GA release | 11, 17 | Newer releases work for experimentation; verify before deploying. |
+| Use case | Verified baseline | Evidence |
+|---|---|---|
+| Framework compilation and tests | Java 8 | Shipyard's Gradle 5.2.1 build and 525 tests |
+| Framework runtime | Java 21 | Shipyard HTTP smoke check and Frontier deployment |
+| Ground Control plugin compilation | JDK 25 | Plugin toolchain and IntelliJ Platform 2026.2 build configuration; separate from the framework |
 
-> While Java 8 remains functional, plan a migration to Java 11 or 17 for long-term support and security updates.
-
-### Why Java 11 Is the Baseline
-
-Most libraries embedded within the Spaceport JAR are compiled targeting Java 8 or 11 bytecode. Java 11 provides the best balance of maturity, long-term security patch availability, and broad hosting provider support.
-
+The framework targets Java 8 bytecode and embeds Groovy 3.0.25 at revision `3fff144`. A tested runtime baseline does not guarantee every third-party stowaway or application works on it. Verify your application's templates, database operations and reflective dependencies on the JDK you deploy.
 
 ## Running on Java 17+
 
@@ -40,13 +35,13 @@ To resolve this, add the `--add-opens` flag when starting Spaceport:
 java --add-opens=java.base/java.lang=ALL-UNNAMED -jar spaceport.jar --start config.spaceport
 ```
 
-This flag tells the JVM to open the `java.base/java.lang` package for reflective access by all unnamed modules. This is commonly the minimum flag needed for Groovy-based applications running on Java 17 or later.
+This flag tells the JVM to open the `java.base/java.lang` package for reflective access by all unnamed modules. Add this flag when the reported inaccessible package is `java.lang`; other failures may need a different package. The Java 21 Shipyard smoke check does not require this flag.
 
 Additional `--add-opens` flags may be required depending on which libraries your application uses. If you encounter further `InaccessibleObjectException` errors, the error message will indicate which package needs to be opened.
 
 ### Using Non-LTS Feature Releases
 
-Spaceport does not depend on incubator modules, so non-LTS feature releases (e.g., Java 21, 22, 23) typically work without issues. Before deploying on a non-LTS release, perform a quick smoke test:
+Non-LTS feature releases need application-specific verification; they are outside the recorded Shipyard runtime checks. Before deploying on a non-LTS release, perform a quick smoke test:
 
 1. Start the application and check for module system or reflective access warnings in the output.
 2. Load a Launchpad template route.
@@ -98,3 +93,10 @@ For maximum production stability, choose **Java 11 or 17**. Test newer feature r
 - [Source Modules](source-modules-overview.md) -- Building application logic
 - [Documents](documents-overview.md) -- Database interactions with CouchDB
 - [Stowaway JARs](stowaways-overview.md) -- Loading external library dependencies
+
+
+## Verified Build and IDE Tooling Baselines
+
+The framework build at revision `3fff144` uses Java 8 and Gradle 5.2.1, with Groovy 3.0.25. Shipyard verification passed 525 tests and a Java 21 HTTP smoke check; Frontier runs Java 21. These checks do not prove every application dependency or all reflective code paths work on every JDK. The Java 8 classloader fix also handles duplicate-class `LinkageError` messages emitted by that runtime.
+
+Ground Control 1.1.0 is a separate IntelliJ plugin targeting platform 2026.2 / build 262. Building it requires JDK 25 and its Gradle 9.3.1 wrapper. This does not raise the framework runtime's Java requirement.

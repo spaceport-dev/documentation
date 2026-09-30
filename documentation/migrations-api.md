@@ -39,15 +39,27 @@ java -jar spaceport.jar --migrate --no-manifest
 3. Replaces environment variable placeholders (`${VAR_NAME}`) in the configuration.
 4. Applies metaclass enhancements (`MetaClassEnhancements.enhance()`).
 5. Connects to the configured main memory core (CouchDB).
-6. If the database connection fails, prompts the user to continue or exit.
-7. Scans the migrations directory for `.groovy` files and presents them as a selection menu.
-8. Executes the chosen migration script using a `GroovyScriptEngine`.
-9. Prints a completion message and exits.
+6. If the database connection fails, exits unattended with status `1` unless `--continue` is supplied; an interactive terminal offers a choice.
+7. Loads stowaways and runs ignition scripts once, without scanning normal source modules.
+8. Scans the migrations directory for `.groovy` files and presents them as a selection menu.
+9. Executes the chosen migration script using a `GroovyScriptEngine`.
+10. Prints a completion message and exits.
 
 **Signal handling:**
 
-On Unix systems, `CTRL+C` is intercepted to reset terminal settings before exiting. This prevents the terminal from being left in a broken state if the migration is interrupted.
+On Unix systems with an interactive terminal, `CTRL+C` is intercepted to reset terminal settings before exiting. This prevents the terminal from being left in a broken state if the migration is interrupted.
 
+
+## Unattended Migrations
+
+```bash
+java -jar spaceport.jar --migrate config.spaceport --headless '{"migration":"001-seed.groovy","inputs":{"tenant":"acme"}}'
+java -jar spaceport.jar --migrate config.spaceport --headless @migration.json
+```
+
+`--headless` disables prompts. Its JSON value selects a filename and provides an `inputs` object. A single script is selected automatically without a terminal; multiple scripts require selection. Scripts receive `report` (`Cargo`), `inputs` (`Map`, empty by default), and `interactive` (`boolean`). Read `inputs.tenant` in the script; these values do not automatically satisfy `Command.promptInput()` calls. Missing required answers must fail explicitly or fall back to a prompt only in interactive mode.
+
+Malformed JSON, an unknown script, a prompt without a terminal or a script failure exits with status `1`. Use `--continue` only when the selected script can proceed without the database. Startup validates configuration after environment substitution, including missing-variable failures.
 
 ## Configuration
 

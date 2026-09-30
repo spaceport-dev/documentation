@@ -122,7 +122,7 @@ Serving images, CSS, JavaScript, fonts, and other static files.
 
 ### Spaceport CLI
 
-Command-line interface for starting, managing, and scaffolding Spaceport applications.
+Command-line interface for starting Spaceport and running migrations, including unattended execution.
 
 - [CLI Overview](cli-overview.md) -- Available commands, flags, and common workflows.
 - [CLI API Reference](cli-api.md) -- Complete reference for all CLI commands, arguments, and configuration flags.
@@ -133,7 +133,7 @@ Project structure templates and starter kits for new applications.
 
 - [Scaffolds Overview](scaffolds-overview.md) -- What scaffolds are, available starter kits (Port-Echo, Port-Mercury), and project directory structure.
 - [Scaffolds API Reference](scaffolds-api.md) -- Configuration options, directory conventions, and customization.
-- [Scaffolds Internals](scaffolds-internals.md) -- How the `--create` command generates project structure and default files.
+- [Scaffolds Internals](scaffolds-internals.md) -- Scaffold ownership and migration from the removed runtime wizard.
 
 ### Manifest Configuration
 
