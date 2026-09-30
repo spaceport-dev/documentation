@@ -1,4 +1,4 @@
-# Groovy Luminary -- A Groovy Quick-Reference for Spaceport Developers
+# Groovy Luminary — A Groovy Quick-Reference for Spaceport Developers
 
 Spaceport is built on **Apache Groovy**, a JVM language that compiles to Java bytecode and is fully compatible with Java libraries. You do not need to be a Groovy expert to build with Spaceport, but familiarity with the patterns below will make you productive fast.
 
@@ -75,7 +75,7 @@ def html = """
 """.stripIndent()
 ```
 
-GString interpolation is used everywhere in Spaceport -- in Launchpad templates, in JSON manifest generation, and in log messages.
+GString interpolation is used everywhere in Spaceport — in Launchpad templates, in JSON manifest generation, and in log messages.
 
 ```groovy
 // From a Spaceport route handler -- building a response string
@@ -94,7 +94,7 @@ def manifest = """
 
 ## Closures
 
-Closures are anonymous blocks of code enclosed in `{ }`. They can be assigned to variables, passed as arguments, and returned from methods. Closures are central to Spaceport -- they power authorization plugs, collection processing, and server actions in templates.
+Closures are anonymous blocks of code enclosed in `{ }`. They can be assigned to variables, passed as arguments, and returned from methods. Closures are central to Spaceport — they power authorization plugs, collection processing, and server actions in templates.
 
 ### Basic Syntax
 
@@ -224,7 +224,7 @@ def updateProfile = { t ->
 
 ## Classes
 
-Groovy classes look like Java classes with less boilerplate. Properties are declared without explicit getters and setters -- Groovy generates them automatically.
+Groovy classes look like Java classes with less boilerplate. Properties are declared without explicit getters and setters — Groovy generates them automatically.
 
 ```groovy
 class Starship {
@@ -430,17 +430,17 @@ def bgColor = config.'background color' ?: '#ffffff'
 Spaceport adds utility methods to standard Groovy/Java classes through metaprogramming:
 
 **String methods**:
-- `.clean()` -- sanitize HTML inputs to prevent XSS
-- `.kebab()` -- convert to kebab-case (`"User Name"` becomes `"user-name"`)
-- `.slugify()` -- convert to URL-safe slug (`"My Post!"` becomes `"my-post"`)
-- `.encode()` -- URL-encode a string
+- `.clean()` — sanitize HTML inputs to prevent XSS
+- `.kebab()` — convert to kebab-case (`"User Name"` becomes `"user-name"`)
+- `.slugify()` — convert to URL-safe slug (`"My Post!"` becomes `"my-post"`)
+- `.encode()` — URL-encode a string
 
 **Number methods**:
-- `.money()` -- format as currency
-- `.minutes()`, `.days()` -- convert to milliseconds
+- `.money()` — format as currency
+- `.minutes()`, `.days()` — convert to milliseconds
 
 **Conditional rendering**:
-- `.if { condition }` -- returns the string if the closure evaluates to true, empty string otherwise
+- `.if { condition }` — returns the string if the closure evaluates to true, empty string otherwise
 
 ```groovy
 "<a href='/admin'>Admin Panel</a>".if { client.isAdmin }
@@ -472,8 +472,8 @@ Spaceport adds utility methods to standard Groovy/Java classes through metaprogr
 
 Once you are comfortable with the Groovy patterns above, explore the Spaceport-specific systems that put them to work:
 
-- **[Source Modules](source-modules-overview.md)** -- how Groovy classes are organized and loaded
-- **[Alerts](alerts-overview.md)** -- routing, lifecycle hooks, and event-driven architecture
-- **[Launchpad](launchpad-overview.md)** -- embedding Groovy in HTML templates
-- **[Cargo](cargo-overview.md)** -- reactive state management
-- **[Class Enhancements](class-enhancements-overview.md)** -- the full list of methods Spaceport adds to standard classes
+- **[Source Modules](source-modules-overview.md)** — how Groovy classes are organized and loaded
+- **[Alerts](alerts-overview.md)** — routing, lifecycle hooks, and event-driven architecture
+- **[Launchpad](launchpad-overview.md)** — embedding Groovy in HTML templates
+- **[Cargo](cargo-overview.md)** — reactive state management
+- **[Class Enhancements](class-enhancements-overview.md)** — the full list of methods Spaceport adds to standard classes

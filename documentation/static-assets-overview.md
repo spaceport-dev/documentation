@@ -51,7 +51,7 @@ static assets:
     /assets/ : assets/*
 ```
 
-This means a file at `assets/logo.svg` is accessible at `http://localhost:10000/assets/logo.svg` with no configuration needed -- just create an `assets/` directory in your project root.
+This means a file at `assets/logo.svg` is accessible at `http://localhost:10000/assets/logo.svg` with no configuration needed — just create an `assets/` directory in your project root.
 
 ## Flat vs. Recursive Serving
 
@@ -90,7 +90,7 @@ URL resolution follows a straightforward pattern. The URL path prefix is strippe
 - **Relative paths** (e.g., `assets/`) are resolved from the Spaceport root directory (set by `spaceport root` in the manifest, or the working directory if unset).
 - **Absolute paths** (e.g., `/var/www/static/`) are used as-is. This is useful when assets are stored outside the project directory.
 
-A filesystem path of `/` is a special case -- it resolves to the Spaceport root directory itself. Avoid this configuration unless you have a specific reason, as it exposes the entire project root.
+A filesystem path of `/` is a special case — it resolves to the Spaceport root directory itself. Avoid this configuration unless you have a specific reason, as it exposes the entire project root.
 
 ## Static vs. Dynamic Route Precedence
 
@@ -104,7 +104,7 @@ In most applications this is not a concern because static assets use a distinct 
 
 ### Guestbook (Simple Application)
 
-The Guestbook project uses the default configuration -- no `static assets` section in its manifest. Its flat `assets/` directory contains CSS, JavaScript, and images served at `/assets/`:
+The Guestbook project uses the default configuration — no `static assets` section in its manifest. Its flat `assets/` directory contains CSS, JavaScript, and images served at `/assets/`:
 
 ```
 assets/

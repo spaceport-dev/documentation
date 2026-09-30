@@ -384,5 +384,5 @@ Command.with {
 
 ## See Also
 
-- [Migrations Overview](migrations-overview.md) -- What migrations are and when to use them.
-- [Migrations API Reference](migrations-api.md) -- Complete reference for CLI commands and available APIs.
+- [Migrations Overview](migrations-overview.md) — What migrations are and when to use them.
+- [Migrations API Reference](migrations-api.md) — Complete reference for CLI commands and available APIs.

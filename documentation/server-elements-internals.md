@@ -1,4 +1,4 @@
-# Server Elements -- Internals
+# Server Elements — Internals
 
 This document covers the implementation details of the Server Elements system: the trait architecture, how annotations work internally, how template tags become rendered components, how CSS and JavaScript are aggregated and injected, the reactive binding system, element lifecycle, and hot-reload behavior.
 
@@ -6,15 +6,15 @@ This document covers the implementation details of the Server Elements system: t
 
 Server Elements span three layers of the Spaceport stack:
 
-1. **Template Engine** (`SpaceportTemplateEngine`) -- parses `<g:element-name>` tags from `.ghtml` files and replaces them with placeholder markers during template compilation
-2. **Launchpad** (`Launchpad`) -- discovers element classes at startup, instantiates them per-use during rendering, calls `prerender()` and `initialize()`, and injects the resulting CSS/JS/HTML into the final page output
-3. **HUD-Core** (client-side JavaScript) -- manages element lifecycle on the client, including `constructed`/`deconstructed` hooks and listener cleanup on DOM removal
+1. **Template Engine** (`SpaceportTemplateEngine`) — parses `<g:element-name>` tags from `.ghtml` files and replaces them with placeholder markers during template compilation
+2. **Launchpad** (`Launchpad`) — discovers element classes at startup, instantiates them per-use during rendering, calls `prerender()` and `initialize()`, and injects the resulting CSS/JS/HTML into the final page output
+3. **HUD-Core** (client-side JavaScript) — manages element lifecycle on the client, including `constructed`/`deconstructed` hooks and listener cleanup on DOM removal
 
 ## The `Element` Trait Architecture
 
 ### Why a Trait?
 
-Server Elements are built on a Groovy trait (`spaceport.launchpad.element.Element`), not an abstract class. A trait in Groovy is similar to an interface with default implementations -- any class that declares `implements Element` gains all of the trait's properties and methods without requiring inheritance. This allows element classes to remain simple, self-contained `.groovy` files while gaining a rich set of internal infrastructure.
+Server Elements are built on a Groovy trait (`spaceport.launchpad.element.Element`), not an abstract class. A trait in Groovy is similar to an interface with default implementations — any class that declares `implements Element` gains all of the trait's properties and methods without requiring inheritance. This allows element classes to remain simple, self-contained `.groovy` files while gaining a rich set of internal infrastructure.
 
 ### Internal Properties
 
@@ -67,7 +67,7 @@ This allows elements to participate in the parent template's reactive data flow,
 
 ## How Annotations Work Internally
 
-All eight element annotations are defined in `spaceport.launchpad.element` as simple marker annotations with `@Retention(RetentionPolicy.RUNTIME)`. They carry no attributes -- their presence on a field or method is what matters.
+All eight element annotations are defined in `spaceport.launchpad.element` as simple marker annotations with `@Retention(RetentionPolicy.RUNTIME)`. They carry no attributes — their presence on a field or method is what matters.
 
 ```groovy
 package spaceport.launchpad.element
@@ -83,7 +83,7 @@ All annotations follow this identical pattern: `@CSS`, `@ScopedCSS`, `@Javascrip
 
 The annotations themselves are inert markers. All processing logic lives in the `initialize()` method of the `Element` trait, which uses Java reflection (`field.getAnnotation(CSS)`, `method.getAnnotation(Bind)`) to scan for annotated fields and methods at runtime.
 
-### @CSS -- How Global Styles Are Built
+### @CSS — How Global Styles Are Built
 
 During `initialize()`, all fields annotated with `@CSS` are iterated via reflection:
 
@@ -103,13 +103,13 @@ if (_style.length() > 0 && _style.trim().startsWith('&'))
     _style = _style.replaceFirst('&', getTagName())
 ```
 
-This is designed for the common pattern of `& { ... }` becoming `my-element { ... }`. Only the first occurrence is replaced -- additional `&` references inside the block are left alone for CSS nesting. The result is wrapped in `<style>` tags:
+This is designed for the common pattern of `& { ... }` becoming `my-element { ... }`. Only the first occurrence is replaced — additional `&` references inside the block are left alone for CSS nesting. The result is wrapped in `<style>` tags:
 
 ```groovy
 if (_style.length() > 0) _style = "<style>${_style}</style>\n"
 ```
 
-### @ScopedCSS -- How Instance-Scoped Styles Work
+### @ScopedCSS — How Instance-Scoped Styles Work
 
 Scoped CSS uses regex to find every CSS selector (text before a `{`) and prepend the instance scope:
 
@@ -132,7 +132,7 @@ _scopedStyle = _scopedStyle.replace(
     '[element-id=' + _id + '] ')
 ```
 
-### @Bind -- How Server Methods Become Client Functions
+### @Bind — How Server Methods Become Client Functions
 
 For each method annotated with `@Bind`, the framework:
 
@@ -208,7 +208,7 @@ The server-side closure wraps the method call with reaction checking:
 
 This means that reactive expressions (`${{ }}`) inside `prerender()` automatically update after any `@Bind` call that modifies the underlying data.
 
-### @Javascript -- How Client-Side Code Is Processed
+### @Javascript — How Client-Side Code Is Processed
 
 JavaScript fields are processed after `@Bind` methods. The behavior differs based on field content:
 
@@ -230,7 +230,7 @@ source.replaceAll('\\sthis\\s', ' element_' + _id + ' ')
 
 This replacement allows inline JavaScript to use `this` as a convenient reference to the element, even though it is not executing within a method context.
 
-**Special fields `constructed` and `deconstructed`:** These are not treated differently by the annotation processor -- they become function properties like any other. The special behavior comes from the script wrapper: after all JavaScript is assembled, the script checks for and calls `constructed`:
+**Special fields `constructed` and `deconstructed`:** These are not treated differently by the annotation processor — they become function properties like any other. The special behavior comes from the script wrapper: after all JavaScript is assembled, the script checks for and calls `constructed`:
 
 ```javascript
 if (element_<id>.constructed) {
@@ -242,7 +242,7 @@ The `deconstructed` function is called by HUD-Core when the element is removed f
 
 ### @Prepend, @ScopedPrepend, @Append, @ScopedAppend
 
-These annotations are straightforward -- during `initialize()`, all fields with each annotation are concatenated into their respective `_prepend`, `_scopedPrepend`, `_append`, and `_scopedAppend` properties. No transformation is applied to the content; it is injected as-is during the final HTML assembly step.
+These annotations are straightforward — during `initialize()`, all fields with each annotation are concatenated into their respective `_prepend`, `_scopedPrepend`, `_append`, and `_scopedAppend` properties. No transformation is applied to the content; it is injected as-is during the final HTML assembly step.
 
 ---
 
@@ -348,7 +348,7 @@ while (text.contains('<g:')) {
 The `hud:` prefix is aliased to `g:` for backward compatibility.
 
 In `processTag()`, the engine checks two registries:
-1. **Built-in generators** (`generators` map) -- handles tags like `<g:javascript>` and `<g:prime>`
+1. **Built-in generators** (`generators` map) — handles tags like `<g:javascript>` and `<g:prime>`
 2. **Registered elements** — resolved via the engine's bound `Launchpad` (`launchpad.resolveElement(name)` for local + shared-pool lookup), or via the qualified slice's local map when the tag uses `<g:slice/element>` syntax
 
 For user-defined elements, the tag is replaced with placeholder markers:
@@ -366,10 +366,10 @@ if (knownElement) {
 The engine receives a Launchpad via its constructor (`new SpaceportTemplateEngine(launchpad)`), so each slice's templates see its own local Elements plus the shared pool. The no-arg constructor still works for callers without a Launchpad context — those fall back to the shared pool only, matching the legacy single-Launchpad behavior.
 
 This produces intermediate HTML with:
-- `<!-- id-styles -->` -- placeholder for CSS injection
+- `<!-- id-styles -->` — placeholder for CSS injection
 - A temporary tag using the random 10-character ID as the tag name (not the real element name)
-- `<!-- id-body -->` / `<!-- END id-body -->` -- markers around the body content
-- `<!-- id-handler -->` -- placeholder for JavaScript injection
+- `<!-- id-body -->` / `<!-- END id-body -->` — markers around the body content
+- `<!-- id-handler -->` — placeholder for JavaScript injection
 
 The element class is **not** instantiated at this point. The element metadata (name, ID) is stored in `template.elements` for later processing.
 
@@ -558,7 +558,7 @@ if (element._scopedAppend?.length() > 0) {
 
 ---
 
-## CSS/JS Asset Injection -- Final Placement
+## CSS/JS Asset Injection — Final Placement
 
 The rendered HTML for a single element instance in the final page output looks like this:
 
@@ -673,32 +673,32 @@ if (data.action === 'elementResponse') {
 
 ### Server-Side Lifecycle
 
-1. **Discovery** -- Element `.groovy` files are scanned from each Launchpad's `elements/` subdirectory during that Launchpad's construction
-2. **Source preprocessing** -- Reactive `${{ }}` syntax is transformed to internal closure format
-3. **Class compilation** -- A single shared `GroovyClassLoader` (per Launchpad) compiles all that Launchpad's preprocessed Element sources into Class objects, so sibling Elements can reference each other by class name
-4. **Registration** -- The Class is stored in the Launchpad's per-instance `launchpad.elements` map and contributed to the static `Launchpad.sharedPool` according to ownership rules
-5. **Instantiation** -- On each page request, `newInstance()` creates a fresh element instance
-6. **Context injection** -- `launchpad`, `client`, `dock`, and `_id` are set on the instance
-7. **`prerender()` call** -- The element's body and parsed attributes are passed in; the method returns inner HTML
-8. **`initialize()` call** -- Annotations are processed; CSS and JavaScript are aggregated
-9. **Asset injection** -- CSS (`<style>`), JavaScript (`<script>`), and prepend/append content are injected into the HTML output at their respective marker positions
+1. **Discovery** — Element `.groovy` files are scanned from each Launchpad's `elements/` subdirectory during that Launchpad's construction
+2. **Source preprocessing** — Reactive `${{ }}` syntax is transformed to internal closure format
+3. **Class compilation** — A single shared `GroovyClassLoader` (per Launchpad) compiles all that Launchpad's preprocessed Element sources into Class objects, so sibling Elements can reference each other by class name
+4. **Registration** — The Class is stored in the Launchpad's per-instance `launchpad.elements` map and contributed to the static `Launchpad.sharedPool` according to ownership rules
+5. **Instantiation** — On each page request, `newInstance()` creates a fresh element instance
+6. **Context injection** — `launchpad`, `client`, `dock`, and `_id` are set on the instance
+7. **`prerender()` call** — The element's body and parsed attributes are passed in; the method returns inner HTML
+8. **`initialize()` call** — Annotations are processed; CSS and JavaScript are aggregated
+9. **Asset injection** — CSS (`<style>`), JavaScript (`<script>`), and prepend/append content are injected into the HTML output at their respective marker positions
 
 ### Client-Side Lifecycle
 
 On page load, as the browser parses the HTML and encounters the element's `<script>` tag:
 
-1. **Element reference** -- `window.element_<id>` is set to the DOM element via `document.querySelector('[element-id="<id>"]')`
-2. **Listener infrastructure** -- The `_listeners` array and `.listen()` helper method are attached
-3. **Inline JavaScript** -- Any `@Javascript` fields that are not function definitions execute immediately
-4. **Function attachment** -- `@Javascript` function properties are assigned as methods on the element
-5. **Bind proxies** -- `@Bind` proxy functions are assigned as methods on the element
-6. **`constructed` callback** -- If a `constructed` function is defined, it is called with the element as its argument
+1. **Element reference** — `window.element_<id>` is set to the DOM element via `document.querySelector('[element-id="<id>"]')`
+2. **Listener infrastructure** — The `_listeners` array and `.listen()` helper method are attached
+3. **Inline JavaScript** — Any `@Javascript` fields that are not function definitions execute immediately
+4. **Function attachment** — `@Javascript` function properties are assigned as methods on the element
+5. **Bind proxies** — `@Bind` proxy functions are assigned as methods on the element
+6. **`constructed` callback** — If a `constructed` function is defined, it is called with the element as its argument
 
 On removal (managed by HUD-Core when DOM regions are replaced):
 
-1. **Listener cleanup** -- All listeners registered via `.listen()` are automatically removed by iterating `_listeners`
-2. **`deconstructed` callback** -- If defined, called with the element as its argument for manual cleanup
-3. **Global cleanup** -- `window.element_<id>` is deleted from the window object
+1. **Listener cleanup** — All listeners registered via `.listen()` are automatically removed by iterating `_listeners`
+2. **`deconstructed` callback** — If defined, called with the element as its argument for manual cleanup
+3. **Global cleanup** — `window.element_<id>` is deleted from the window object
 
 ### What Gets Cleaned Up Automatically
 

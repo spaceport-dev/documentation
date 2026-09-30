@@ -1,4 +1,4 @@
-# HUD-Core.js -- Internals
+# HUD-Core.js — Internals
 
 This document covers the implementation details of HUD-Core.js v1.1.3. It is intended for contributors, advanced developers debugging behavior, or anyone curious about how the client-side machinery works under the hood.
 
@@ -6,11 +6,11 @@ This document covers the implementation details of HUD-Core.js v1.1.3. It is int
 
 HUD-Core is a single-file library with no dependencies. It runs entirely in the browser and organizes its functionality around five core systems:
 
-1. **MutationObserver** -- Watches the DOM and processes new/removed elements
-2. **Event binding** -- Converts `on-*` attributes into event listeners
-3. **`fetchDataAndUpdate()`** -- The data collection, fetch, and response processing pipeline
-4. **`documentData` Proxy** -- Reactive data binding via JavaScript Proxy
-5. **HREF navigation** -- Click/keyboard handlers for non-anchor elements with `href`
+1. **MutationObserver** — Watches the DOM and processes new/removed elements
+2. **Event binding** — Converts `on-*` attributes into event listeners
+3. **`fetchDataAndUpdate()`** — The data collection, fetch, and response processing pipeline
+4. **`documentData` Proxy** — Reactive data binding via JavaScript Proxy
+5. **HREF navigation** — Click/keyboard handlers for non-anchor elements with `href`
 
 These systems are initialized on `DOMContentLoaded` and operate for the lifetime of the page.
 
@@ -117,7 +117,7 @@ On `DOMContentLoaded`, HUD-Core iterates the `builtInEvents` array and calls `qu
 
 ---
 
-## `fetchDataAndUpdate()` -- The Core Pipeline
+## `fetchDataAndUpdate()` — The Core Pipeline
 
 This is the most complex function in HUD-Core. It orchestrates the full round-trip: collecting data, sending it to the server, and processing the response.
 
@@ -146,15 +146,15 @@ The source resolution walks upward from `event.target` through parent elements, 
 
 Data is assembled into a `postData` object in this order:
 
-1. **Element value** -- Determined by element type (checkbox, radio, file, select-multiple, or generic)
-2. **Mouse event data** -- clientX/Y, pageX/Y, screenX/Y, offsetX/Y, movementX/Y, button/buttons
-3. **Keyboard event data** -- key, keyCode, shiftKey, ctrlKey, altKey, metaKey, repeat (modifier keys only if true)
-4. **Element metadata** -- contentEditable, bind, elementId, classList, tagName, innerText, textContent
-5. **URL query parameters** -- parsed from `window.location.search`
-6. **Form data** -- if active target is inside a `<form>`, all named inputs via `FormData`. Date inputs are converted to epoch milliseconds. Also scans for custom `[name]` elements not in FormData.
-7. **Data attributes** -- `data-*` from `event.currentTarget`, then `data-*` from active target (overrides allowed unless source is `strict`)
-8. **Included data** -- parsed from `include` attribute (localStorage, sessionStorage, element attributes)
-9. **Endpoint query params** -- any query string on the endpoint URL itself is extracted and merged
+1. **Element value** — Determined by element type (checkbox, radio, file, select-multiple, or generic)
+2. **Mouse event data** — clientX/Y, pageX/Y, screenX/Y, offsetX/Y, movementX/Y, button/buttons
+3. **Keyboard event data** — key, keyCode, shiftKey, ctrlKey, altKey, metaKey, repeat (modifier keys only if true)
+4. **Element metadata** — contentEditable, bind, elementId, classList, tagName, innerText, textContent
+5. **URL query parameters** — parsed from `window.location.search`
+6. **Form data** — if active target is inside a `<form>`, all named inputs via `FormData`. Date inputs are converted to epoch milliseconds. Also scans for custom `[name]` elements not in FormData.
+7. **Data attributes** — `data-*` from `event.currentTarget`, then `data-*` from active target (overrides allowed unless source is `strict`)
+8. **Included data** — parsed from `include` attribute (localStorage, sessionStorage, element attributes)
+9. **Endpoint query params** — any query string on the endpoint URL itself is extracted and merged
 
 ### Phase 4: Fetch
 
@@ -367,7 +367,7 @@ function sendData(id, data) {
 
 The `handler-id` field is used by Spaceport's server-side WebSocket routing to dispatch the message to the correct `@Alert('on socket <handler-id>')` handler.
 
-The retry mechanism handles the case where the WebSocket is still connecting or temporarily disconnected. It polls every 25ms until the connection is open. Note that this is explicitly asynchronous -- message ordering is not guaranteed.
+The retry mechanism handles the case where the WebSocket is still connecting or temporarily disconnected. It polls every 25ms until the connection is open. Note that this is explicitly asynchronous — message ordering is not guaranteed.
 
 The `socket` variable is expected to be defined elsewhere (typically by Spaceport's WebSocket initialization, which is separate from HUD-Core).
 
@@ -443,7 +443,7 @@ When new elements are added via mutation, HUD-Core checks for `popovertarget` at
 
 ### Event Binding
 
-Each `on-*` attribute results in a single `addEventListener` call. There is no event delegation at the HUD-Core level -- each element gets its own listener. For large lists, use the `source` attribute on a parent container for event delegation at the Launchpad level.
+Each `on-*` attribute results in a single `addEventListener` call. There is no event delegation at the HUD-Core level — each element gets its own listener. For large lists, use the `source` attribute on a parent container for event delegation at the Launchpad level.
 
 ### MutationObserver Overhead
 

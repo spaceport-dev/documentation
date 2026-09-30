@@ -1,4 +1,4 @@
-# HUD-Core.js -- API Reference
+# HUD-Core.js — API Reference
 
 ## Installation
 
@@ -87,10 +87,10 @@ Note that the `on-` prefix uses a dash, distinguishing Launchpad server events f
 
 The following events are defined in HUD-Core's source but are currently disabled. They can be re-enabled by uncommenting them in the `builtInEvents` array:
 
-- `on-scroll` -- Scroll events (disabled, likely for performance)
-- `on-unload` -- Page unloaded
-- `on-error` -- Error occurred
-- `on-resize` -- Element resized
+- `on-scroll` — Scroll events (disabled, likely for performance)
+- `on-unload` — Page unloaded
+- `on-error` — Error occurred
+- `on-resize` — Element resized
 
 ---
 
@@ -300,7 +300,7 @@ An array of strings applied to the payload target. Each string is either a class
 
 | Prefix | Behavior | Example |
 |---|---|---|
-| *(none)* | Toggle class | `'active'` -- adds if absent, removes if present |
+| *(none)* | Toggle class | `'active'` — adds if absent, removes if present |
 | `+` | Add class | `'+active'` |
 | `-` | Remove class | `'-active'` |
 
@@ -371,10 +371,10 @@ A key-value object where each entry is an instruction. This is the most powerful
 
 Actions in a Map Transmission support targeting via their value:
 
-- `null` or missing -- applies to the payload target
-- `'this'` -- applies to `event.target`
-- `'it'` -- applies to `event.currentTarget`
-- `'source'` -- applies to the active target (from `source` attribute)
+- `null` or missing — applies to the payload target
+- `'this'` — applies to `event.target`
+- `'it'` — applies to `event.currentTarget`
+- `'source'` — applies to the active target (from `source` attribute)
 
 | Key | Behavior | Additional Notes |
 |---|---|---|
@@ -486,7 +486,7 @@ sendData('chat-message', { text: 'Hello!', room: 'lobby' })
 ```
 
 **Behavior:**
-- Asynchronous -- cannot guarantee order of execution
+- Asynchronous — cannot guarantee order of execution
 - Automatically retries every 25ms if the WebSocket is not yet open
 - The payload is JSON-serialized with `handler-id` merged into the data object
 - On the server, the message triggers `@Alert('on socket <handler-id>')` handlers
@@ -542,8 +542,8 @@ HUD-Core supports lifecycle callbacks on DOM elements via JavaScript properties:
 
 | Property | When Called | Arguments |
 |---|---|---|
-| `element.mutated` | When the element is added to the DOM via mutation | `(node)` -- the element itself |
-| `element.removed` | When the element is removed from the DOM | `(node)` -- the element itself |
+| `element.mutated` | When the element is added to the DOM via mutation | `(node)` — the element itself |
+| `element.removed` | When the element is removed from the DOM | `(node)` — the element itself |
 | `element.attributeChanged` | When an attribute on the element changes | `(node, attributeName, oldValue, newValue)` |
 
 ### Server Element Lifecycle

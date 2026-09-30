@@ -142,7 +142,7 @@ Spaceport uses spaces in configuration keys (e.g., `spaceport name`, `memory cor
 
 ## Custom Configuration Keys
 
-Any key you add to the manifest becomes accessible in your application code through `Spaceport.config`. This makes the manifest a single source of truth for all application settings -- not just framework configuration.
+Any key you add to the manifest becomes accessible in your application code through `Spaceport.config`. This makes the manifest a single source of truth for all application settings — not just framework configuration.
 
 ```yaml
 app name: My Application
@@ -199,7 +199,7 @@ Combined with environment variable substitution, this lets you keep secrets out 
 
 ## See Also
 
-- [Manifest API Reference](manifest-api.md) -- Complete reference of all configuration keys
-- [Manifest Examples](manifest-examples.md) -- Real-world configuration files
-- [CLI Overview](cli-overview.md) -- How to start Spaceport with a manifest
-- [Scaffolds Overview](scaffolds-overview.md) -- How manifests relate to project structure
+- [Manifest API Reference](manifest-api.md) — Complete reference of all configuration keys
+- [Manifest Examples](manifest-examples.md) — Real-world configuration files
+- [CLI Overview](cli-overview.md) — How to start Spaceport with a manifest
+- [Scaffolds Overview](scaffolds-overview.md) — How manifests relate to project structure

@@ -1,4 +1,4 @@
-# Transmissions -- Examples
+# Transmissions — Examples
 
 Real-world Transmission patterns drawn from production Spaceport applications, including the Guestbook.ing and MadAve-Collab projects. Each example demonstrates a common use case with copy-paste-ready code.
 
@@ -6,7 +6,7 @@ Real-world Transmission patterns drawn from production Spaceport applications, i
 
 ### Updating an Element's Text
 
-The simplest Transmission -- return a string, and it replaces the target element's content:
+The simplest Transmission — return a string, and it replaces the target element's content:
 
 ```groovy
 <%
@@ -53,7 +53,7 @@ Array Transmissions are concise for simple actions:
 </button>
 ```
 
-*Source: Guestbook.ing -- `guestbook.ghtml`*
+*Source: Guestbook.ing — `guestbook.ghtml`*
 
 ---
 
@@ -90,7 +90,7 @@ Collect form data via the `t` object, process on the server, and return feedback
 </form>
 ```
 
-*Source: Guestbook.ing -- `guestbook.ghtml`*
+*Source: Guestbook.ing — `guestbook.ghtml`*
 
 Key points:
 - `t.name` gives the raw string value from the `name` input
@@ -122,7 +122,7 @@ For simpler forms, define the server action inline:
 </form>
 ```
 
-*Source: Guestbook.ing -- `guestbook.ghtml`*
+*Source: Guestbook.ing — `guestbook.ghtml`*
 
 ### Form with Targeted Feedback
 
@@ -177,7 +177,7 @@ After submitting a comment, clear the textarea using an Array Transmission:
 </form>
 ```
 
-*Source: MadAve-Collab -- `view.ghtml`*
+*Source: MadAve-Collab — `view.ghtml`*
 
 The `target="textarea"` resolves to the `<textarea>` element, and `['@clear']` empties its value. Meanwhile, `job._update()` triggers reactive updates for all connected clients viewing this job.
 
@@ -206,7 +206,7 @@ Use `on-change` to handle select element changes:
 </select>
 ```
 
-*Source: MadAve-Collab -- `view.ghtml`*
+*Source: MadAve-Collab — `view.ghtml`*
 
 The `t.value` (accessed here via `t.getString('value')`) contains the selected option's value.
 
@@ -222,7 +222,7 @@ Reactive bindings update automatically when the underlying data changes:
 <strong>Guestbook for <span id='guestbook-name'>${{ gb.info.name }}</span></strong>
 ```
 
-*Source: Guestbook.ing -- `guestbook.ghtml`*
+*Source: Guestbook.ing — `guestbook.ghtml`*
 
 When `gb.info.name` changes (e.g., via a form submission), the `<span>` updates on all connected clients.
 
@@ -234,7 +234,7 @@ Combine reactive bindings with dynamic CSS:
 ${{ """<badge color="${ statusColor(job.status) }">${ job.status }</badge>""" }}
 ```
 
-*Source: MadAve-Collab -- `view.ghtml`*
+*Source: MadAve-Collab — `view.ghtml`*
 
 The entire badge HTML is re-rendered whenever `job.status` changes, updating both the text and color.
 
@@ -246,7 +246,7 @@ Use the `.if` class enhancement for conditional rendering:
 ${{ "<div id='closed-guestbook-notice' class='centered narrow-width top-margin padded'><strong>Guestbook is closed.</strong></div>".if { !gb.isOpen() } }}
 ```
 
-*Source: Guestbook.ing -- `guestbook.ghtml`*
+*Source: Guestbook.ing — `guestbook.ghtml`*
 
 The notice appears or disappears based on the guestbook's open state, reactively.
 
@@ -268,7 +268,7 @@ ${{ gb.participants.combine { participant ->
 } }}
 ```
 
-*Source: Guestbook.ing -- `guestbook.ghtml`*
+*Source: Guestbook.ing — `guestbook.ghtml`*
 
 When a new participant signs the guestbook, the entire list re-renders for all connected clients.
 
@@ -293,7 +293,7 @@ ${{ gb.participants.combine { Guestbook.ParticipantSchema participant ->
 } }}
 ```
 
-*Source: Guestbook.ing -- `guestbook.ghtml`*
+*Source: Guestbook.ing — `guestbook.ghtml`*
 
 Each participant entry has its own delete button. The `_{ }` closure captures the specific `participant.cookie` from the loop iteration. Clicking delete removes the participant server-side and removes the parent `<div>` from the DOM with `['@remove']`.
 
@@ -335,7 +335,7 @@ A real-time comment thread that updates for all viewers when comments are added 
 </comment-thread>
 ```
 
-*Source: MadAve-Collab -- `view.ghtml`*
+*Source: MadAve-Collab — `view.ghtml`*
 
 This pattern embeds `_{ }` server actions (for edit/delete dialogs) within a `${{ }}` reactive block. When any user adds or modifies a comment and calls `job._update()`, the entire comment thread re-renders on all connected clients.
 
@@ -367,7 +367,7 @@ ${{
 }}
 ```
 
-*Source: MadAve-Collab -- `view.ghtml`*
+*Source: MadAve-Collab — `view.ghtml`*
 
 Each flag shows its sent status and timestamp, with a "Clear" button that deletes the Cargo value, saves the document, and triggers a reactive update.
 
@@ -503,7 +503,7 @@ Open dialogs by returning their rendered HTML from a server action:
 </li>
 ```
 
-*Source: MadAve-Collab -- `view.ghtml`*
+*Source: MadAve-Collab — `view.ghtml`*
 
 The `deleteJobDialog` closure is defined in the primed dialog template file and returns the dialog HTML as a Single Value Transmission, which is rendered into the target.
 
@@ -554,6 +554,6 @@ button[loading] {
 
 ## What's Next
 
-- **[Transmissions Overview](transmissions-overview.md)** -- high-level introduction
-- **[Transmissions API Reference](transmissions-api.md)** -- complete syntax reference
-- **[Transmissions Internals](transmissions-internals.md)** -- implementation deep-dive
+- **[Transmissions Overview](transmissions-overview.md)** — high-level introduction
+- **[Transmissions API Reference](transmissions-api.md)** — complete syntax reference
+- **[Transmissions Internals](transmissions-internals.md)** — implementation deep-dive

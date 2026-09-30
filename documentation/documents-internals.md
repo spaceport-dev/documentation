@@ -1,4 +1,4 @@
-# Documents (CouchDB ORM) --- Internals
+# Documents (CouchDB ORM) — Internals
 
 This document covers the internal implementation of the Document system: how saves actually work, how conflicts are detected and resolved, how caching operates, how Jackson serialization is configured, and how Documents integrate with Cargo for reactivity.
 
@@ -23,7 +23,7 @@ spaceport.computer.memory.physical
 
 ## CouchHandler: The HTTP Bridge
 
-`CouchHandler` is the sole point of communication between Spaceport and CouchDB. Every document operation --- get, create, update, delete, query --- passes through this class as an HTTP request.
+`CouchHandler` is the sole point of communication between Spaceport and CouchDB. Every document operation — get, create, update, delete, query — passes through this class as an HTTP request.
 
 ### Construction and Session Authentication
 
@@ -222,7 +222,7 @@ The resulting diff map is passed to the `on document save`, `on document modifie
 
 ## ViewDocument Internals
 
-`ViewDocument` stores CouchDB design documents. The `_id` is always prefixed with `_design/` --- the `get()` method prepends this automatically, so callers use plain names.
+`ViewDocument` stores CouchDB design documents. The `_id` is always prefixed with `_design/` — the `get()` method prepends this automatically, so callers use plain names.
 
 ### View Function Storage
 

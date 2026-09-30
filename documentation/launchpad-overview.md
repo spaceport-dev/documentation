@@ -1,10 +1,10 @@
-# Launchpad (Templating Engine) -- Overview
+# Launchpad (Templating Engine) — Overview
 
 Launchpad is Spaceport's server-side templating engine. It reads `.ghtml` template files (Groovy-embedded HTML), combines them into pages, and writes the rendered output to the HTTP response. Beyond basic templating, Launchpad provides two features that distinguish it from traditional engines: **reactive bindings** that automatically push DOM updates when server-side data changes, and **server actions** that let you bind Groovy closures directly to client-side events like clicks and form submissions.
 
 ## Why Launchpad?
 
-Most web frameworks require you to build a separate API layer between your server logic and your UI. You write route handlers that return JSON, then write client-side JavaScript that fetches that JSON and updates the DOM. Launchpad eliminates this middleman. Your templates run Groovy code on the server with full access to your database, business logic, and session state -- and the results render directly as HTML. When you need interactivity, reactive bindings and server actions handle the communication transparently over WebSocket.
+Most web frameworks require you to build a separate API layer between your server logic and your UI. You write route handlers that return JSON, then write client-side JavaScript that fetches that JSON and updates the DOM. Launchpad eliminates this middleman. Your templates run Groovy code on the server with full access to your database, business logic, and session state — and the results render directly as HTML. When you need interactivity, reactive bindings and server actions handle the communication transparently over WebSocket.
 
 The result is a development model where a single `.ghtml` file can contain the markup, the data queries, the form handling logic, and the reactive update rules for an entire page section. There is no separate frontend codebase to maintain.
 
@@ -25,14 +25,14 @@ Templates are HTML files with a `.ghtml` extension stored in a `launchpad/parts/
 <p>You last visited ${ user.fields.lastVisit?.relativeTime() ?: 'never' }.</p>
 ```
 
-The `<% %>` blocks execute Groovy code on the server. The `${ }` expressions interpolate values into the HTML output. The client never sees the Groovy code -- they receive plain HTML.
+The `<% %>` blocks execute Groovy code on the server. The `${ }` expressions interpolate values into the HTML output. The client never sees the Groovy code — they receive plain HTML.
 
 ### The Assemble/Launch Pattern
 
 Every Launchpad page follows a two-step pattern:
 
-1. **Assemble** -- Choose which template files make up the page
-2. **Launch** -- Render those templates and write the output to the HTTP response
+1. **Assemble** — Choose which template files make up the page
+2. **Launch** — Render those templates and write the output to the HTTP response
 
 ```groovy
 import spaceport.computer.alerts.Alert
@@ -68,7 +68,7 @@ The `assemble()` method takes a list of template filenames (relative to `launchp
 
 ### Reactive Bindings
 
-Wrap an expression in `${{ }}` (double curly braces) to create a reactive binding. Launchpad tracks which variables and Cargo fields the expression depends on, and when those values change, it pushes a DOM update to the client over WebSocket -- automatically.
+Wrap an expression in `${{ }}` (double curly braces) to create a reactive binding. Launchpad tracks which variables and Cargo fields the expression depends on, and when those values change, it pushes a DOM update to the client over WebSocket — automatically.
 
 ```html
 <p>Messages: ${{ dock.messages.getList().size() }}</p>
@@ -81,7 +81,7 @@ When the button is clicked, the server action adds a message to the session-scop
 
 ### Server Actions
 
-The `_{ }` syntax inside a `${ }` expression creates a server action -- a Groovy closure that executes on the server when a client-side event fires. Server actions are bound to DOM events using `on-*` attributes:
+The `_{ }` syntax inside a `${ }` expression creates a server action — a Groovy closure that executes on the server when a client-side event fires. Server actions are bound to DOM events using `on-*` attributes:
 
 ```html
 <button on-click=${ _{ println 'Button clicked on server!' }}>Click Me</button>
@@ -98,7 +98,7 @@ The `_{ }` syntax inside a `${ }` expression creates a server action -- a Groovy
 </form>
 ```
 
-The closure's parameter `t` (the "transmission") carries client-side data -- form fields, element values, event details. The closure's return value is sent back to the client. Returning a String replaces the source element's content. Returning a Map can target multiple DOM elements or trigger special behaviors like redirects.
+The closure's parameter `t` (the "transmission") carries client-side data — form fields, element values, event details. The closure's return value is sent back to the client. Returning a String replaces the source element's content. Returning a Map can target multiple DOM elements or trigger special behaviors like redirects.
 
 ## Built-in Template Variables
 
@@ -139,7 +139,7 @@ For reactive bindings and server actions to work, the client page must include t
 <script defer src='https://cdn.jsdelivr.net/gh/spaceport-dev/hud-core.js@latest/hud-core.min.js'></script>
 ```
 
-HUD-Core is not required for purely static server-rendered pages -- only when you use `${{ }}` reactive bindings or `_{ }` server actions.
+HUD-Core is not required for purely static server-rendered pages — only when you use `${{ }}` reactive bindings or `_{ }` server actions.
 
 ## A Complete Example
 
@@ -192,6 +192,6 @@ This single file queries the database, checks the user's session, renders a cond
 
 ## What's Next
 
-- **[Launchpad API Reference](launchpad-api.md)** -- Complete method signatures for the `Launchpad` class, template syntax reference, `<g:*>` generators, and transmission API.
-- **[Launchpad Internals](launchpad-internals.md)** -- How template preprocessing, reactive binding tracking, the Catch proxy, and WebSocket updates work under the hood.
-- **[Launchpad Examples](launchpad-examples.md)** -- Real-world patterns from production Spaceport applications including page composition, form handling, reactive lists, and nested templates.
+- **[Launchpad API Reference](launchpad-api.md)** — Complete method signatures for the `Launchpad` class, template syntax reference, `<g:*>` generators, and transmission API.
+- **[Launchpad Internals](launchpad-internals.md)** — How template preprocessing, reactive binding tracking, the Catch proxy, and WebSocket updates work under the hood.
+- **[Launchpad Examples](launchpad-examples.md)** — Real-world patterns from production Spaceport applications including page composition, form handling, reactive lists, and nested templates.

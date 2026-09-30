@@ -130,7 +130,7 @@ base url: 'https://staging.collab.madavegroup.com/'
 
 ## Minimal Configuration
 
-The smallest useful manifest -- everything else inherits from defaults:
+The smallest useful manifest — everything else inherits from defaults:
 
 ```yaml
 host:
@@ -349,14 +349,14 @@ java -jar spaceport.jar --start config.staging.spaceport
 java -jar spaceport.jar --start config.production.spaceport
 ```
 
-Each file is a complete, standalone configuration. There is no inheritance between manifest files -- each is independently merged with the built-in defaults.
+Each file is a complete, standalone configuration. There is no inheritance between manifest files — each is independently merged with the built-in defaults.
 
 
 ## See Also
 
-- [Manifest Overview](manifest-overview.md) -- How configuration loading works
-- [Manifest API Reference](manifest-api.md) -- Complete reference of all configuration keys
-- [CLI Overview](cli-overview.md) -- Starting Spaceport with different manifests
+- [Manifest Overview](manifest-overview.md) — How configuration loading works
+- [Manifest API Reference](manifest-api.md) — Complete reference of all configuration keys
+- [CLI Overview](cli-overview.md) — Starting Spaceport with different manifests
 
 
 ## Dedicated Users Database and Render Limits

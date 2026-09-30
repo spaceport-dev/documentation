@@ -1,6 +1,6 @@
-# Transmissions -- Server-Driven DOM Updates
+# Transmissions — Server-Driven DOM Updates
 
-Transmissions are how Spaceport's server-side code reaches into the browser and updates the UI. When a user clicks a button, submits a form, or any DOM event fires, the server can respond with a Transmission -- a structured payload that tells the client exactly what to change in the page. No custom JavaScript required.
+Transmissions are how Spaceport's server-side code reaches into the browser and updates the UI. When a user clicks a button, submits a form, or any DOM event fires, the server can respond with a Transmission — a structured payload that tells the client exactly what to change in the page. No custom JavaScript required.
 
 This is a core piece of the Launchpad templating system. Where most frameworks require you to write frontend code to handle user interactions, Spaceport lets you define that behavior in Groovy, right inside your templates, and the framework handles the round-trip automatically.
 
@@ -8,9 +8,9 @@ This is a core piece of the Launchpad templating system. Where most frameworks r
 
 The Transmission cycle has three steps:
 
-1. **Event** -- A user interacts with an element that has an `on-*` attribute (e.g., `on-click`, `on-submit`). HUD-Core intercepts the event.
-2. **Server Action** -- HUD-Core sends a POST request to the server with contextual data (element values, form data, event details). The server executes the Groovy closure associated with that event.
-3. **Transmission** -- The closure returns a value. HUD-Core receives it and applies the instructions to the DOM.
+1. **Event** — A user interacts with an element that has an `on-*` attribute (e.g., `on-click`, `on-submit`). HUD-Core intercepts the event.
+2. **Server Action** — HUD-Core sends a POST request to the server with contextual data (element values, form data, event details). The server executes the Groovy closure associated with that event.
+3. **Transmission** — The closure returns a value. HUD-Core receives it and applies the instructions to the DOM.
 
 ```
 User clicks button
@@ -25,7 +25,7 @@ User clicks button
   HUD-Core applies Transmission to target element
 ```
 
-There is no page reload. The update is surgical -- only the targeted element changes.
+There is no page reload. The update is surgical — only the targeted element changes.
 
 ## The Two Syntaxes
 
@@ -65,7 +65,7 @@ Reactive bindings create expressions that automatically re-evaluate when their u
 <p>Page views: ${{ stats.get('pageViews') }}</p>
 ```
 
-When `stats.inc('pageViews')` runs anywhere on the server, the displayed count updates on every connected client via WebSocket -- no event trigger needed. This is how Spaceport achieves real-time multi-user updates.
+When `stats.inc('pageViews')` runs anywhere on the server, the displayed count updates on every connected client via WebSocket — no event trigger needed. This is how Spaceport achieves real-time multi-user updates.
 
 ## The Three Transmission Formats
 
@@ -95,7 +95,7 @@ return [
 ]
 ```
 
-Maps can combine content updates, class changes, attribute modifications, browser actions, and selector-based updates -- all in a single response.
+Maps can combine content updates, class changes, attribute modifications, browser actions, and selector-based updates — all in a single response.
 
 ### Array (Groovy List)
 
@@ -153,21 +153,21 @@ A key design principle behind Transmissions is that the server owns the state. T
 </div>
 ```
 
-The `counter` variable lives on the server, bound to the user's session. Refreshing the page, reopening the browser, or logging in from a different device all see the same state. The Transmission simply tells the client what the current value is -- it never relies on client-side state.
+The `counter` variable lives on the server, bound to the user's session. Refreshing the page, reopening the browser, or logging in from a different device all see the same state. The Transmission simply tells the client what the current value is — it never relies on client-side state.
 
 ## When to Use Transmissions
 
 Transmissions are ideal for:
 
-- **Form processing** -- validate, save, and provide feedback in one round-trip
-- **Dynamic UI updates** -- toggle states, show/hide elements, update content
-- **Real-time displays** -- combine `${{ }}` bindings with Cargo for live data
-- **Server-authoritative interactions** -- anything where the server should decide what happens next
+- **Form processing** — validate, save, and provide feedback in one round-trip
+- **Dynamic UI updates** — toggle states, show/hide elements, update content
+- **Real-time displays** — combine `${{ }}` bindings with Cargo for live data
+- **Server-authoritative interactions** — anything where the server should decide what happens next
 
 For interactions that need instant feedback without a server round-trip (e.g., optimistic UI updates), Spaceport provides Document Data on the client side, which can be combined with Transmissions for a hybrid approach.
 
 ## What's Next
 
-- **[Transmissions API Reference](transmissions-api.md)** -- complete syntax for all Transmission formats, target values, and the `t` data object
-- **[Transmissions Internals](transmissions-internals.md)** -- how bindings, reactions, the Catch proxy, and WebSocket updates work under the hood
-- **[Transmissions Examples](transmissions-examples.md)** -- real-world patterns from production Spaceport applications
+- **[Transmissions API Reference](transmissions-api.md)** — complete syntax for all Transmission formats, target values, and the `t` data object
+- **[Transmissions Internals](transmissions-internals.md)** — how bindings, reactions, the Catch proxy, and WebSocket updates work under the hood
+- **[Transmissions Examples](transmissions-examples.md)** — real-world patterns from production Spaceport applications

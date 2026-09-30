@@ -1,4 +1,4 @@
-# Server Elements -- Examples
+# Server Elements — Examples
 
 Real-world patterns drawn from the MadAve-Collab production application, which uses 17+ elements across its interface. These examples illustrate the range of element design strategies: from simple display-only components to complex interactive form controls with client-server communication.
 
@@ -6,7 +6,7 @@ Real-world patterns drawn from the MadAve-Collab production application, which u
 
 ## Simple Display Element: UserBadge
 
-The simplest useful element pattern -- server-side rendering only, no JavaScript, no interactivity. The element accesses `client` to read the authenticated user's data.
+The simplest useful element pattern — server-side rendering only, no JavaScript, no interactivity. The element accesses `client` to read the authenticated user's data.
 
 **`UserBadge.groovy`**
 
@@ -96,8 +96,8 @@ class UserBadge implements Element {
 ```
 
 **Patterns demonstrated:**
-- **Accessing `client`:** The element reads from the authenticated user's `document` (permissions, name, userID) -- all available through the `client` property injected by the trait.
-- **Custom child elements for structure:** `<user-icon>` and `<user-name>` are not Server Elements -- they are plain custom HTML tags used for semantic structure and CSS targeting. This avoids class-name collisions.
+- **Accessing `client`:** The element reads from the authenticated user's `document` (permissions, name, userID) — all available through the `client` property injected by the trait.
+- **Custom child elements for structure:** `<user-icon>` and `<user-name>` are not Server Elements — they are plain custom HTML tags used for semantic structure and CSS targeting. This avoids class-name collisions.
 - **Static CSS:** The `static` keyword signals that this CSS is identical for all instances.
 - **Class enhancements:** `.surroundWith('<badge>')`, `.titleCase()`, and `.replace()` are used to format display output inline.
 
@@ -302,7 +302,7 @@ class CheckBox implements Element {
 ```
 
 **Patterns demonstrated:**
-- **Boolean attributes.** `checked`, `disabled`, `required` are detected via `attributes.containsKey()` -- they have no meaningful value, just presence.
+- **Boolean attributes.** `checked`, `disabled`, `required` are detected via `attributes.containsKey()` — they have no meaningful value, just presence.
 - **Hidden native input.** A visually hidden native `<input type="checkbox">` handles form submission while custom elements handle the visual presentation. This preserves form compatibility.
 - **Accessibility.** Keyboard support (Space and Enter), `tabindex` for focus, `focus-visible` styling, and ID transfer for `<label for="...">` association.
 - **No `@Bind` needed.** The element is purely client-side. Form submission carries the checkbox value through the hidden native input.
@@ -666,7 +666,7 @@ class HudDialog implements Element {
 }
 ```
 
-**Template usage -- reactive dialog creation:**
+**Template usage — reactive dialog creation:**
 
 ```html
 <%
@@ -684,7 +684,7 @@ class HudDialog implements Element {
 """ }}>Edit</button>
 ```
 
-**Template usage -- with tabs:**
+**Template usage — with tabs:**
 
 ```html
 <g:hud-dialog>
@@ -705,7 +705,7 @@ class HudDialog implements Element {
 **Patterns demonstrated:**
 - **Native `<dialog>` integration.** Uses `dialog.showModal()` for proper modal behavior with backdrop and focus trapping.
 - **Reactive creation.** The dialog is rendered when a reactive variable is set to the dialog content. The `${{ }}` wrapper in the template renders the `<g:hud-dialog>` when the variable is non-empty. Setting the variable back to `''` removes the dialog.
-- **Tab system via body content.** The element does not define tabs itself -- the body content includes `<tab-strip>` and `<tab-section>` elements that the `constructed` hook automatically wires up. This is a content-agnostic pattern.
+- **Tab system via body content.** The element does not define tabs itself — the body content includes `<tab-strip>` and `<tab-section>` elements that the `constructed` hook automatically wires up. This is a content-agnostic pattern.
 - **Close via DOM removal.** The close button calls `this.closest('hud-dialog').remove()`, which triggers HUD-Core's element cleanup (calling `deconstructed`, removing listeners, deleting the global reference).
 - **Draggable.** The dialog becomes draggable on mousedown, excluding interactive child elements. The dialog transitions from CSS-centered to absolute positioning on first drag.
 
@@ -713,7 +713,7 @@ class HudDialog implements Element {
 
 ## Convenience Wrapper: CancelButton
 
-The simplest possible element -- a thin wrapper that reduces boilerplate for a common pattern.
+The simplest possible element — a thin wrapper that reduces boilerplate for a common pattern.
 
 **`CancelButton.groovy`**
 
@@ -739,7 +739,7 @@ class CancelButton implements Element {
 ```
 
 **Patterns demonstrated:**
-- **Zero-annotation element.** No `@CSS`, `@Javascript`, or `@Bind` -- just `prerender()`. This is the absolute minimum for a useful element.
+- **Zero-annotation element.** No `@CSS`, `@Javascript`, or `@Bind` — just `prerender()`. This is the absolute minimum for a useful element.
 - **Server action in prerender.** Uses `_{ [ '@remove' ] }` to create a server action that sends a `@remove` transmission, removing the closest `hud-dialog` ancestor from the DOM.
 - **Boilerplate reduction.** Without this element, every cancel button in every dialog would need `type='button' class='secondary' target='hud-dialog' on-click="${ _{ [ '@remove' ] }}"`. The element collapses that into a single tag.
 
@@ -749,7 +749,7 @@ class CancelButton implements Element {
 
 A form control that manages a list of tags with inline editing, drag-to-reorder, and keyboard navigation.
 
-**`TagInput.groovy`** (abbreviated -- full implementation includes drag-and-drop, inline editing, and keyboard support)
+**`TagInput.groovy`** (abbreviated — full implementation includes drag-and-drop, inline editing, and keyboard support)
 
 ```groovy
 import spaceport.launchpad.element.CSS
@@ -1422,7 +1422,7 @@ class HudTable implements Element {
 ```
 
 **Patterns demonstrated:**
-- **`@Prepend` instead of `@CSS`.** The table uses `@Prepend` with explicit `<style>` tags for its global CSS. This is an alternative approach -- it works the same as `@CSS` but gives you full control over the style tag, and is better suited for element styles that need to apply globally (since the table structure is complex with many sub-elements).
+- **`@Prepend` instead of `@CSS`.** The table uses `@Prepend` with explicit `<style>` tags for its global CSS. This is an alternative approach — it works the same as `@CSS` but gives you full control over the style tag, and is better suited for element styles that need to apply globally (since the table structure is complex with many sub-elements).
 - **Declarative column configuration.** Column widths, alignment, sticky behavior, and sort eligibility are configured via attributes on the `<span>` header elements. The `constructed` JavaScript reads these attributes and generates CSS Grid column templates.
 - **CSS-based sorting.** Sorted rows use `row.style.order = index` rather than DOM reordering, avoiding expensive DOM mutations.
 - **localStorage persistence.** Sort state is saved to `localStorage` keyed by the table's `id` attribute, restoring the user's sort preference on page reload.

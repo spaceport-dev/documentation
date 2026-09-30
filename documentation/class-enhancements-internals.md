@@ -77,7 +77,7 @@ Because `enhance()` is called before any user code runs, you can rely on enhance
 | `Number` | Date/time formatting, currency formatting, duration conversion. Web apps frequently work with timestamps (epoch milliseconds) and monetary values. |
 | `Integer` | Random number and ID generation. Extends `Number` enhancements with integer-specific utilities. |
 | `List` | Template rendering (`combine`), temporary reactive data (`snap`), HTML sanitization of collections, and fluent modification (`including`). |
-| `Map` | Same patterns as List -- `combine`, `snap`, `including`, `json` -- applied to key-value data. |
+| `Map` | Same patterns as List — `combine`, `snap`, `including`, `json` — applied to key-value data. |
 | `Collection` | JSON serialization for any collection type (covers Sets and other non-List collections). |
 | `Object` | Reactive update propagation (`_update`, `_forceUpdate`), universal membership checking (`isPresent`), and CDATA wrapping (`cdata`). Applied to `Object` so these methods are available on every type. |
 | `Closure` | Delegate manipulation (`callWith`) for advanced closure invocation patterns. |
@@ -194,6 +194,6 @@ The `snap()` method spawns a new thread for each timed removal. The `sleep()` an
 
 ## See Also
 
-- [Class Enhancements Overview](class-enhancements-overview.md) -- High-level introduction to what enhancements are and why they exist.
-- [Class Enhancements API Reference](class-enhancements-api.md) -- Complete method reference.
-- [Launchpad Internals](launchpad-internals.md) -- How Launchpad's reactive system uses `_update()`.
+- [Class Enhancements Overview](class-enhancements-overview.md) — High-level introduction to what enhancements are and why they exist.
+- [Class Enhancements API Reference](class-enhancements-api.md) — Complete method reference.
+- [Launchpad Internals](launchpad-internals.md) — How Launchpad's reactive system uses `_update()`.

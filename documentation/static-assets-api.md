@@ -67,7 +67,7 @@ static assets:
     /assets/ : assets/*
 ```
 
-Setting `buffer: true` in debug mode has no effect -- the implementation disables it whenever debug mode is active.
+Setting `buffer: true` in debug mode has no effect — the implementation disables it whenever debug mode is active.
 
 ---
 
@@ -196,7 +196,7 @@ MIME types are handled automatically by Jetty's `DefaultServlet`. The `Content-T
 | `.ttf` | `font/ttf` |
 | `.ico` | `image/x-icon` |
 
-No additional configuration is needed -- Jetty detects and sets MIME types automatically.
+No additional configuration is needed — Jetty detects and sets MIME types automatically.
 
 ---
 

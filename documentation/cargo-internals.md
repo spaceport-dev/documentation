@@ -79,7 +79,7 @@ The debounce prevents excessive database writes during burst operations like loo
 
 `synchronize()` also calls `_update()`, which notifies the Launchpad binding system that this Cargo's data has changed. This is debounced at 5 milliseconds.
 
-The `_update()` method interacts with Launchpad's **binding satellites** -- the mechanism that tracks which template expressions reference which Cargo instances. When `_update()` fires, Launchpad:
+The `_update()` method interacts with Launchpad's **binding satellites** — the mechanism that tracks which template expressions reference which Cargo instances. When `_update()` fires, Launchpad:
 
 1. Identifies all active template bindings that reference this Cargo's `_id`
 2. Re-evaluates those expressions server-side
@@ -154,7 +154,7 @@ Launchpad templates that contain reactive expressions like `${{ cargo.get('key')
 
 When `_update()` fires on a Cargo, Launchpad queries its satellite registry for all satellites referencing that Cargo's `_id`, re-evaluates each expression, and sends targeted DOM updates via WebSocket to each connected client.
 
-This is the mechanism that makes `${{ }}` expressions "live" -- they are not polling. The server pushes changes to the client only when the underlying Cargo actually mutates.
+This is the mechanism that makes `${{ }}` expressions "live" — they are not polling. The server pushes changes to the client only when the underlying Cargo actually mutates.
 
 ## Data Flow Summary
 
@@ -186,8 +186,8 @@ This is the mechanism that makes `${{ }}` expressions "live" -- they are not pol
 
 ## See Also
 
-- [Cargo Overview](cargo-overview.md) -- high-level introduction
-- [Cargo API Reference](cargo-api.md) -- complete method listing
-- [Cargo Examples](cargo-examples.md) -- real-world usage patterns
-- [Launchpad Internals](launchpad-internals.md) -- details on the template binding system
-- [Alerts Internals](alerts-internals.md) -- the event system powering `on document saved`
+- [Cargo Overview](cargo-overview.md) — high-level introduction
+- [Cargo API Reference](cargo-api.md) — complete method listing
+- [Cargo Examples](cargo-examples.md) — real-world usage patterns
+- [Launchpad Internals](launchpad-internals.md) — details on the template binding system
+- [Alerts Internals](alerts-internals.md) — the event system powering `on document saved`

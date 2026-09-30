@@ -11,7 +11,7 @@ Sanitizes HTML content using the Jsoup library. The sanitization level is contro
 
 **Signature:** `String clean()`
 
-**Returns:** `String` -- The sanitized string.
+**Returns:** `String` — The sanitized string.
 
 **cleanType values:**
 
@@ -21,8 +21,8 @@ Sanitizes HTML content using the Jsoup library. The sanitization level is contro
 | `'simpleText'` | Allows basic text formatting: `<b>`, `<i>`, `<em>`, `<strong>`. |
 | `'simple'` | Allows `simpleText` tags plus `<br>`, `<u>`, `<s>`, `<strike>`. |
 | `'simpleWithImages'` | Allows `simple` tags plus `<img>` with `src` attribute (http, https, data protocols). |
-| `'basic'` | Jsoup's `Safelist.basic()` -- common inline and block elements. |
-| `'basicWithImages'` | Jsoup's `Safelist.basicWithImages()` -- basic plus image tags. |
+| `'basic'` | Jsoup's `Safelist.basic()` — common inline and block elements. |
+| `'basicWithImages'` | Jsoup's `Safelist.basicWithImages()` — basic plus image tags. |
 | `'relaxed'` | Jsoup's `Safelist.relaxed()` plus `<img>` with height, src, width attributes (http, https, data protocols). |
 
 ```groovy
@@ -299,7 +299,7 @@ Parses an HTML5 `datetime-local` form string (`yyyy-MM-dd'T'HH:mm`) into epoch m
 
 **Signature:** `Long time()`
 
-**Returns:** `Long` -- Epoch milliseconds.
+**Returns:** `Long` — Epoch milliseconds.
 
 ```groovy
 "2025-10-28T14:30".time()  // epoch milliseconds for that date/time
@@ -463,7 +463,7 @@ Formats epoch milliseconds as a 12-hour time string with AM/PM.
 
 **Signature:** `String time()`
 
-**Returns:** `String` -- Format: `hh:mm:ss a`
+**Returns:** `String` — Format: `hh:mm:ss a`
 
 ```groovy
 System.currentTimeMillis().time()    // "02:30:45 PM"
@@ -477,7 +477,7 @@ Formats epoch milliseconds as a human-readable date string.
 
 **Signature:** `String date()`
 
-**Returns:** `String` -- Format: `MMMM dd, yyyy`
+**Returns:** `String` — Format: `MMMM dd, yyyy`
 
 ```groovy
 System.currentTimeMillis().date()    // "March 01, 2026"
@@ -491,7 +491,7 @@ Formats epoch milliseconds as a compact date string.
 
 **Signature:** `String dateRaw()`
 
-**Returns:** `String` -- Format: `MM/dd/yyyy`
+**Returns:** `String` — Format: `MM/dd/yyyy`
 
 ```groovy
 System.currentTimeMillis().dateRaw()    // "03/01/2026"
@@ -505,7 +505,7 @@ Formats epoch milliseconds as a full date and time string with timezone.
 
 **Signature:** `String dateTime()`
 
-**Returns:** `String` -- Format: `MMMM dd, yyyy hh:mm a z`
+**Returns:** `String` — Format: `MMMM dd, yyyy hh:mm a z`
 
 ```groovy
 System.currentTimeMillis().dateTime()    // "March 01, 2026 02:30 PM EST"
@@ -519,7 +519,7 @@ Formats epoch milliseconds as a compact date and time string with timezone.
 
 **Signature:** `String dateTimeRaw()`
 
-**Returns:** `String` -- Format: `MM/dd/yyyy hh:mm a z`
+**Returns:** `String` — Format: `MM/dd/yyyy hh:mm a z`
 
 ```groovy
 System.currentTimeMillis().dateTimeRaw()    // "03/01/2026 02:30 PM EST"
@@ -597,7 +597,7 @@ Formats epoch milliseconds into the HTML5 `datetime-local` input format, using t
 
 **Signature:** `String formTime()`
 
-**Returns:** `String` -- Format: `yyyy-MM-dd'T'HH:mm`
+**Returns:** `String` — Format: `yyyy-MM-dd'T'HH:mm`
 
 ```groovy
 System.currentTimeMillis().formTime()    // "2026-03-01T14:30"
@@ -645,7 +645,7 @@ Cleans all `String` items in the list in place using the `cleanType` property. N
 
 **Signature:** `List clean()`
 
-**Returns:** `List` -- The same list, modified in place.
+**Returns:** `List` — The same list, modified in place.
 
 ```groovy
 def inputs = ["<b>Bold</b>", "<script>bad</script>", 42]
@@ -662,7 +662,7 @@ Temporarily adds an item (or all items from a list) to the list, then automatica
 
 **Signature:** `List snap(Integer time, Object obj)`
 
-**Returns:** `List` -- The modified list.
+**Returns:** `List` — The modified list.
 
 ```groovy
 def messages = []
@@ -769,7 +769,7 @@ Temporarily adds a key-value pair (or all entries from a map) to this map, then 
 
 **Signature:** `Map snap(Integer time, String key, Object obj)`
 
-**Returns:** `Map` -- The modified map.
+**Returns:** `Map` — The modified map.
 
 ```groovy
 def flags = [:]
@@ -972,6 +972,6 @@ input.clean()    // "<b>Bold</b> bad"
 
 ## See Also
 
-- [Class Enhancements Overview](class-enhancements-overview.md) -- High-level introduction to the enhancement system.
-- [Class Enhancements Internals](class-enhancements-internals.md) -- How metaclass enhancements work under the hood.
-- [Launchpad Overview](launchpad-overview.md) -- Where many of these enhancements are used in templates.
+- [Class Enhancements Overview](class-enhancements-overview.md) — High-level introduction to the enhancement system.
+- [Class Enhancements Internals](class-enhancements-internals.md) — How metaclass enhancements work under the hood.
+- [Launchpad Overview](launchpad-overview.md) — Where many of these enhancements are used in templates.

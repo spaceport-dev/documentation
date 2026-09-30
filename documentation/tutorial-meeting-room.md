@@ -6,13 +6,13 @@ This tutorial walks you through building a meeting room booking application with
 
 By the end of this tutorial you will have learned:
 
-- **Documents** -- Persisting data to CouchDB so bookings survive server restarts
-- **Custom Document Classes** -- Defining typed data models with business logic
-- **CouchDB Views** -- Querying and listing documents
-- **Cargo** -- Using reactive data containers for real-time cross-client updates
-- **Multiple Routes** -- Handling more than one URL in a single application
-- **Form Handling** -- Processing form submissions with server actions
-- **Reactive Bindings** -- Updating all connected browsers automatically when data changes
+- **Documents** — Persisting data to CouchDB so bookings survive server restarts
+- **Custom Document Classes** — Defining typed data models with business logic
+- **CouchDB Views** — Querying and listing documents
+- **Cargo** — Using reactive data containers for real-time cross-client updates
+- **Multiple Routes** — Handling more than one URL in a single application
+- **Form Handling** — Processing form submissions with server actions
+- **Reactive Bindings** — Updating all connected browsers automatically when data changes
 
 ## Prerequisites
 
@@ -39,7 +39,7 @@ Create a new project folder with the same minimal scaffold you used in the Tic-T
     + elements/
 ```
 
-There is one new subdirectory here: `modules/documents/`. This is where we will place our custom Document class -- a pattern you will see in real Spaceport applications for organizing data models separately from routing logic.
+There is one new subdirectory here: `modules/documents/`. This is where we will place our custom Document class — a pattern you will see in real Spaceport applications for organizing data models separately from routing logic.
 
 Download the Spaceport JAR into your project root:
 
@@ -63,7 +63,7 @@ Your project scaffold should now look like this:
 
 ## Step 2: Define the Booking Document
 
-In the Tic-Tac-Toe tutorial, all game state lived in `static` variables -- simple and fast, but lost on every server restart. For a booking system, we need data to persist. This is where **Documents** come in.
+In the Tic-Tac-Toe tutorial, all game state lived in `static` variables — simple and fast, but lost on every server restart. For a booking system, we need data to persist. This is where **Documents** come in.
 
 A Document is Spaceport's ORM layer for CouchDB. It maps a Groovy object to a JSON document in the database. When you save a Document, it writes to CouchDB. When you retrieve it, you get a Groovy object with typed properties and methods. For a full explanation, see the [Documents Overview](documents-overview.md).
 
@@ -116,10 +116,10 @@ class Booking extends Document {
 
 Let's break down the key pieces:
 
-- **`extends Document`** -- This makes `Booking` a CouchDB-backed object. It inherits `_id`, `_rev`, `fields`, `cargo`, `save()`, `remove()`, and all the other Document capabilities described in the [Documents API Reference](documents-api.md).
-- **`def type = 'booking'`** -- A tag that CouchDB views use to filter documents. A single database can hold multiple document types, so the `type` field is how you distinguish bookings from other records.
-- **`def customProperties`** -- This list is critical. It tells Spaceport which of your custom properties to include when serializing the document to JSON for CouchDB. Without this, only the base Document properties (`_id`, `_rev`, `fields`, `cargo`, etc.) would be saved.
-- **`getNew('bookings')`** -- Creates a new document with a random UUID in the `bookings` database. The `as Booking` cast ensures you get a typed `Booking` object back.
+- **`extends Document`** — This makes `Booking` a CouchDB-backed object. It inherits `_id`, `_rev`, `fields`, `cargo`, `save()`, `remove()`, and all the other Document capabilities described in the [Documents API Reference](documents-api.md).
+- **`def type = 'booking'`** — A tag that CouchDB views use to filter documents. A single database can hold multiple document types, so the `type` field is how you distinguish bookings from other records.
+- **`def customProperties`** — This list is critical. It tells Spaceport which of your custom properties to include when serializing the document to JSON for CouchDB. Without this, only the base Document properties (`_id`, `_rev`, `fields`, `cargo`, etc.) would be saved.
+- **`getNew('bookings')`** — Creates a new document with a random UUID in the `bookings` database. The `as Booking` cast ensures you get a typed `Booking` object back.
 
 ### Setting Up a CouchDB View
 
@@ -155,7 +155,7 @@ Add a view setup method to the `Booking` class, inside the class body, after the
 This code does two things at startup:
 
 1. **Creates the `bookings` database** in CouchDB if it does not already exist. Without this, attempts to save documents would fail.
-2. **Defines a view** named `by-date` inside a design document called `views`. The JavaScript function runs against every document in the `bookings` database. When it finds one with `type === 'booking'`, it emits the date as the key and the booking details as the value. `setViewIfNeeded` is idempotent -- it only writes to CouchDB if the view does not exist or has changed.
+2. **Defines a view** named `by-date` inside a design document called `views`. The JavaScript function runs against every document in the `bookings` database. When it finds one with `type === 'booking'`, it emits the date as the key and the booking details as the value. `setViewIfNeeded` is idempotent — it only writes to CouchDB if the view does not exist or has changed.
 
 ### Complete `modules/documents/Booking.groovy`
 
@@ -274,14 +274,14 @@ In the Tic-Tac-Toe tutorial, state was stored in `static` variables and the page
 
 **Cargo** solves this. It is a reactive data container that automatically pushes updates to all connected Launchpad templates when its values change. When you call `bookingData.set('bookings', ...)`, every browser viewing a template that references `bookingData` will see the new data instantly, with no page reload required.
 
-We are using `Cargo.fromStore('booking-data')` here, which creates a **Store Cargo** -- a named singleton shared across the entire server. It survives hot-reloads during development but does not persist to disk (the CouchDB Documents handle persistence). See the [Cargo Overview](cargo-overview.md) for details on all three Cargo modes.
+We are using `Cargo.fromStore('booking-data')` here, which creates a **Store Cargo** — a named singleton shared across the entire server. It survives hot-reloads during development but does not persist to disk (the CouchDB Documents handle persistence). See the [Cargo Overview](cargo-overview.md) for details on all three Cargo modes.
 
 ### Multiple Routes
 
 Notice that we now have two `@Alert` handlers for different URLs:
 
-- `'on / hit'` -- serves the main booking schedule at `http://localhost:10000/`
-- `'on /new hit'` -- serves the booking form at `http://localhost:10000/new`
+- `'on / hit'` — serves the main booking schedule at `http://localhost:10000/`
+- `'on /new hit'` — serves the booking form at `http://localhost:10000/new`
 
 This is how Spaceport handles routing. Each URL gets its own `@Alert` handler, and each can assemble different Launchpad templates. See the [Alerts Overview](alerts-overview.md) for the full event string syntax.
 
@@ -491,9 +491,9 @@ This template introduces `on-submit` with a **Transmission parameter** `t`. When
 
 The key accessors on `t` are:
 
-- `t.room` -- direct property access to the `name="room"` field value
-- `t.getString('bookedBy')` -- typed accessor that coerces to String
-- `t.clean()` -- sanitizes strings to prevent XSS injection
+- `t.room` — direct property access to the `name="room"` field value
+- `t.getString('bookedBy')` — typed accessor that coerces to String
+- `t.clean()` — sanitizes strings to prevent XSS injection
 
 The closure then calls `Booking.makeNew(...)`, which creates a new CouchDB document, and `App.refreshBookingData()`, which updates the shared Cargo. Finally, it returns `['@redirect': '/']` to send the user back to the main page.
 
@@ -501,7 +501,7 @@ See the [Launchpad API Reference](launchpad-api.md) for the complete list of Tra
 
 ### Map Return Values
 
-Notice the validation error case returns a Map: `['> #result': '<div class=\"error\">...</div>']`. The `> #result` key is a selector-based Transmission instruction -- it tells HUD-Core to replace the innerHTML of the element with `id="result"`. This lets you show error feedback without leaving the page. The Tic-Tac-Toe tutorial only used `@redirect`; this Map format gives you surgical DOM updates.
+Notice the validation error case returns a Map: `['> #result': '<div class=\"error\">...</div>']`. The `> #result` key is a selector-based Transmission instruction — it tells HUD-Core to replace the innerHTML of the element with `id="result"`. This lets you show error feedback without leaving the page. The Tic-Tac-Toe tutorial only used `@redirect`; this Map format gives you surgical DOM updates.
 
 ---
 
@@ -688,23 +688,23 @@ The key insight is that **CouchDB is the source of truth** (persistent storage),
 
 Here are ways to extend this application with more Spaceport features:
 
-- **Add User Sessions** -- Use the session system to track who created each booking. The `client` object is available in every template and route handler, and you can read the `cookies.'spaceport-uuid'` value to identify visitors. See the [Sessions Overview](sessions-overview.md) for authentication and the Dock for per-session state.
+- **Add User Sessions** — Use the session system to track who created each booking. The `client` object is available in every template and route handler, and you can read the `cookies.'spaceport-uuid'` value to identify visitors. See the [Sessions Overview](sessions-overview.md) for authentication and the Dock for per-session state.
 
-- **Prevent Double Bookings** -- Add validation in `Booking.makeNew()` to check whether a room is already booked for a given date and time slot before saving. Query the view with parameters to filter by date and check for conflicts.
+- **Prevent Double Bookings** — Add validation in `Booking.makeNew()` to check whether a room is already booked for a given date and time slot before saving. Query the view with parameters to filter by date and check for conflicts.
 
-- **Use a Vessel Template** -- Both templates currently duplicate the full HTML boilerplate. Extract the shared `<head>`, styles, and `<body>` wrapper into a vessel template (e.g., `wrapper.ghtml`) with a `<payload/>` tag, and pass it as the second argument to `launch()`. See the [Launchpad Overview](launchpad-overview.md) for details on the assemble/launch pattern with vessels.
+- **Use a Vessel Template** — Both templates currently duplicate the full HTML boilerplate. Extract the shared `<head>`, styles, and `<body>` wrapper into a vessel template (e.g., `wrapper.ghtml`) with a `<payload/>` tag, and pass it as the second argument to `launch()`. See the [Launchpad Overview](launchpad-overview.md) for details on the assemble/launch pattern with vessels.
 
-- **Add Document Cargo for Per-Booking Reactivity** -- Instead of a single Store Cargo for all bookings, you can use `Cargo.fromDocument(booking)` to make individual booking documents reactive. This is useful if you want to add live-updating status fields (e.g., "in progress", "completed") to each booking.
+- **Add Document Cargo for Per-Booking Reactivity** — Instead of a single Store Cargo for all bookings, you can use `Cargo.fromDocument(booking)` to make individual booking documents reactive. This is useful if you want to add live-updating status fields (e.g., "in progress", "completed") to each booking.
 
-- **Implement a Calendar Grid** -- Replace the table with a visual calendar that shows bookings as colored blocks, similar to the original Meeting Room tutorial's grid layout. Use `<g:each>` generator tags for cleaner iteration in the template.
+- **Implement a Calendar Grid** — Replace the table with a visual calendar that shows bookings as colored blocks, similar to the original Meeting Room tutorial's grid layout. Use `<g:each>` generator tags for cleaner iteration in the template.
 
 ## Related Documentation
 
-- [Documents Overview](documents-overview.md) -- How CouchDB Documents work in Spaceport
-- [Documents API Reference](documents-api.md) -- Complete Document, ViewDocument, and View API
-- [Cargo Overview](cargo-overview.md) -- Reactive data containers and the three Cargo modes
-- [Alerts Overview](alerts-overview.md) -- The event system powering routing and lifecycle hooks
-- [Launchpad Overview](launchpad-overview.md) -- Server-side templating, reactive bindings, and server actions
-- [Launchpad API Reference](launchpad-api.md) -- Template syntax, Transmission formats, and `on-*` events
-- [Transmissions Overview](transmissions-overview.md) -- How server-driven DOM updates work
-- [Sessions Overview](sessions-overview.md) -- Client management, authentication, and the Dock
+- [Documents Overview](documents-overview.md) — How CouchDB Documents work in Spaceport
+- [Documents API Reference](documents-api.md) — Complete Document, ViewDocument, and View API
+- [Cargo Overview](cargo-overview.md) — Reactive data containers and the three Cargo modes
+- [Alerts Overview](alerts-overview.md) — The event system powering routing and lifecycle hooks
+- [Launchpad Overview](launchpad-overview.md) — Server-side templating, reactive bindings, and server actions
+- [Launchpad API Reference](launchpad-api.md) — Template syntax, Transmission formats, and `on-*` events
+- [Transmissions Overview](transmissions-overview.md) — How server-driven DOM updates work
+- [Sessions Overview](sessions-overview.md) — Client management, authentication, and the Dock

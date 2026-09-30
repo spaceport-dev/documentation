@@ -1,4 +1,4 @@
-# Transmissions -- API Reference
+# Transmissions — API Reference
 
 Complete reference for Spaceport's Transmission system: server action syntax, reactive binding syntax, Transmission response formats, target resolution, the `t` data object, and all supported directives.
 
@@ -22,7 +22,7 @@ The closure receives a `t` object containing all data sent from the client:
 <button on-click=${ _{ t -> processClick(t) }}>Go</button>
 ```
 
-The `t` parameter name is conventional but arbitrary -- you can name it anything.
+The `t` parameter name is conventional but arbitrary — you can name it anything.
 
 ### Closures Defined in Scriptlets
 
@@ -179,7 +179,7 @@ Controls **which element's data** is sent to the server. Important for event del
 | **`strict`** | Event only fires if `event.target === event.currentTarget`. Clicks on child elements are ignored |
 | **`auto`** | Explicitly sets default behavior (data from `event.target`). Rarely needed |
 
-**Example -- Event Delegation:**
+**Example — Event Delegation:**
 
 ```html
 <ul on-click=${ _{ t -> handleItemClick(t) }} source="li" target="self">
@@ -426,6 +426,6 @@ While a Transmission is in-flight, HUD-Core automatically sets a `loading` attri
 
 ## What's Next
 
-- **[Transmissions Overview](transmissions-overview.md)** -- high-level introduction to the Transmission system
-- **[Transmissions Internals](transmissions-internals.md)** -- how bindings, the Catch proxy, and WebSocket reactions work
-- **[Transmissions Examples](transmissions-examples.md)** -- real-world patterns from production applications
+- **[Transmissions Overview](transmissions-overview.md)** — high-level introduction to the Transmission system
+- **[Transmissions Internals](transmissions-internals.md)** — how bindings, the Catch proxy, and WebSocket reactions work
+- **[Transmissions Examples](transmissions-examples.md)** — real-world patterns from production applications

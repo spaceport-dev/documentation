@@ -2,13 +2,13 @@
 
 ## What is Cargo?
 
-Cargo is Spaceport's reactive data container -- a flexible key-value store that automatically propagates changes to connected Launchpad templates in real time. When you update a value in a Cargo instance, any template expression referencing that value re-renders instantly on the client via WebSocket, with no manual wiring required.
+Cargo is Spaceport's reactive data container — a flexible key-value store that automatically propagates changes to connected Launchpad templates in real time. When you update a value in a Cargo instance, any template expression referencing that value re-renders instantly on the client via WebSocket, with no manual wiring required.
 
 At its core, Cargo wraps a `Map` and adds three capabilities on top:
 
-1. **Path-based access** -- read and write nested values using dot-separated paths like `'user.profile.theme'`
-2. **Reactive synchronization** -- mutations automatically push updates to connected Launchpad templates
-3. **Optional persistence** -- Cargo can mirror its contents to a CouchDB document, surviving server restarts
+1. **Path-based access** — read and write nested values using dot-separated paths like `'user.profile.theme'`
+2. **Reactive synchronization** — mutations automatically push updates to connected Launchpad templates
+3. **Optional persistence** — Cargo can mirror its contents to a CouchDB document, surviving server restarts
 
 ## The Three Modes
 
@@ -94,7 +94,7 @@ r.context.dock.set('prefs.sidebar', 'collapsed')
 </div>
 ```
 
-The dock is one of the most practical uses of Cargo -- it gives you reactive, per-user state with almost no setup.
+The dock is one of the most practical uses of Cargo — it gives you reactive, per-user state with almost no setup.
 
 ## When to Use Each Mode
 
@@ -121,6 +121,6 @@ This means you can organize Cargo data into logical namespaces without manually 
 
 ## Next Steps
 
-- **[Cargo API Reference](cargo-api.md)** -- complete method reference for all operations
-- **[Cargo Internals](cargo-internals.md)** -- how the reactive synchronization mechanism works under the hood
-- **[Cargo Examples](cargo-examples.md)** -- real-world patterns drawn from production Spaceport applications
+- **[Cargo API Reference](cargo-api.md)** — complete method reference for all operations
+- **[Cargo Internals](cargo-internals.md)** — how the reactive synchronization mechanism works under the hood
+- **[Cargo Examples](cargo-examples.md)** — real-world patterns drawn from production Spaceport applications

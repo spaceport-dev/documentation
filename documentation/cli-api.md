@@ -432,6 +432,6 @@ Renders every individual color and every pairwise combination of two colors to t
 
 ## See Also
 
-- [CLI Overview](cli-overview.md) -- Summary of all CLI commands
-- [Scaffolds API Reference](scaffolds-api.md) -- Current project creation workflow
-- [Manifest API Reference](manifest-api.md) -- Configuration file reference
+- [CLI Overview](cli-overview.md) — Summary of all CLI commands
+- [Scaffolds API Reference](scaffolds-api.md) — Current project creation workflow
+- [Manifest API Reference](manifest-api.md) — Configuration file reference

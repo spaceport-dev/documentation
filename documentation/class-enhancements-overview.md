@@ -5,7 +5,7 @@ Spaceport enhances standard Groovy classes with dozens of additional methods des
 
 ## What Metaclass Enhancements Are
 
-Groovy's metaclass system allows methods to be added to existing classes at runtime. Spaceport takes advantage of this by injecting a curated set of utility methods into core types when the framework starts up. Once applied, these methods are available everywhere in your Spaceport application -- in route handlers, migration scripts, Launchpad templates, and any other Groovy code running in the Spaceport runtime.
+Groovy's metaclass system allows methods to be added to existing classes at runtime. Spaceport takes advantage of this by injecting a curated set of utility methods into core types when the framework starts up. Once applied, these methods are available everywhere in your Spaceport application — in route handlers, migration scripts, Launchpad templates, and any other Groovy code running in the Spaceport runtime.
 
 For example, after enhancements are applied, any `String` in your application gains methods like `.kebab()`, `.clean()`, `.encode()`, and `.slugify()`. Any `Number` gains methods like `.money()`, `.hours()`, `.relativeTime()`, and `.ordinal()`. These are not separate utility classes you need to import; they are methods directly on the objects you are already working with.
 
@@ -24,7 +24,7 @@ This design philosophy has several benefits:
 
 ## How They Are Applied
 
-All enhancements are defined in a single class: `spaceport.engineering.MetaClassEnhancements`. When Spaceport starts up -- whether as a full application server or in migration mode -- it calls `MetaClassEnhancements.enhance()`. This method uses Groovy's `metaClass` mechanism to attach new methods to standard types.
+All enhancements are defined in a single class: `spaceport.engineering.MetaClassEnhancements`. When Spaceport starts up — whether as a full application server or in migration mode — it calls `MetaClassEnhancements.enhance()`. This method uses Groovy's `metaClass` mechanism to attach new methods to standard types.
 
 The enhancements are applied once, early in the startup process, before any user code runs. This means they are available in:
 
@@ -99,5 +99,5 @@ items.combine { "<li>${it}</li>" }  // "<li>a</li><li>b</li><li>c</li>"
 
 ## See Also
 
-- [Class Enhancements API Reference](class-enhancements-api.md) -- Complete reference of every enhancement method, organized by type.
-- [Class Enhancements Internals](class-enhancements-internals.md) -- How the metaclass enhancement system works under the hood.
+- [Class Enhancements API Reference](class-enhancements-api.md) — Complete reference of every enhancement method, organized by type.
+- [Class Enhancements Internals](class-enhancements-internals.md) — How the metaclass enhancement system works under the hood.

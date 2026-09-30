@@ -420,7 +420,7 @@ Usage in a form:
 
 The `name="rating"` attribute on the `<star-rating>` element causes HUD-Core to include its `.value` (from `getValue()`) in the form submission under the key `rating`.
 
-*Source: MadAve-Collab -- StarRating element*
+*Source: MadAve-Collab — StarRating element*
 
 ### Using Hidden Inputs
 
@@ -471,7 +471,7 @@ class TagInput implements Element {
 
 The hidden `<input name="tags">` is picked up by `FormData` directly, so the tags are submitted even without the `getValue()` path.
 
-*Source: MadAve-Collab -- TagInput element*
+*Source: MadAve-Collab — TagInput element*
 
 ### Traditional Forms and Custom Elements
 
@@ -571,7 +571,7 @@ Clear a textarea or form field after successful submission:
 
 The `target="textarea"` points to the `<textarea>` inside the form, and `['@clear']` empties its value. Meanwhile, `job._update()` triggers a reactive update for all connected clients viewing this job.
 
-*Source: MadAve-Collab -- view.ghtml*
+*Source: MadAve-Collab — view.ghtml*
 
 ### Edit-in-Place
 
@@ -632,7 +632,7 @@ Use `on-change` for immediate server-side processing when a select changes:
 
 For single element events (not inside a form), `t.value` contains the element's current value.
 
-*Source: MadAve-Collab -- view.ghtml*
+*Source: MadAve-Collab — view.ghtml*
 
 ### Forms Inside Reactive Blocks
 

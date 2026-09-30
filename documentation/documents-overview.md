@@ -1,6 +1,6 @@
-# Documents (CouchDB ORM) --- Overview
+# Documents (CouchDB ORM) — Overview
 
-Documents are Spaceport's data layer. Every piece of persistent data in a Spaceport application --- user records, configuration, uploaded files, application state --- lives in a CouchDB database and is accessed through the `Document` class. Documents give you a Groovy object with automatic JSON serialization, revision tracking, conflict detection, a built-in lifecycle event system, and tight integration with Spaceport's reactive Cargo and Launchpad systems.
+Documents are Spaceport's data layer. Every piece of persistent data in a Spaceport application — user records, configuration, uploaded files, application state — lives in a CouchDB database and is accessed through the `Document` class. Documents give you a Groovy object with automatic JSON serialization, revision tracking, conflict detection, a built-in lifecycle event system, and tight integration with Spaceport's reactive Cargo and Launchpad systems.
 
 ## What Is a Document?
 
@@ -71,7 +71,7 @@ With a custom class, you get IDE autocomplete, compile-time type checking, and a
 
 ## Querying with Views
 
-CouchDB does not support ad-hoc queries the way SQL databases do. Instead, you define **views** --- small JavaScript functions that CouchDB runs against every document in a database to produce a sorted, queryable index.
+CouchDB does not support ad-hoc queries the way SQL databases do. Instead, you define **views** — small JavaScript functions that CouchDB runs against every document in a database to produce a sorted, queryable index.
 
 In Spaceport, views are managed through two classes: `ViewDocument` (which stores the JavaScript map/reduce functions) and `View` (which queries the results).
 
@@ -105,12 +105,12 @@ Views are the primary way to list, filter, and aggregate documents. They run ins
 
 Documents fire Alerts at key points in their lifecycle, letting other parts of your application react to data changes without tight coupling:
 
-- **`on document created`** --- A new document was created in CouchDB.
-- **`on document save`** --- A document is about to be saved (synchronous; you can modify it).
-- **`on document saved`** --- A document was successfully saved (asynchronous; runs in a new thread).
-- **`on document modified`** --- A document was saved or removed (synchronous).
-- **`on document remove`** / **`on document removed`** --- A document is being or was deleted.
-- **`on document conflict`** --- A revision conflict was detected during save.
+- **`on document created`** — A new document was created in CouchDB.
+- **`on document save`** — A document is about to be saved (synchronous; you can modify it).
+- **`on document saved`** — A document was successfully saved (asynchronous; runs in a new thread).
+- **`on document modified`** — A document was saved or removed (synchronous).
+- **`on document remove`** / **`on document removed`** — A document is being or was deleted.
+- **`on document conflict`** — A revision conflict was detected during save.
 
 This means you can build notification systems, audit logs, cache invalidation, and other cross-cutting concerns as separate modules that simply listen for document events.
 
@@ -128,6 +128,6 @@ For transient, session-scoped data that does not need to persist, use `Cargo.fro
 
 ## Related Topics
 
-- **[Cargo](cargo-overview.md)** --- Reactive data containers that can be mirrored to Documents for persistence.
-- **[Alerts](alerts-overview.md)** --- The event system that powers document lifecycle hooks.
-- **[Sessions & Clients](sessions-overview.md)** --- `ClientDocument` extends `Document` for user management.
+- **[Cargo](cargo-overview.md)** — Reactive data containers that can be mirrored to Documents for persistence.
+- **[Alerts](alerts-overview.md)** — The event system that powers document lifecycle hooks.
+- **[Sessions & Clients](sessions-overview.md)** — `ClientDocument` extends `Document` for user management.

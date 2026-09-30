@@ -131,7 +131,7 @@ In larger projects, `App.groovy` may live inside a package (like `app.App` in Ma
 
 ### Static Module
 
-A module where all methods and state are static. This is the most common pattern for route handlers and service classes. The class is never instantiated -- Spaceport calls its static `@Alert` methods directly.
+A module where all methods and state are static. This is the most common pattern for route handlers and service classes. The class is never instantiated — Spaceport calls its static `@Alert` methods directly.
 
 ```groovy
 class HitCounter {
@@ -335,7 +335,7 @@ The `Cargo` object reference in the static field is lost on reload, but the unde
 
 ### Avoid ClassCastException with `def`
 
-A common pitfall during hot-reload: if you store a typed object in a static field, and the class is reloaded into a new classloader, the old object's class is not the same as the new class -- even if they have the same name. This causes `ClassCastException`.
+A common pitfall during hot-reload: if you store a typed object in a static field, and the class is reloaded into a new classloader, the old object's class is not the same as the new class — even if they have the same name. This causes `ClassCastException`.
 
 ```groovy
 // PROBLEM: ClassCastException after hot-reload
@@ -353,7 +353,7 @@ class Cache {
 }
 ```
 
-With `def`, Groovy uses duck typing -- it accesses properties and methods by name rather than by class identity, bypassing the classloader mismatch.
+With `def`, Groovy uses duck typing — it accesses properties and methods by name rather than by class identity, bypassing the classloader mismatch.
 
 ### Reinitialize Gracefully
 
@@ -388,7 +388,7 @@ class App {
 }
 ```
 
-Multiple modules can each have their own `Launchpad` instance. The Launchpad instance is lightweight -- it primarily serves as an entry point for template assembly and rendering, not as a heavy stateful object.
+Multiple modules can each have their own `Launchpad` instance. The Launchpad instance is lightweight — it primarily serves as an entry point for template assembly and rendering, not as a heavy stateful object.
 
 ---
 
@@ -461,8 +461,8 @@ This pattern separates the authorization decision from the route handler, allowi
 
 ## See Also
 
-- [Source Modules Overview](source-modules-overview.md) -- what source modules are and why they exist
-- [Source Modules API Reference](source-modules-api.md) -- configuration and lifecycle alerts
-- [Source Modules Internals](source-modules-internals.md) -- how class loading and hot-reload work
-- [Alerts Overview](alerts-overview.md) -- the event system powering `@Alert` annotations
-- [Alerts Examples](alerts-examples.md) -- more patterns for route handling and lifecycle hooks
+- [Source Modules Overview](source-modules-overview.md) — what source modules are and why they exist
+- [Source Modules API Reference](source-modules-api.md) — configuration and lifecycle alerts
+- [Source Modules Internals](source-modules-internals.md) — how class loading and hot-reload work
+- [Alerts Overview](alerts-overview.md) — the event system powering `@Alert` annotations
+- [Alerts Examples](alerts-examples.md) — more patterns for route handling and lifecycle hooks

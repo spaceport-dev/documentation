@@ -98,7 +98,7 @@ static _postMessage(HttpResult r) {
 </div>
 ```
 
-Messages appear on all connected clients as soon as they are posted -- no polling, no refresh.
+Messages appear on all connected clients as soon as they are posted — no polling, no refresh.
 
 ## Notification Deduplication Flags
 
@@ -228,7 +228,7 @@ static _deleteFlag(HttpResult r) {
 </table>
 ```
 
-Because the template uses `${{ }}` reactive syntax, the table updates live when flags are added or removed -- even if another admin modifies them simultaneously.
+Because the template uses `${{ }}` reactive syntax, the table updates live when flags are added or removed — even if another admin modifies them simultaneously.
 
 ## Combining Cargo with Alerts for Real-Time Dashboards
 
@@ -278,7 +278,7 @@ static _dashboard(HttpResult r) {
 </div>
 ```
 
-Every connected browser viewing `/dashboard` sees the numbers update in real time as documents are saved -- no JavaScript polling code needed.
+Every connected browser viewing `/dashboard` sees the numbers update in real time as documents are saved — no JavaScript polling code needed.
 
 ## Paginated Cargo Lists
 
@@ -325,8 +325,8 @@ String locale = settings.getDefaulted('i18n.locale', 'en-US')
 
 ## See Also
 
-- [Cargo Overview](cargo-overview.md) -- what Cargo is and the three modes
-- [Cargo API Reference](cargo-api.md) -- complete method listing
-- [Cargo Internals](cargo-internals.md) -- how the reactive mechanism works
-- [Alerts Examples](alerts-examples.md) -- more patterns using `@Alert` with Cargo
-- [Documents Overview](documents-overview.md) -- the Document class and its built-in `cargo` property
+- [Cargo Overview](cargo-overview.md) — what Cargo is and the three modes
+- [Cargo API Reference](cargo-api.md) — complete method listing
+- [Cargo Internals](cargo-internals.md) — how the reactive mechanism works
+- [Alerts Examples](alerts-examples.md) — more patterns using `@Alert` with Cargo
+- [Documents Overview](documents-overview.md) — the Document class and its built-in `cargo` property

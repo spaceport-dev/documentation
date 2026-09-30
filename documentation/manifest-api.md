@@ -1,6 +1,6 @@
 # Manifest Configuration API Reference
 
-Complete reference for all configuration keys recognized by Spaceport in the manifest file (`config.spaceport`). All keys are optional -- unspecified keys inherit their default values.
+Complete reference for all configuration keys recognized by Spaceport in the manifest file (`config.spaceport`). All keys are optional — unspecified keys inherit their default values.
 
 
 ## Application Identity
@@ -593,6 +593,6 @@ if (baseValue instanceof Map && overrideValue instanceof Map) {
 
 ## See Also
 
-- [Manifest Overview](manifest-overview.md) -- How configuration loading works
-- [Manifest Examples](manifest-examples.md) -- Real-world configuration files
-- [CLI Overview](cli-overview.md) -- Starting Spaceport with a manifest
+- [Manifest Overview](manifest-overview.md) — How configuration loading works
+- [Manifest Examples](manifest-examples.md) — Real-world configuration files
+- [CLI Overview](cli-overview.md) — Starting Spaceport with a manifest

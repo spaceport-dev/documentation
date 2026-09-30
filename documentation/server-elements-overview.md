@@ -1,4 +1,4 @@
-# Server Elements -- Overview
+# Server Elements — Overview
 
 Server Elements are Spaceport's reusable component system. They let you encapsulate HTML structure, CSS styling, JavaScript behavior, and server-side Groovy logic into a single class that you use like a custom HTML element in your Launchpad templates.
 
@@ -29,7 +29,7 @@ The rendered output wraps your content in a custom `<highlight>` tag with the pr
 <highlight element-id="a1b2c3"><mark style='background-color: coral'>This text stands out.</mark></highlight>
 ```
 
-That is the simplest possible element. From here, annotations let you layer in CSS, JavaScript, server-bound methods, and lifecycle hooks -- all within the same class.
+That is the simplest possible element. From here, annotations let you layer in CSS, JavaScript, server-bound methods, and lifecycle hooks — all within the same class.
 
 ## Why Server Elements?
 
@@ -38,7 +38,7 @@ Most web frameworks force a choice between server-rendered components and client
 - **Server-side rendering out of the box.** The `prerender` method produces HTML on the server, so content is included in the initial HTTP response. No blank-page-while-JavaScript-loads problem.
 - **Encapsulated CSS and JavaScript.** Annotate properties with `@CSS` or `@Javascript` and the framework aggregates and injects them automatically. No separate asset pipeline configuration.
 - **Server methods callable from the client.** The `@Bind` annotation exposes Groovy methods as client-callable functions over WebSocket, without writing API endpoints.
-- **Integration with Launchpad reactivity.** Elements can use Cargo objects, reactive expressions (`${{ }}`), and server actions (`on-click=${ _{ } }`) -- the same tools available in regular templates.
+- **Integration with Launchpad reactivity.** Elements can use Cargo objects, reactive expressions (`${{ }}`), and server actions (`on-click=${ _{ } }`) — the same tools available in regular templates.
 - **Reusable across templates.** Define a component once, use it in any `.ghtml` file with a simple HTML-like tag.
 
 ## Element Structure at a Glance
@@ -88,11 +88,11 @@ class Counter implements Element {
 
 This single class provides:
 
-- **CSS** (`@CSS`) -- styling scoped to the `<counter>` tag via the `&` selector
-- **Server-side rendering** (`prerender`) -- initial HTML with reactive expressions
-- **Reactive updates** (`${{ }}` and Cargo) -- the count updates in real time when buttons are clicked
-- **Server actions** (`on-click=${ _{ } }`) -- button clicks execute Groovy on the server
-- **Client-callable methods** (`@Bind`) -- JavaScript on the page can call `document.querySelector('counter').setValue(25)` and the server state updates
+- **CSS** (`@CSS`) — styling scoped to the `<counter>` tag via the `&` selector
+- **Server-side rendering** (`prerender`) — initial HTML with reactive expressions
+- **Reactive updates** (`${{ }}` and Cargo) — the count updates in real time when buttons are clicked
+- **Server actions** (`on-click=${ _{ } }`) — button clicks execute Groovy on the server
+- **Client-callable methods** (`@Bind`) — JavaScript on the page can call `document.querySelector('counter').setValue(25)` and the server state updates
 
 ## Naming Convention
 
@@ -132,7 +132,7 @@ Server Elements support a spectrum of strategies depending on where you want the
 
 Handle most interaction in JavaScript. The server provides the initial HTML, and `@Javascript` properties define client-side behavior. Good for purely visual components, form controls, and interactions that do not need server state.
 
-Real-world example: A `CheckBox` element that wraps a native input with custom styling and keyboard support -- all interaction is client-side JavaScript.
+Real-world example: A `CheckBox` element that wraps a native input with custom styling and keyboard support — all interaction is client-side JavaScript.
 
 ### Server-Focused
 
@@ -169,13 +169,13 @@ Nested tags get the full treatment — CSS deduplication, handler injection, rec
 | `@ScopedCSS` | Properties | CSS scoped to a specific element instance |
 | `@Javascript` | Properties | Client-side JavaScript (functions, lifecycle hooks, inline code) |
 | `@Bind` | Methods | Exposes a Groovy method as a client-callable function via WebSocket |
-| `@Prepend` | Properties | HTML injected into `<head>` (or page start) -- once per element type |
+| `@Prepend` | Properties | HTML injected into `<head>` (or page start) — once per element type |
 | `@ScopedPrepend` | Properties | HTML injected immediately before this element instance |
-| `@Append` | Properties | HTML injected after `</body>` (or page end) -- once per element type |
+| `@Append` | Properties | HTML injected after `</body>` (or page end) — once per element type |
 | `@ScopedAppend` | Properties | HTML injected immediately after this element instance |
 
 ## What is Next
 
-- **[Server Elements API Reference](server-elements-api.md)** -- Complete reference for the Element trait, all annotations, template integration, and configuration.
-- **[Server Elements Internals](server-elements-internals.md)** -- How element discovery, initialization, CSS/JS aggregation, and the client-side lifecycle work under the hood.
-- **[Server Elements Examples](server-elements-examples.md)** -- Real-world patterns from production Spaceport applications, including form controls, dialogs, rich text editors, and reactive dashboard components.
+- **[Server Elements API Reference](server-elements-api.md)** — Complete reference for the Element trait, all annotations, template integration, and configuration.
+- **[Server Elements Internals](server-elements-internals.md)** — How element discovery, initialization, CSS/JS aggregation, and the client-side lifecycle work under the hood.
+- **[Server Elements Examples](server-elements-examples.md)** — Real-world patterns from production Spaceport applications, including form controls, dialogs, rich text editors, and reactive dashboard components.

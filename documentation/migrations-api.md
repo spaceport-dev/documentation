@@ -163,7 +163,7 @@ if (!username) username = 'admin'
 |:---|:---|:---|
 | `message` | `String` | The prompt message displayed to the user. |
 
-**Returns:** `String` -- The user's input, or `null`/empty string if no input was provided.
+**Returns:** `String` — The user's input, or `null`/empty string if no input was provided.
 
 ---
 
@@ -182,7 +182,7 @@ def choice = promptMultiInput('Select an action:', ['Create', 'Update', 'Delete'
 | `message` | `String` | The prompt message displayed to the user. |
 | `options` | `List` | A list of string options to present. |
 
-**Returns:** `String` -- The selected option.
+**Returns:** `String` — The selected option.
 
 ---
 
@@ -295,7 +295,7 @@ Prints a section header with formatting.
 
 ## Database APIs
 
-Migration scripts have full access to Spaceport's core database layer. Note that only built-in Spaceport classes are available -- project-specific modules are not loaded in the migration runtime.
+Migration scripts have full access to Spaceport's core database layer. Note that only built-in Spaceport classes are available — project-specific modules are not loaded in the migration runtime.
 
 ### `Spaceport.main_memory_core`
 
@@ -304,7 +304,7 @@ The configured CouchDB connection handler (`CouchHandler`), initialized from the
 | Method | Returns | Description |
 |:---|:---|:---|
 | `containsDatabase(String name)` | `boolean` | Checks if a database exists. |
-| `createDatabase(String name)` | -- | Creates a new database. |
+| `createDatabase(String name)` | — | Creates a new database. |
 | `cookie` | `String` | The authentication cookie. `null` if the connection failed. |
 
 **Example:**
@@ -388,12 +388,12 @@ if (user) {
 - **Debug mode:** Debug output is enabled by default (`Spaceport.store._debug = true`).
 - **Default configuration:** If `--no-manifest` is used, a default configuration is applied with CouchDB at `http://127.0.0.1:5984`, port `10000`, and standard paths.
 - **Environment variables:** Placeholders in the form `${VAR_NAME}` in the manifest are replaced with actual environment variable values before the migration runs.
-- **Project modules are not loaded.** The migration runtime does not compile or load source modules from your `modules/` directory. Stowaway JARs are also not loaded. Only core Spaceport classes are available. All migration logic must be self-contained within the script -- use closures, inline definitions, or standard Groovy/Java libraries for any helper logic.
+- **Project modules are not loaded.** The migration runtime does not compile or load source modules from your `modules/` directory. Stowaway JARs are also not loaded. Only core Spaceport classes are available. All migration logic must be self-contained within the script — use closures, inline definitions, or standard Groovy/Java libraries for any helper logic.
 
 
 ## See Also
 
-- [Migrations Overview](migrations-overview.md) -- High-level introduction to the migration system.
-- [Migrations Examples](migrations-examples.md) -- Practical patterns and recipes.
-- [Documents API](documents-api.md) -- Full Document class reference.
-- [Cargo API](cargo-api.md) -- Cargo data container reference.
+- [Migrations Overview](migrations-overview.md) — High-level introduction to the migration system.
+- [Migrations Examples](migrations-examples.md) — Practical patterns and recipes.
+- [Documents API](documents-api.md) — Full Document class reference.
+- [Cargo API](cargo-api.md) — Cargo data container reference.

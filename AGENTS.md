@@ -27,6 +27,8 @@ Do not commit caches, generated output, secrets, or runtime JARs.
   explicitly labeled migration or compatibility note only when it gives readers
   an actionable upgrade step or a version-specific requirement. Lead with the
   supported workflow; do not retell obsolete implementations.
+- Use em dashes (—) for prose punctuation rather than double or triple hyphens.
+  Preserve CLI flags, code, URLs, table delimiters and Markdown thematic breaks.
 - Use plain, direct language and concrete examples. Avoid marketing claims,
   filler, vague claims of novelty, and references to the editing session.
 - Keep overview, reference, internals, and tutorial pages consistent. When a

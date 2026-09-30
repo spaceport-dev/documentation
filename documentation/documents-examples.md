@@ -1,4 +1,4 @@
-# Documents (CouchDB ORM) --- Examples
+# Documents (CouchDB ORM) — Examples
 
 Practical patterns for working with Documents, drawn from real Spaceport applications. Each section shows a pattern, explains when to use it, and provides code you can adapt.
 
@@ -366,7 +366,7 @@ static _init(Result r) {
 }
 ```
 
-This runs once when source modules are loaded (and again on hot-reload in debug mode). `createDatabaseIfNotExists()` is idempotent -- it only creates the database if it does not already exist.
+This runs once when source modules are loaded (and again on hot-reload in debug mode). `createDatabaseIfNotExists()` is idempotent — it only creates the database if it does not already exist.
 
 ---
 
@@ -483,7 +483,7 @@ states['approval'] = [
 
 ## Complete Example: Document Class with Views and Querying
 
-A full example combining custom properties, view initialization, typed rows, factory methods, and reactive querying --- adapted from a production Spaceport application.
+A full example combining custom properties, view initialization, typed rows, factory methods, and reactive querying — adapted from a production Spaceport application.
 
 ```groovy
 package data

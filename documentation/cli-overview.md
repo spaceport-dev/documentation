@@ -191,6 +191,6 @@ java -jar spaceport.jar --start config.production.spaceport
 
 ## See Also
 
-- [CLI API Reference](cli-api.md) -- Full Command class API and color system
-- [Scaffolds Overview](scaffolds-overview.md) -- Current project creation options
-- [Manifest Overview](manifest-overview.md) -- Configuration file format and options
+- [CLI API Reference](cli-api.md) — Full Command class API and color system
+- [Scaffolds Overview](scaffolds-overview.md) — Current project creation options
+- [Manifest Overview](manifest-overview.md) — Configuration file format and options

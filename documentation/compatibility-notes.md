@@ -89,10 +89,10 @@ For maximum production stability, choose **Java 11 or 17**. Test newer feature r
 
 ## Related Documentation
 
-- [Spaceport CLI](cli-overview.md) -- Managing the application lifecycle
-- [Source Modules](source-modules-overview.md) -- Building application logic
-- [Documents](documents-overview.md) -- Database interactions with CouchDB
-- [Stowaway JARs](stowaways-overview.md) -- Loading external library dependencies
+- [Spaceport CLI](cli-overview.md) — Managing the application lifecycle
+- [Source Modules](source-modules-overview.md) — Building application logic
+- [Documents](documents-overview.md) — Database interactions with CouchDB
+- [Stowaway JARs](stowaways-overview.md) — Loading external library dependencies
 
 
 ## Verified Build and IDE Tooling Baselines

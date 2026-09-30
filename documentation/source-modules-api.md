@@ -94,7 +94,7 @@ Source modules participate in a four-phase lifecycle managed by the [Alerts syst
 
 ### `on initialize`
 
-Fires after all source module classes have been compiled and loaded, and after `@Alert` methods have been discovered and registered. Use this for setup tasks that other modules may depend on -- database creation, configuration validation, global state initialization.
+Fires after all source module classes have been compiled and loaded, and after `@Alert` methods have been discovered and registered. Use this for setup tasks that other modules may depend on — database creation, configuration validation, global state initialization.
 
 ```groovy
 import spaceport.computer.alerts.Alert
@@ -114,7 +114,7 @@ class App {
 
 ### `on initialized`
 
-Fires after `on initialize` has completed across all modules. Use this for setup that depends on other modules having already initialized -- querying views that were created during `on initialize`, building caches from data set up by other modules.
+Fires after `on initialize` has completed across all modules. Use this for setup that depends on other modules having already initialized — querying views that were created during `on initialize`, building caches from data set up by other modules.
 
 ```groovy
 @Alert('on initialized')
@@ -127,7 +127,7 @@ static _ready(Result r) {
 
 ### `on deinitialize`
 
-Fires at the beginning of a hot-reload cycle, before any classes are unloaded. Use this for teardown tasks -- closing connections, canceling timers, releasing resources.
+Fires at the beginning of a hot-reload cycle, before any classes are unloaded. Use this for teardown tasks — closing connections, canceling timers, releasing resources.
 
 ```groovy
 @Alert('on deinitialize')
@@ -356,7 +356,7 @@ This method is used internally by `AnnotatedAlert.loadStaticHooks()` to discover
 
 ## See Also
 
-- [Source Modules Overview](source-modules-overview.md) -- high-level introduction
-- [Source Modules Internals](source-modules-internals.md) -- implementation deep-dive
-- [Source Modules Examples](source-modules-examples.md) -- real-world patterns
-- [Alerts API Reference](alerts-api.md) -- the `@Alert` annotation and event system
+- [Source Modules Overview](source-modules-overview.md) — high-level introduction
+- [Source Modules Internals](source-modules-internals.md) — implementation deep-dive
+- [Source Modules Examples](source-modules-examples.md) — real-world patterns
+- [Alerts API Reference](alerts-api.md) — the `@Alert` annotation and event system
