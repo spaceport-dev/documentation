@@ -2,7 +2,88 @@
 
 [Try the live example](https://frontier.spaceport.sh/meeting-room).
 
-This tutorial walks you through building a meeting room booking application with Spaceport. You will start with an in-memory version similar to the Tic-Tac-Toe tutorial, then progressively upgrade it with **Documents** (CouchDB persistence), **Cargo** (reactive data containers), **multiple routes**, **form handling**, and **real-time cross-client updates**.
+The live example is a compact, in-memory booking board: choose a date, book an hourly slot in either room, and cancel bookings made in your browser. Other visitors see changes immediately. Start with the short explanation below, then follow the extended walkthrough to learn **Documents** (CouchDB persistence), **Cargo** (reactive data containers), **multiple routes**, and **form handling**.
+
+## Understand the Live Example
+
+The live board uses two application files: `modules/MeetingRoom.groovy` for routing and booking rules, and `launchpad/parts/meetingroom/index.ghtml` for the interface. Its booking data lives in memory, is shared by visitors to one server, and disappears when that server restarts. It does not require a booking database or user accounts.
+
+### 1. Separate shared state from browser state
+
+```groovy
+// One shared booking board for this Spaceport process.
+static final Cargo bookings = Cargo.fromStore('meeting-room-bookings')
+
+@Alert('on /meeting-room hit')
+static _index(HttpResult r) {
+    // The Dock keeps this browser's date separate from everyone else's.
+    r.context.dock.getDefaulted('meetingRoom.date', LocalDate.now().toString())
+    launchpad.assemble(['meetingroom/index.ghtml']).launch(r)
+}
+```
+
+The imports are `spaceport.computer.memory.virtual.Cargo`, `spaceport.computer.alerts.Alert`, `spaceport.computer.alerts.results.HttpResult`, `spaceport.launchpad.Launchpad`, and `java.time.LocalDate`. The module also defines `static final Launchpad launchpad = new Launchpad()`.
+
+Use [Store Cargo](cargo-overview.md) for the shared board and the [Dock](sessions-overview.md) for the selected date. Changing your date should not move another visitor's schedule.
+
+### 2. Give each room and hour a separate key
+
+A booking key looks like `2026-10-04:a:9`: date, room, and starting hour. Conference B has a different key at 09:00, and tomorrow's Conference A slot has a different key again. Each value contains a cleaned meeting title and the booking browser's `client.userID`.
+
+```groovy
+synchronized (bookings) {
+    def key = slotKey(date, room, hour)
+    if (bookings.get(key)) return 'That room is already booked at this time.'
+    bookings.set(key, [title: cleanTitle, owner: owner])
+}
+```
+
+Before this block, the module validates the date, checks the room and hour against the allowed choices, and cleans and checks the title. Keeping the availability check and write inside the same lock prevents two requests from claiming one slot in a single Spaceport process. This is not a locking strategy for multiple servers.
+
+Cancellation checks the stored owner against the current browser's Client ID before calling `bookings.delete(key)`. Hiding the button is only a UI convenience; the server still checks ownership. This is anonymous browser ownership, not authentication.
+
+### 3. Let server actions handle the form
+
+```html
+<form on-submit="${ _{ t ->
+    ['#feedback': MeetingRoom.book(
+        dock.getString('meetingRoom.date'),
+        t.getString('room'), t.getString('hour'), t.getString('title'),
+        client.userID
+    )]
+}}">
+    /// Named room, hour, and title controls go here.
+</form>
+<p id="feedback" role="status"></p>
+```
+
+The closure runs on the server. HUD-Core sends the named form controls in `t`; the returned selector map updates the submitting browser's feedback. Native `required` and `maxlength` attributes help the visitor, while server validation remains authoritative.
+
+For the date selector, HUD-Core sends `<input type="date">` values as **epoch milliseconds**. The example converts that number through `Instant.ofEpochMilli(value.longValue()).atOffset(ZoneOffset.UTC).toLocalDate()` before storing the ISO date in the Dock. UTC preserves the calendar day without shifting it into a neighboring day in another timezone.
+
+### 4. Read Cargo inside reactive bindings
+
+```html
+<% def bookings = MeetingRoom.bookings %>
+<span>${{ dock.getString('meetingRoom.date') }}</span>
+```
+
+The schedule uses the same double-brace binding around each cell's HTML. Each cell reads the selected date from the Dock and its booking from shared Cargo. `bookings.set(...)` and `bookings.delete(...)` notify connected pages, which re-render the affected bindings through HUD-Core. The cell's title and cancellation button are rendered together so their state stays consistent. There is no custom browser JavaScript in the example.
+
+Try this with two separate browser profiles or a private window:
+
+1. Select the same date in both browsers and book Conference A at 09:00 in one.
+2. Watch the title appear in the other browser without reloading.
+3. Book Conference B at 09:00 too: the rooms have independent availability.
+4. Attempt to book the occupied Conference A slot; the server rejects it.
+5. Change the date in one browser; the other browser keeps its selected date.
+6. Cancel from the booking browser and watch the slot become available in both.
+
+All visitors can see meeting titles. Restarting clears bookings, and losing the browser session loses cancellation ownership. Keep this version small while learning; use authenticated ownership and persistent storage when building a real booking service.
+
+## Build the Persistent Version
+
+The extended walkthrough below builds a separate application with a booking list, a new-booking form, and CouchDB persistence. Its routes and presentation differ from the live grid. The live example's availability and ownership rules are useful exercises to carry into this version; they are not supplied by persistence itself.
 
 By the end of this tutorial you will have learned:
 
