@@ -641,7 +641,9 @@
     "documents-couchdb-orm-----internals": "Documents (CouchDB ORM) —- Internals"
   },
   "documents-api": {
-    "documents-couchdb-orm-----api-reference": "Documents (CouchDB ORM) —- API Reference"
+    "documents-couchdb-orm-----api-reference": "Documents (CouchDB ORM) —- API Reference",
+    "addattachmentfile-file-map-details": "addAttachment(File file, Map details = [:])",
+    "addbase64attachmentstring-base64-map-details": "addBase64Attachment(String base64, Map details = [:])"
   },
   "transmissions-internals": {
     "transmissions----internals": "Transmissions — Internals"
@@ -693,5 +695,8 @@
   },
   "hud-core-api": {
     "hud-corejs----api-reference": "HUD-Core.js — API Reference"
+  },
+  "forms-guide": {
+    "server-action-forms-base64": "Server Action Forms (Base64 Data URLs)"
   }
 }

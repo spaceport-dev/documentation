@@ -136,12 +136,12 @@ When a server action includes a parameter (`_{ t -> ... }`), the `t` object cont
 
 | Category | Properties | Description |
 |:---|:---|:---|
-| **Element Value** | `value` | Intelligently determined: input text, checkbox state, file content (Base64), or trimmed innerHTML |
+| **Element Value** | `value` | Intelligently determined: input text, checkbox state, file content (base64 data URL), or trimmed innerHTML |
 | **Element Info** | `elementId`, `tagName`, `classList`, `innerText`, `textContent` | Properties of the active target element |
 | **Keyboard Events** | `key`, `keyCode`, `shiftKey`, `ctrlKey`, `altKey`, `metaKey`, `repeat` | Present for keyboard events. Boolean keys only appear when `true` |
 | **Mouse Events** | `clientX`, `clientY`, `pageX`, `pageY`, `button`, `buttons`, `offsetX`, `offsetY`, `movementX`, `movementY` | Present for mouse events |
 | **Form Data** | `[input-name]` | All named inputs from the enclosing `<form>`, keyed by `name` attribute |
-| **Custom Data** | `[data-attribute]` | All `data-*` attributes as camelCase keys (e.g., `data-user-id` becomes `t.userId`) |
+| **Custom Data** | `[data-attribute]` | All `data-*` attributes with the `data-` prefix stripped (no camelCase conversion, e.g., `data-user-id` becomes `t['user-id']`) |
 | **URL Data** | `[query-param]` | All query parameters from the current page URL |
 | **Included Data** | `[key]` | Values from `localStorage` (`*key`), `sessionStorage` (`~~key`), or element attributes specified via the `include` attribute |
 

@@ -104,7 +104,7 @@ The request body and query string are parsed into a `Map` based on Content-Type:
 | Content-Type | Parsing |
 |---|---|
 | `application/json` | `JsonSlurper.parseText(body)` |
-| `multipart/form-data` | Each `Part` extracted; file parts stored as `Part` objects, non-file parts as strings. Max size: 50 MB. |
+| `multipart/form-data` | Each `Part` extracted; file parts stored as `[name: String, data: byte[]]` maps (promoted to a `List` on repeated field names), non-file parts as strings. Max size: 50 MB. |
 | `application/x-www-form-urlencoded` | Standard form parsing. |
 | *(query string)* | Always parsed. Merged into the same map. |
 

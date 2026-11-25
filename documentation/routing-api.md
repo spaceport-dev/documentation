@@ -58,7 +58,7 @@ Spaceport automatically parses the request body based on the `Content-Type` head
 | Content-Type | Parsing Behavior |
 |---|---|
 | `application/json` | JSON body parsed into a Map via `JsonSlurper`. Nested structures preserved. |
-| `multipart/form-data` | Each part extracted. File parts stored as the raw `Part` object. Non-file parts stored as strings. Maximum request size: **50 MB**. |
+| `multipart/form-data` | Each part extracted. File parts stored as `[name: String, data: byte[]]` maps (or a `List` of maps when multiple files share a field name). Non-file parts stored as strings. Maximum request size: **50 MB**. |
 | `application/x-www-form-urlencoded` | Standard form key-value pairs parsed into the data map. |
 | *(query string)* | Query parameters parsed from the URL and merged into the data map. Always parsed, regardless of Content-Type. A missing `Content-Type` header is handled safely. |
 | *(other / none)* | No body parsing. Only query string parameters are available. |
@@ -77,14 +77,14 @@ List tags = r.context.list('tag')   // always a List<String>, even when one or z
 
 ### File Uploads
 
-For multipart uploads, file parts are available as `javax.servlet.http.Part` objects:
+For multipart uploads, file parts arrive as maps with `name` (the submitted filename) and `data` (`byte[]` file content). If multiple files are uploaded under the same field name, `r.context.data.<field>` is a `List` of those maps (use `r.context.list('file')` to handle single and multiple files uniformly):
 
 ```groovy
 @Alert('on /upload POST')
 static _upload(HttpResult r) {
-    def filePart = r.context.data.file  // Part object
-    def fileName = filePart.submittedFileName
-    def stream   = filePart.inputStream
+    def file     = r.context.data.file  // Map: [name: 'photo.jpg', data: byte[]]
+    def fileName = file.name
+    byte[] bytes = file.data
     // Process the uploaded file...
 }
 ```

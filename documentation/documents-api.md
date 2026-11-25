@@ -123,7 +123,7 @@ These properties are serialized to and from CouchDB automatically.
 |:---------|:-----|:------------|
 | `_id` | `String` | Unique identifier within the database. Managed by CouchDB. |
 | `_rev` | `String` | Revision identifier. Updated on every save. Used for conflict detection. |
-| `_attachments` | `Map` | Inline file attachments stored as base64. Keyed by a generated `file-UUID`. |
+| `_attachments` | `Map` | CouchDB file attachments keyed by a generated `file-UUID`. Holds inline base64 before `save()` and CouchDB attachment stubs (`content_type`, `digest`, `length`, `revpos`, `stub: true`) afterward. |
 | `fields` | `Map` | General-purpose key-value store. Intended for data exposed to HTTP requests. |
 | `cargo` | `Cargo` | Built-in Cargo object. Can be mirrored with `Cargo.fromDocument()` for reactivity. |
 | `updates` | `Map` | Timestamped log of save operations (keyed by `System.currentTimeMillis()`). |
@@ -176,7 +176,7 @@ Operation result = doc.save()
   4. If `DocumentFeature.KEEP_HISTORY` is enabled and changes exist, records them in `updates`.
   5. Fires `on document save` (synchronous, pre-write).
   6. Writes to CouchDB via `CouchHandler.updateDoc()`.
-  7. Updates `_rev` with the new revision.
+  7. On success (`o?.ok == true`), updates `_rev` with the new revision and refreshes `_attachments` with CouchDB's `stub: true` entries if inline attachments were uploaded, so later saves do not re-upload attachment bytes.
   8. Fires `on document modified` (synchronous, post-write).
   9. Fires `on document saved` (asynchronous, in a new thread).
 - **See also:** [Documents Internals](documents-internals.md) for the full save lifecycle and conflict resolution flow.
@@ -222,32 +222,46 @@ def job = doc as Job
 
 ### Attachment Methods
 
-#### `addAttachment(File file, Map details)`
+Adding an attachment (whether from a `File` or from base64) stages inline base64 in `_attachments` on the in-memory `Document`. **You must call `save()` afterward** to persist the attachment to CouchDB.
 
-Attaches a file to the document as a base64-encoded inline attachment. The file is stored in `_attachments` with a generated `file-UUID` key. Also records the operation in `updates`.
+CouchDB strips extra keys (`attname`, `created`, `details`) from `_attachments[fileId]` when saving and keeps only its own stub fields (`content_type`, `digest`, `length`, `revpos`, `stub: true`). Extra keys in `details` are recorded in `updates[timestamp].details`, so store attachment IDs and any metadata you need to query or display (such as filenames or roles) in your own `customProperties` fields or `fields`.
+
+#### `addAttachment(File file, Map details = [:])`
+
+Attaches a local `java.io.File` to the document as a base64-encoded inline attachment under a generated `file-UUID` key, and records the operation in `updates`.
 
 ```groovy
 def fileId = doc.addAttachment(new File('/path/to/image.png'), [label: 'Profile Photo'])
 doc.save()
 ```
 
-- **Parameters:** `file` — the file to attach; `details` — a map of metadata to associate with the attachment.
-- **Returns:** `String` — the generated UUID key (e.g., `"file-a3f8b2c1-..."`).
-- **Note:** You must call `save()` after adding an attachment.
+You can also pass explicit `type` (MIME type) or `name` overrides in `details`:
+
+```groovy
+def fileId = doc.addAttachment(tempFile, [name: 'photo.webp', type: 'image/webp'])
+doc.save()
+```
+
+- **Parameters:** `file` — the readable file to attach; `details` — optional metadata map (copied internally; the caller's map is not mutated). Supports optional `name` and `type` overrides.
+- **MIME type resolution:** uses explicit `details.type` if provided, then `Files.probeContentType(file.toPath())`, and falls back to `'application/octet-stream'`.
+- **Returns:** `String` — the generated UUID key (e.g., `"file-a3f8b2c1-..."`), or `null` if the file is missing or unreadable.
+- **Note:** Call `doc.save()` to persist the attachment.
 
 ---
 
-#### `addBase64Attachment(String base64, Map details)`
+#### `addBase64Attachment(String base64, Map details = [:])`
 
-Attaches base64-encoded data directly. The `details` map **must** contain `name` (desired filename) and `type` (MIME type). These keys are consumed and removed from the details map.
+Attaches base64-encoded data directly. Accepts either bare base64 or a base64 data URL (`data:<mime>;base64,<data>`, such as the value sent by HUD-Core server actions).
 
 ```groovy
 def fileId = doc.addBase64Attachment(encodedData, [name: 'photo.jpg', type: 'image/jpeg'])
 doc.save()
 ```
 
-- **Parameters:** `base64` — the base64-encoded file content; `details` — must include `name` and `type`.
-- **Returns:** `String` — the generated UUID key.
+- **Parameters:** `base64` — bare base64 text or a base64 data URL; `details` — optional metadata map (copied internally; the caller's map is not mutated). Provide `name` and `type` when known.
+- **MIME type resolution:** explicit `details.type` takes precedence over any MIME type embedded in a data URL, falling back to `'application/octet-stream'`. For untrusted uploads, detect the MIME type from the file bytes and pass it explicitly.
+- **Returns:** `String` — the generated UUID key, or `null` if the input is empty or not valid base64.
+- **Note:** Call `doc.save()` to persist the attachment.
 
 ---
 
@@ -257,11 +271,11 @@ Retrieves an attachment from CouchDB and writes it to the provided `OutputStream
 
 ```groovy
 def out = new ByteArrayOutputStream()
-doc.getAttachment('file-a3f8b2c1-...', out)
+def meta = doc.getAttachment('file-a3f8b2c1-...', out)
 ```
 
 - **Parameters:** `fileId` — the attachment UUID; `o` — the output stream to write to.
-- **Returns:** `Map` with `content_type` and `content_length`.
+- **Returns:** `Map` with `content_type`, `content_length`, and `status` on HTTP 2xx responses. On non-2xx responses (such as 404), nothing is written to `o` and the returned map contains `[status: statusCode, error: true]`.
 
 ---
 
@@ -274,7 +288,7 @@ doc.removeAttachment('file-a3f8b2c1-...')
 ```
 
 - **Parameters:** `attachment` — the attachment UUID.
-- **Note:** This method saves to CouchDB immediately (no separate `save()` call needed).
+- **Note:** This method saves the deletion to CouchDB immediately (no separate `save()` call is needed for the attachment itself). If you also track attachment IDs in a document field, remove the ID from that field and call `doc.save()`.
 
 ---
 

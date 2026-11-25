@@ -106,8 +106,8 @@ The `value` property is determined intelligently based on the element type:
 |---|---|
 | Checkbox / Radio | `value` attribute (only if `checked`) |
 | Multi-select `<select>` | Array of selected option values |
-| File input (single) | `{ name: "file.pdf", data: "base64..." }` |
-| File input (multiple) | Array of `{ name, data }` objects |
+| File input (single) | `{ name: "file.pdf", data: "data:application/pdf;base64,..." }` |
+| File input (multiple) | Array of `{ name, data }` objects (each `data` is a `data:` URL) |
 | Input / Textarea / Select | `.value` property |
 | Other elements (non-form) | Trimmed `innerHTML` with whitespace collapsed |
 
@@ -158,7 +158,7 @@ If the active target is inside a `<form>`, all named form inputs are automatical
 | Text / Textarea / Select | String value |
 | Date / DateTime / Month / Week / Time | Milliseconds since epoch (number) |
 | Checkbox / Radio | Boolean (`true`/`false`) |
-| File (on submit) | Array of `{ name, value: "base64..." }` |
+| File (on submit) | Array of `{ name, value: "data:<type>;base64,..." }` |
 | File (non-submit) | Array of `{ name, value: null }` |
 | Multi-select | Array of selected values |
 | Custom `[name]` elements | `.value` property |
@@ -169,7 +169,7 @@ All `data-*` attributes from both `event.currentTarget` and the active target ar
 
 ```html
 <button data-user-id="123" data-role="admin" on-click=${ _{ t ->
-    // t.userId == "123" (note: camelCase conversion does NOT happen -- key is "user-id")
+    // t['user-id'] == "123" (the data- prefix is stripped without camelCase conversion)
     // t.role == "admin"
 }}>Edit</button>
 ```

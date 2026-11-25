@@ -69,7 +69,7 @@ This ObjectMapper is used for all document serialization and deserialization bet
 ### Cache Behavior
 
 - **On `get()`**: The cache is checked first. If a cached document with a compatible type exists, it is returned immediately without hitting CouchDB. Cache hits are logged at debug level.
-- **On `getUncached()`**: The cache is bypassed entirely. A fresh copy is fetched from CouchDB and replaces the cached entry.
+- **On `getUncached()`**: The cache is bypassed entirely. A fresh copy is fetched from CouchDB without replacing or modifying the cached entry.
 - **On `getIfExists()`**: Uses the same cache-first logic as `get()`.
 - **On `exists()`**: Always bypasses the cache (`ignoreCache = true`) to check actual database state.
 - **On `close()`**: The document is removed from the cache. The next `get()` call will fetch from CouchDB.

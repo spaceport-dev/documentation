@@ -411,24 +411,20 @@ static _exportCsv(HttpResult r) {
 
 ## File Uploads
 
-Multipart form data is parsed automatically. File parts arrive as `javax.servlet.http.Part` objects:
+Multipart form data is parsed automatically. File parts arrive as maps with `name` (the submitted filename) and `data` (`byte[]` raw bytes), or a `List` of maps when multiple files share a field name:
 
 ```groovy
 @Alert('on /upload POST')
 static _handleUpload(HttpResult r) {
-    def filePart = r.context.data.file  // matches the form field name
-    if (!filePart) {
+    def file = r.context.data.file  // Map: [name: 'photo.jpg', data: byte[]]
+    if (!(file instanceof Map) || !file.data) {
         r.writeToClient([success: false, error: 'No file provided'])
         return
     }
 
-    def fileName = filePart.submittedFileName
-    def destFile = new File("/var/app/uploads/${fileName}")
-    filePart.inputStream.withStream { input ->
-        destFile.withOutputStream { output ->
-            output << input
-        }
-    }
+    // Strip any client-supplied path segments before saving to disk
+    def fileName = new File(file.name as String).name
+    new File("/var/app/uploads/${fileName}").bytes = file.data as byte[]
 
     r.writeToClient([success: true, fileName: fileName])
 }

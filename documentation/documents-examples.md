@@ -409,32 +409,36 @@ class NotificationManager {
 
 ## Working with Attachments
 
-Upload and retrieve file attachments on documents.
+Attach native `File` objects or base64 data (including data URLs from HUD-Core server actions) to a document, and retrieve or remove them. Always call `doc.save()` after adding attachments, and record attachment IDs or filenames in a document field since CouchDB keeps only its stub metadata inside `_attachments`.
 
 ```groovy
-// Upload a file
+// Attach a local File (optional 'type' and 'name' overrides supported)
 def doc = Document.get('user-profile', 'users')
 def fileId = doc.addAttachment(
     new File('/uploads/photo.jpg'),
     [label: 'Profile Photo', uploadedBy: 'admin']
 )
-doc.save()  // Must save after adding attachment
+doc.fields.avatarId = fileId
+doc.save()  // Required after adding an attachment
 println "Attachment stored as: ${fileId}"
 
-// Upload from base64 (e.g., from a form submission)
-def fileId2 = doc.addBase64Attachment(base64String, [
+// Attach from bare base64 or a HUD-Core data URL ("data:<type>;base64,<data>")
+def fileId2 = doc.addBase64Attachment(base64OrDataUrl, [
     name: 'document.pdf',
     type: 'application/pdf',
     uploadedBy: 'user-123'
 ])
-doc.save()
+doc.fields.documentId = fileId2
+doc.save()  // Required after adding an attachment
 
 // Download an attachment
 def outputStream = new ByteArrayOutputStream()
 def meta = doc.getAttachment(fileId, outputStream)
-println "Content-Type: ${meta.content_type}, Size: ${meta.content_length}"
+if (!meta.error) {
+    println "Content-Type: ${meta.content_type}, Size: ${meta.content_length}"
+}
 
-// Remove an attachment (saves to CouchDB immediately)
+// Remove an attachment (deletes from CouchDB immediately; save any field updates separately)
 doc.removeAttachment(fileId)
 ```
 

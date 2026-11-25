@@ -111,7 +111,7 @@ HUD-Core applies special handling to certain input types before sending:
 | Date, datetime-local, month, week, time | Converted to milliseconds since epoch | `Number` (long) |
 | Select | Sent as the selected option's value | `String` |
 | Select (multiple) | Sent as an array of selected values | `List` |
-| File | Converted to base64 with metadata | `List` of `[name: String, value: String]` |
+| File | Converted to a base64 data URL with filename (on submit; `value: null` on other events) | `List` of `[name: String, value: String]` |
 | Textarea | Sent as string | `String` |
 | Hidden | Sent as string | `String` |
 
@@ -170,8 +170,8 @@ _{ t ->
     // Multi-select
     def tags = t.getList('tags')                // List of selected values
 
-    // Data attributes from the triggering element
-    def itemId = t.itemId                       // from data-item-id="..."
+    // Data attributes from the triggering element (data- prefix stripped; no camelCase conversion)
+    def itemId = t['item-id']                   // from data-item-id="..."
 }
 ```
 
@@ -254,8 +254,9 @@ _{ t ->
 ```groovy
 _{ t -> ['@reload'] }                     // Reload the page
 _{ t -> ['@clear'] }                      // Clear the target element's value
-_{ t -> ['@redirect', '/dashboard'] }     // Navigate to URL
 ```
+
+Use a Map Transmission for actions that take a parameter, such as `['@redirect': '/dashboard']`.
 
 ### The `loading` Attribute
 
@@ -312,9 +313,9 @@ Key details:
 - File data arrives as `byte[]` — write it to disk, store it in a database, or process it directly
 - Regular form fields alongside files are plain strings in the same `r.context.data` map
 
-### Server Action Forms (Base64)
+### Server Action Forms (Base64 Data URLs)
 
-When a form with `on-submit` contains a file input, HUD-Core converts the file to **base64** and sends it as JSON over HTTP. This works but is less efficient for large files (base64 adds ~33% overhead, and the entire payload must fit in memory).
+When a form with `on-submit` contains a file input, HUD-Core reads each selected file with `FileReader.readAsDataURL()` and sends it as a base64 data URL (`"data:<type>;base64,<data>"`) inside the JSON transmission. This works well for photos and documents of a few megabytes, though base64 adds about a third to the payload size and the request is held in memory.
 
 ```html
 <form on-submit=${ _{ t -> handleUpload(t) }}>
@@ -325,16 +326,22 @@ When a form with `on-submit` contains a file input, HUD-Core converts the file t
 
 ```groovy
 def handleUpload = { t ->
-    def files = t.attachment    // List of [name: 'file.pdf', value: 'base64string...']
+    def files = t.attachment    // List of [name: 'file.pdf', value: 'data:application/pdf;base64,...']
     files.each { file ->
-        def bytes = file.value.decodeBase64()
-        new File("uploads/${file.name}").bytes = bytes
+        String dataUrl = file.value as String
+        int comma = dataUrl?.indexOf(',') ?: -1
+        if (comma < 0) return
+        byte[] bytes = dataUrl.substring(comma + 1).decodeBase64()
+        def safeName = new File(file.name as String).name
+        new File("uploads/${safeName}").bytes = bytes
     }
     'Upload complete!'
 }
 ```
 
-**Recommendation:** Use traditional multipart POST for file uploads, especially for large files. Use server action forms for everything else.
+If you are storing the uploaded file on a Spaceport `Document`, `doc.addBase64Attachment(file.value, [name: file.name, type: detectedType])` accepts either a base64 data URL or bare base64 directly (call `doc.save()` afterward).
+
+**Recommendation:** Use server action forms when you want inline validation and targeted UI updates for small-to-medium files, and traditional multipart POST (or a streaming route) for large files.
 
 ---
 
@@ -505,7 +512,7 @@ Validate in the server action and return targeted error messages:
         }
 
         createUser(t.getString('username').clean(), t.getString('email'), t.getString('password'))
-        ['@redirect', '/welcome']
+        ['@redirect': '/welcome']
     }
 %>
 
@@ -660,7 +667,7 @@ Use `data-*` attributes to pass extra state to the server without hidden inputs:
 ```html
 <button data-item-id="42" data-action="archive"
         on-click=${ _{ t ->
-            def item = Document.get(t.itemId, 'items')  // from data-item-id
+            def item = Document.get(t['item-id'], 'items')  // from data-item-id
             item.fields.archived = true
             item.save()
             ['@remove']
